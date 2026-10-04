@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import XCrashlyticsCore
 
 public struct IssuesPayload: Encodable, Sendable {
     public var query: String?
@@ -27,7 +28,6 @@ public struct IssuesPayload: Encodable, Sendable {
     public var issues: [IssueSummary]
     public var xcodeCrashes: [XcodeIssueSummary]?
     public var relatedGroups: [RelatedIssueGroup]?
-    public var candidatePairs: [CandidatePair]?
 
     public init(
         query: String?,
@@ -48,8 +48,7 @@ public struct IssuesPayload: Encodable, Sendable {
         symbolicationHint: String?,
         issues: [IssueSummary],
         xcodeCrashes: [XcodeIssueSummary]?,
-        relatedGroups: [RelatedIssueGroup]?,
-        candidatePairs: [CandidatePair]?
+        relatedGroups: [RelatedIssueGroup]?
     ) {
         self.query = query
         self.match = match
@@ -70,7 +69,6 @@ public struct IssuesPayload: Encodable, Sendable {
         self.issues = issues
         self.xcodeCrashes = xcodeCrashes
         self.relatedGroups = relatedGroups
-        self.candidatePairs = candidatePairs
     }
 }
 
@@ -94,10 +92,10 @@ public struct IssueSummary: Encodable, Sendable {
     public var dailyEventsTruncated: Bool?
     public var lastSeenAt: String?
 
-    public init(_ issue: CrashRecord, trend: IssueTrend? = nil, lastSeenAt: String? = nil) {
+    public init(_ issue: CrashIssue, trend: IssueTrend? = nil, lastSeenAt: String? = nil) {
         let display = DisplaySignature(issue)
-        self.id = "FB-\(issue.id)"
-        self.firebaseIssueId = issue.id
+        self.id = issue.id
+        self.firebaseIssueId = issue.providerId
         self.title = issue.exception.description
         self.subtitle = issue.exception.subtype
         self.exceptionType = issue.exception.exceptionType
@@ -152,7 +150,7 @@ public struct XcodeIssueSummary: Encodable, Sendable {
     public var topAppSymbol: String?
 
     public init(_ crash: XcodeCrash) {
-        self.id = crash.localId
+        self.id = crash.event.id
         self.exceptionType = crash.event.exception.exceptionType
         self.appVersion = crash.event.bundleVersion
         self.deviceModel = crash.event.deviceModel
@@ -160,37 +158,9 @@ public struct XcodeIssueSummary: Encodable, Sendable {
     }
 }
 
-public struct DisplaySignature: Sendable, Equatable {
-    public var module: String?
-    public var file: String?
-    public var symbol: String?
-
-    public init?(_ issue: CrashRecord) {
-        guard var text = issue.exception.description?.trimmingCharacters(in: .whitespaces), !text.isEmpty else {
-            return nil
-        }
-        if text.hasPrefix("["), let close = text.firstIndex(of: "]") {
-            module = String(text[text.index(after: text.startIndex)..<close])
-            text = String(text[text.index(after: close)...]).trimmingCharacters(in: .whitespaces)
-        }
-        if let separator = text.range(of: " - ", options: .backwards) {
-            file = String(text[..<separator.lowerBound]).trimmingCharacters(in: .whitespaces)
-            symbol = String(text[separator.upperBound...]).trimmingCharacters(in: .whitespaces)
-        } else {
-            symbol = text
-        }
-    }
-}
-
-public extension Array {
-    var nilIfEmpty: Self? {
-        isEmpty ? nil : self
-    }
-}
-
 public enum IssuesRenderer {
     public static func text(
-        issues: [CrashRecord],
+        issues: [CrashIssue],
         xcodeCrashes: [XcodeCrash],
         hint: String?,
         symbolicationHint: String?,
@@ -214,35 +184,20 @@ public enum IssuesRenderer {
             let seenText = lastSeenAt[issue.id]
                 .map { "   last seen \(EventDates.dayString(from: $0) ?? $0)" } ?? ""
             return
-                "FB-\(issue.id)   \(type)   \(version)   \(title)   \(events) events / \(users) users\(seenText)\(trendText)"
+                "\(issue.id)   \(type)   \(version)   \(title)   \(events) events / \(users) users\(seenText)\(trendText)"
         }.joined(separator: "\n")
         let xcodeText = xcodeCrashes.map { crash in
             let event = crash.event
             return
-                "\(crash.localId)   \(event.bundleVersion ?? "unknown app")   \(event.exception.exceptionType)"
+                "\(event.id)   \(event.bundleVersion ?? "unknown app")   \(event.exception.exceptionType)"
         }.joined(separator: "\n")
         return [firebaseText, xcodeText].filter { !$0.isEmpty }.joined(separator: "\n") + "\n"
     }
 
-    public static func json(_ payload: IssuesPayload) throws -> String {
-        try PayloadEncoder.json(payload)
-    }
-
-    public static func ndjson(
-        issues: [CrashRecord],
-        trends: [String: IssueTrend],
-        lastSeenAt: [String: String] = [:]
-    ) throws -> String {
-        try issues.map { issue in
-            try PayloadEncoder.ndjsonLine(
-                IssueSummary(issue, trend: trends[issue.id], lastSeenAt: lastSeenAt[issue.id]))
-        }.joined(separator: "\n") + "\n"
-    }
-
     /// "v6.2.0→v6.16.0" when the seen range spans versions, else the
     /// last-seen version alone.
-    private static func versionDescription(_ issue: CrashRecord) -> String {
-        guard let last = issue.lastSeenVersion ?? issue.bundleVersion else { return "-" }
+    private static func versionDescription(_ issue: CrashIssue) -> String {
+        guard let last = issue.bundleVersion else { return "-" }
         if let first = issue.firstSeenVersion, first != last {
             return "v\(first)→v\(last)"
         }

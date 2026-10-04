@@ -6,6 +6,7 @@
 //
 
 import Foundation
+import XCrashlyticsCore
 
 /// Renders crashes as plain text suitable for terminal output.
 ///
@@ -34,11 +35,11 @@ public struct PlainTextRenderer: Sendable {
             if !group.firebase.isEmpty {
                 let metrics = formatMetrics(events: group.totalEvents, users: group.totalUsers)
                 lines.append("    firebase: \(group.firebase.count) issue\(group.firebase.count == 1 ? "" : "s")   \(metrics)")
-                lines.append("      " + group.firebase.map { "FB-\($0.id)" }.joined(separator: ", "))
+                lines.append("      " + group.firebase.map(\.id).joined(separator: ", "))
             }
             if !group.xcode.isEmpty {
                 lines.append("    xcode: \(group.xcode.count) crash\(group.xcode.count == 1 ? "" : "es")")
-                lines.append("      " + group.xcode.map(\.localId).joined(separator: ", "))
+                lines.append("      " + group.xcode.map(\.event.id).joined(separator: ", "))
             }
             lines.append("")
         }
@@ -53,7 +54,11 @@ public struct PlainTextRenderer: Sendable {
     }
 
     /// Multi-line block: header + frames of the crashed thread.
-    public func renderDetail(_ event: CrashRecord, activity: IssueActivitySummary? = nil) -> String {
+    public func renderDetail(
+        _ event: CrashEvent,
+        issue: CrashIssue? = nil,
+        activity: IssueActivitySummary? = nil
+    ) -> String {
         var out: [String] = []
         out.append("ID:        \(event.id)")
         out.append("Source:    \(event.source.rawValue)")
@@ -68,9 +73,9 @@ public struct PlainTextRenderer: Sendable {
         if let subtype = event.exception.subtype {
             out.append("Subtype:   \(subtype)")
         }
-        if event.eventsCount != nil || event.impactedUsersCount != nil {
-            let events = event.eventsCount.map(String.init) ?? "?"
-            let users = event.impactedUsersCount.map(String.init) ?? "?"
+        if let issue, issue.eventsCount != nil || issue.impactedUsersCount != nil {
+            let events = issue.eventsCount.map(String.init) ?? "?"
+            let users = issue.impactedUsersCount.map(String.init) ?? "?"
             out.append("Impact:    \(events) events / \(users) users")
         }
         if let activity {

@@ -7,7 +7,7 @@ Thanks for your interest in `xcrashlytics`.
 Requires macOS 15+ and Xcode 16+ (Swift 6.0 toolchain).
 
 ```bash
-git clone https://github.com/firattamurcw/xcrashlytics.git
+git clone https://github.com/0xfirattamur/xcrashlytics.git
 cd xcrashlytics
 swift build
 swift test

@@ -75,7 +75,7 @@ public struct IssueFilter: Sendable {
         criteria.userId?.trimmedNonEmpty
     }
 
-    public func matchesIssueFields(_ issue: CrashRecord) -> Bool {
+    public func matchesIssueFields(_ issue: CrashIssue) -> Bool {
         if let minEvents = criteria.minEvents, (issue.eventsCount ?? 0) < minEvents { return false }
         if let type = criteria.type, !type.isEmpty,
             issue.exception.exceptionType.caseInsensitiveCompare(type) != .orderedSame {
@@ -85,7 +85,7 @@ public struct IssueFilter: Sendable {
             return false
         }
         if let sinceVersion = criteria.sinceVersion,
-            !VersionComparator.isAtLeast(issue.lastSeenVersion ?? issue.bundleVersion, sinceVersion) {
+            !VersionComparator.isAtLeast(issue.bundleVersion, sinceVersion) {
             return false
         }
         let display = DisplaySignature(issue)
@@ -100,14 +100,53 @@ public struct IssueFilter: Sendable {
         }
     }
 
-    public func matchesIssueText(_ issue: CrashRecord, term: String) -> Bool {
+    public func matchesXcodeEvent(_ event: CrashEvent) -> Bool {
+        guard normalizedUserId == nil, criteria.domain?.trimmedNonEmpty == nil,
+              criteria.userInfoKey.isEmpty else { return false }
+        if let type = criteria.type, !type.isEmpty,
+           event.exception.exceptionType.caseInsensitiveCompare(type) != .orderedSame {
+            return false
+        }
+        if let appVersion = criteria.appVersion,
+           !Self.matchesExact(event.bundleVersion, appVersion) {
+            return false
+        }
+        if let file = criteria.file,
+           !event.frames.contains(where: { Self.matchesExact($0.file, file) }) {
+            return false
+        }
+        if let symbol = criteria.symbol,
+           !event.frames.contains(where: { Self.matchesExact($0.symbol, symbol) }) {
+            return false
+        }
+        return searchTerms.allSatisfy {
+            Self.xcodeSearchHaystack(event).range(
+                of: $0, options: [.caseInsensitive, .diacriticInsensitive]) != nil
+        }
+    }
+
+    private static func xcodeSearchHaystack(_ event: CrashEvent) -> String {
+        [
+            event.exception.exceptionType,
+            event.exception.signal,
+            event.exception.subtype,
+            event.bundleId,
+            event.bundleVersion,
+            event.osVersion,
+            event.deviceModel,
+            event.frames.compactMap(\.file).joined(separator: " "),
+            event.frames.compactMap(\.symbol).joined(separator: " ")
+        ].compactMap { $0 }.joined(separator: " ")
+    }
+
+    public func matchesIssueText(_ issue: CrashIssue, term: String) -> Bool {
         Self.searchHaystack(for: issue).range(
             of: term, options: [.caseInsensitive, .diacriticInsensitive]) != nil
     }
 
-    public func matchesEventMetadata(issue: CrashRecord, event: FirebaseDTO.EventDTO) -> Bool {
+    public func matchesEventMetadata(issue: CrashIssue, event: FirebaseEvent) -> Bool {
         let metadata = FirebaseEventMetadata(event)
-        if let normalizedUserId, event.user?.id != normalizedUserId {
+        if let normalizedUserId, event.userId != normalizedUserId {
             return false
         }
         if let domain = criteria.domain, !metadata.matchesDomain(domain) {
@@ -129,14 +168,13 @@ public struct IssueFilter: Sendable {
         return trimmed.contains(".") || trimmed.contains("_") || trimmed.contains("=")
     }
 
-    public static func searchHaystack(for issue: CrashRecord) -> String {
+    public static func searchHaystack(for issue: CrashIssue) -> String {
         let display = DisplaySignature(issue)
         return [
             issue.exception.description,
             issue.exception.subtype,
             issue.exception.exceptionType,
             issue.exception.signal,
-            issue.bundleId,
             issue.bundleVersion,
             display?.module,
             display?.file,
@@ -152,12 +190,12 @@ public struct IssueFilter: Sendable {
 
     /// Matches an exact version against either end of the issue's seen range.
     /// Versions between first- and last-seen are not reported by Firebase.
-    static func matchesSeenVersion(_ issue: CrashRecord, _ expected: String) -> Bool {
-        matchesExact(issue.lastSeenVersion ?? issue.bundleVersion, expected)
+    static func matchesSeenVersion(_ issue: CrashIssue, _ expected: String) -> Bool {
+        matchesExact(issue.bundleVersion, expected)
             || matchesExact(issue.firstSeenVersion, expected)
     }
 
-    static func matchesSymbol(issue: CrashRecord, display: DisplaySignature?, expected: String) -> Bool {
+    static func matchesSymbol(issue: CrashIssue, display: DisplaySignature?, expected: String) -> Bool {
         matchesExact(display?.symbol, expected)
             || matchesExact(CrashSignature.of(issue)?.symbol, expected)
     }

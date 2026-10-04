@@ -8,10 +8,10 @@
 import Foundation
 
 public protocol FirebaseCrashlyticsClient: Sendable {
-    func listIssues(maxIssues: Int?) async throws -> [CrashRecord]
+    func listIssues(maxIssues: Int?) async throws -> [CrashIssue]
     func representativeFrames(issueID: String) async throws -> [Frame]
-    func listEvents(issueID: String, maxEvents: Int?) async throws -> [FirebaseDTO.EventDTO]
-    func getIssueDetail(id: String) async throws -> CrashRecord
+    func listEvents(issueID: String, maxEvents: Int?) async throws -> [FirebaseEvent]
+    func getIssueDetail(id: String) async throws -> CrashIssue
 }
 
 /// How many newest events commands sample when inspecting a single issue.
@@ -89,18 +89,19 @@ public struct FirebaseClient: Sendable {
     /// collected — so `--limit N` fetches roughly one small page instead of the
     /// whole project. Leave it `nil` for grouping or blame aggregation to fetch all,
     /// since clustering needs the complete set.
-    public func listIssues(pageSize: Int = 100, maxIssues: Int? = nil) async throws -> [CrashRecord] {
+    public func listIssues(pageSize: Int = 100, maxIssues: Int? = nil) async throws -> [CrashIssue] {
         let effectivePageSize = maxIssues.map { min($0, pageSize) } ?? pageSize
         var pageToken: String?
-        var out: [CrashRecord] = []
+        var out: [CrashIssue] = []
         repeat {
             let resp = try await fetchTopIssuesPage(pageToken: pageToken, pageSize: effectivePageSize)
             for group in resp.groups ?? [] {
                 let m = group.metrics?.first
-                var event = group.issue.toCrashRecord()
-                event.eventsCount = m?.eventsCount.flatMap(Int.init)
-                event.impactedUsersCount = m?.impactedUsersCount.flatMap(Int.init)
-                out.append(event)
+                let issue = group.issue.toCrashIssue(
+                    eventsCount: m?.eventsCount.flatMap(Int.init),
+                    impactedUsersCount: m?.impactedUsersCount.flatMap(Int.init)
+                )
+                out.append(issue)
             }
             pageToken = resp.nextPageToken
             if let maxIssues, out.count >= maxIssues {
@@ -115,22 +116,22 @@ public struct FirebaseClient: Sendable {
     /// has no retrievable event. The issue endpoints only return summaries —
     /// frames live on events.
     public func representativeFrames(issueID: String) async throws -> [Frame] {
-        try await listEvents(issueID: issueID, maxEvents: 1).first?.toFrames() ?? []
+        try await listEvents(issueID: issueID, maxEvents: 1).first?.representativeFrames() ?? []
     }
 
     /// Lists Firebase events for a single issue.
-    public func listEvents(issueID: String, pageSize: Int = 100, maxEvents: Int? = nil) async throws -> [FirebaseDTO.EventDTO] {
+    public func listEvents(issueID: String, pageSize: Int = 100, maxEvents: Int? = nil) async throws -> [FirebaseEvent] {
         try Self.validateIssueId(issueID)
         let effectivePageSize = maxEvents.map { min($0, pageSize) } ?? pageSize
         var pageToken: String?
-        var out: [FirebaseDTO.EventDTO] = []
+        var out: [FirebaseEvent] = []
         repeat {
             let resp = try await fetchEventsPage(
                 issueID: issueID,
                 pageToken: pageToken,
                 pageSize: effectivePageSize
             )
-            out.append(contentsOf: resp.events ?? [])
+            out.append(contentsOf: (resp.events ?? []).map { $0.toFirebaseEvent() })
             pageToken = resp.nextPageToken
             if let maxEvents, out.count >= maxEvents {
                 return Array(out.prefix(maxEvents))
@@ -140,7 +141,7 @@ public struct FirebaseClient: Sendable {
     }
 
     /// Fetches a single issue's detail.
-    public func getIssueDetail(id: String) async throws -> CrashRecord {
+    public func getIssueDetail(id: String) async throws -> CrashIssue {
         try Self.validateIssueId(id)
         let data = try await get(path: "issues/\(id)", query: [:])
         let dto: FirebaseDTO.IssueDTO
@@ -149,7 +150,7 @@ public struct FirebaseClient: Sendable {
         } catch {
             throw FirebaseError.decodingFailed("issue detail: \(error)")
         }
-        return dto.toCrashRecord()
+        return dto.toCrashIssue()
     }
 
     // MARK: - Internal
@@ -259,11 +260,11 @@ public struct FirebaseClient: Sendable {
 }
 
 extension FirebaseClient: FirebaseCrashlyticsClient {
-    public func listIssues(maxIssues: Int?) async throws -> [CrashRecord] {
+    public func listIssues(maxIssues: Int?) async throws -> [CrashIssue] {
         try await listIssues(pageSize: 100, maxIssues: maxIssues)
     }
 
-    public func listEvents(issueID: String, maxEvents: Int?) async throws -> [FirebaseDTO.EventDTO] {
+    public func listEvents(issueID: String, maxEvents: Int?) async throws -> [FirebaseEvent] {
         try await listEvents(issueID: issueID, pageSize: 100, maxEvents: maxEvents)
     }
 }

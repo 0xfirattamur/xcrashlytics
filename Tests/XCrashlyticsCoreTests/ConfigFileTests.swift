@@ -57,13 +57,14 @@ struct ConfigFileTests {
         #expect(tmpLeftovers.isEmpty)
     }
 
-    @Test("corrupt file falls back to defaults")
-    func corruptFallsBack() throws {
+    @Test("corrupt file reports invalid configuration")
+    func corruptReportsInvalidFile() throws {
         let fs = InMemoryFileSystem()
         fs.seed(configPath, text: "not json")
         let store = ConfigFile(fileSystem: fs)
-        let cfg = try store.load()
-        #expect(cfg.appId == nil)
+        #expect(throws: ConfigError.invalidFile) {
+            _ = try store.load()
+        }
     }
 }
 
@@ -119,5 +120,43 @@ struct FirebaseAppDiscoveryTests {
         #expect(apps.map(\.profileName) == ["app"])
         #expect(apps.first?.platform == "android")
         #expect(apps.first?.appId == "1:3333333333:android:release")
+    }
+
+    @Test("reads iOS BUNDLE_ID and Android package_name")
+    func discoversBundleIds() throws {
+        let fs = InMemoryFileSystem()
+        fs.seed("/repo/Release/GoogleService-Info.plist", text: """
+        <?xml version="1.0" encoding="UTF-8"?>
+        <plist version="1.0"><dict>
+          <key>GOOGLE_APP_ID</key><string>1:1111111111:ios:release</string>
+          <key>BUNDLE_ID</key><string>com.x.app</string>
+        </dict></plist>
+        """)
+        fs.seed("/repo/app/google-services.json", text: """
+        {"client": [{"client_info": {
+          "mobilesdk_app_id": "1:3333333333:android:release",
+          "android_client_info": {"package_name": "com.x.android"}
+        }}]}
+        """)
+
+        let apps = try FirebaseAppDiscovery(fs: fs).discover(from: "/repo")
+
+        #expect(Dictionary(uniqueKeysWithValues: apps.map { ($0.profileName, $0.bundleId) })
+            == ["release": "com.x.app", "app": "com.x.android"])
+    }
+
+    @Test("keeps every discovered app when profile names collide")
+    func keepsCollidingProfileNamesUnique() throws {
+        let fs = InMemoryFileSystem()
+        for (index, path) in ["a/debug", "b/debug", "c/debug-2"].enumerated() {
+            fs.seed("/repo/\(path)/GoogleService-Info.plist", text: """
+            <plist version="1.0"><dict>
+              <key>GOOGLE_APP_ID</key><string>1:\(1111111111 + index):ios:app</string>
+            </dict></plist>
+            """)
+        }
+
+        let apps = try FirebaseAppDiscovery(fs: fs).discover(from: "/repo")
+        #expect(Set(apps.map(\.profileName)).count == 3)
     }
 }

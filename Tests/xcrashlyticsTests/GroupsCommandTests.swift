@@ -22,8 +22,7 @@ struct GroupsCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try GroupsCommand.parse([])
 
@@ -45,8 +44,7 @@ struct GroupsCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try GroupsCommand.parse(["--format", "json"])
 
@@ -55,10 +53,14 @@ struct GroupsCommandTests {
 
         )
 
-        #expect(output.contains(#""symbol" : "blurdetectionservice.classifywithml(:_)""#) == false)
-        #expect(output.contains(#""symbol" : "blurdetectionservice.classifywithml(_:)"#))
-        #expect(output.contains(#""totalEvents" : 50"#))
-        #expect(output.contains(#""crossSource" : false"#))
+        let env = try Envelope(output)
+        let groups = try #require(env.data["groups"]?.array)
+        #expect(groups.count == 1)
+        let group = try #require(groups.first)
+        #expect(group["symbol"]?.string == "blurdetectionservice.classifywithml(_:)")
+        #expect(group["totalEvents"]?.int == 50)
+        #expect(group["crossSource"]?.bool == false)
+        #expect(group["firebase"]?.array?.compactMap { $0["id"]?.string } == ["FB-I1", "FB-I2"])
     }
 
     private func makeConfig() throws -> InMemoryFileSystem {

@@ -1,4 +1,5 @@
 import Foundation
+import XCrashlyticsCore
 
 /// The one JSON configuration every CLI payload uses, so field formatting
 /// never drifts between commands.

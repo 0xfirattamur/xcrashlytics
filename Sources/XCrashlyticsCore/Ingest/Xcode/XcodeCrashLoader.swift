@@ -7,6 +7,21 @@
 
 import Foundation
 
+/// A non-fatal problem found while loading local crashes.
+public struct CrashLoadWarning: Sendable, Equatable, Encodable {
+    /// Stable machine code: `XCODE_SCAN_FAILED` or `XCODE_PARSE_FAILED`.
+    public var code: String
+    public var message: String
+    /// File or directory the warning is about.
+    public var path: String
+
+    public init(code: String, message: String, path: String) {
+        self.code = code
+        self.message = message
+        self.path = path
+    }
+}
+
 /// Result of loading crashes from disk — successful crashes plus per-file
 /// warnings for ones that failed to parse.
 public struct XcodeCrashLoadResult: Sendable {
@@ -15,9 +30,9 @@ public struct XcodeCrashLoadResult: Sendable {
     /// One entry per file that failed to parse and per directory that failed
     /// to enumerate — surfaced rather than thrown so a single broken file or
     /// unreadable directory doesn't break the whole scan.
-    public var warnings: [String]
+    public var warnings: [CrashLoadWarning]
 
-    public init(crashes: [XcodeCrash], warnings: [String]) {
+    public init(crashes: [XcodeCrash], warnings: [CrashLoadWarning]) {
         self.crashes = crashes
         self.warnings = warnings
     }
@@ -51,7 +66,7 @@ public struct XcodeCrashLoader: Sendable {
     public func load(directories: [String]) -> XcodeCrashLoadResult {
         let scan = scanner.scan(directories: directories)
         var crashes: [XcodeCrash] = []
-        var warnings: [String] = scan.warnings
+        var warnings = scan.warnings
 
         for path in scan.paths {
             do {
@@ -65,7 +80,8 @@ public struct XcodeCrashLoader: Sendable {
                     fileSize: attrs.size
                 ))
             } catch {
-                warnings.append("failed to parse \(path): \(error)")
+                warnings.append(CrashLoadWarning(
+                    code: "XCODE_PARSE_FAILED", message: "failed to parse \(path): \(error)", path: path))
             }
         }
 

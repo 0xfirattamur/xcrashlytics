@@ -27,7 +27,7 @@ struct ProfileCommandTests {
                 "staging": AppProfile(appId: "1:2222222222:ios:staging", sourcePath: "Staging/GoogleService-Info.plist")
             ]
         ))
-        let ctx = CommandContext(fileSystem: fs, processRunner: MockProcessRunner(), clock: SystemClock(), keychain: InMemoryKeychainStore())
+        let ctx = CommandContext(fileSystem: fs, processRunner: MockProcessRunner(), clock: SystemClock())
 
         let cmd = try UseCommand.parse(["staging"])
         let output = try await cmd.runWithContext(ctx)
@@ -42,7 +42,7 @@ struct ProfileCommandTests {
     func errorsOnUnknownProfile() async throws {
         let fs = InMemoryFileSystem()
         try ConfigFile(fileSystem: fs).save(Config(appId: "1:1111111111:ios:debug"))
-        let ctx = CommandContext(fileSystem: fs, processRunner: MockProcessRunner(), clock: SystemClock(), keychain: InMemoryKeychainStore())
+        let ctx = CommandContext(fileSystem: fs, processRunner: MockProcessRunner(), clock: SystemClock())
 
         let cmd = try UseCommand.parse(["staging"])
         await #expect(throws: ValidationError.self) {

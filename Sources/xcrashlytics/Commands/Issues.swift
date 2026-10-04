@@ -98,8 +98,6 @@ struct IssuesCommand: AsyncParsableCommand {
     @Flag(name: .long, help: "Include local crash reports downloaded by the Xcode Organizer.")
     var xcode: Bool = false
 
-    @Flag(name: .long, help: "Include candidate related-issue pairs in JSON output.")
-    var showPairs: Bool = false
 
     @Option(
         name: .customLong("crash-directory"), help: "Xcode crash directory to scan. Repeatable.")
@@ -130,8 +128,11 @@ struct IssuesCommand: AsyncParsableCommand {
             outputLimit: outputLimit, explicit: searchLimit, all: all,
             hasCriteria: filter.hasSearchCriteria)
         let fetchedIssues = try await firebase.listIssues(maxIssues: fetchLimit)
+        var warnings: [CLIWarning] = []
         if all, fetchedIssues.count >= IssueSearchPlanner.allSearchLimitCap {
-            ctx.console.warn("--all is capped at \(IssueSearchPlanner.allSearchLimitCap) issues; results may be truncated.")
+            warnings.append(CLIWarning(
+                code: "SEARCH_TRUNCATED",
+                message: "--all is capped at \(IssueSearchPlanner.allSearchLimitCap) issues; results may be truncated."))
         }
         var issues = fetchedIssues.filter(filter.matchesIssueFields)
         var eventMetadataSamples = 0
@@ -144,7 +145,17 @@ struct IssuesCommand: AsyncParsableCommand {
             let cutoff = try SinceDuration.cutoffDate(from: since, now: ctx.clock.now())
             issues = try await filterByLatestEventSince(issues, firebase: firebase, cutoff: cutoff)
         }
-        let xcodeCrashes = try loadXcodeCrashes(ctx: ctx, overrideDirectories: overrideDirectories)
+        let xcodeLoad = try loadXcodeCrashes(ctx: ctx, overrideDirectories: overrideDirectories)
+        warnings += xcodeLoad.warnings
+        let xcodeCrashes = xcodeLoad.crashes
+            .filter { crash in
+                guard filter.matchesXcodeEvent(crash.event) else { return false }
+                guard let since else { return true }
+                guard since != "all",
+                      let cutoff = try? SinceDuration.cutoffDate(from: since, now: ctx.clock.now())
+                else { return true }
+                return crash.event.timestamp.map { $0 >= cutoff } ?? false
+            }
 
         let output: String
         let hint = IssueSearchPlanner.emptyResultHint(
@@ -194,15 +205,15 @@ struct IssuesCommand: AsyncParsableCommand {
                 },
                 xcodeCrashes: xcode ? xcodeCrashes.map(XcodeIssueSummary.init) : nil,
                 relatedGroups: RelatedIssueGroups.build(firebase: displayedIssues, xcode: xcodeCrashes)
-                    .nilIfEmpty,
-                candidatePairs: showPairs
-                    ? IssueCandidatePairs.build(firebase: displayedIssues, xcode: xcodeCrashes) : nil
+                    .nilIfEmpty
             )
-            output = try IssuesRenderer.json(payload)
+            output = try PayloadEncoder.envelope(payload, warnings: warnings)
         case .ndjson:
-            output = try IssuesRenderer.ndjson(
-                issues: displayedIssues, trends: activity.trends, lastSeenAt: activity.lastSeenAt)
+            output = try PayloadEncoder.ndjson(displayedIssues.map {
+                IssueSummary($0, trend: activity.trends[$0.id], lastSeenAt: activity.lastSeenAt[$0.id])
+            })
         }
+        ctx.report(warnings, format: format)
         ctx.console.output(output)
         return output
     }
@@ -210,8 +221,8 @@ struct IssuesCommand: AsyncParsableCommand {
     private func loadXcodeCrashes(
         ctx: CommandContext,
         overrideDirectories: [String]?
-    ) throws -> [XcodeCrash] {
-        guard xcode else { return [] }
+    ) throws -> (crashes: [XcodeCrash], warnings: [CLIWarning]) {
+        guard xcode else { return ([], []) }
         let directories =
             try overrideDirectories
             ?? (crashDirectories.isEmpty ? ctx.xcodeCrashDirectories() : crashDirectories)
@@ -222,15 +233,15 @@ struct IssuesCommand: AsyncParsableCommand {
 
 extension IssuesCommand {
     func filterByEventMetadata(
-        _ issues: [CrashRecord],
+        _ issues: [CrashIssue],
         firebase: FirebaseCrashlyticsClient,
         filter: IssueFilter
-    ) async throws -> (issues: [CrashRecord], samples: Int) {
+    ) async throws -> (issues: [CrashIssue], samples: Int) {
         let maxEvents = filter.normalizedUserId == nil ? 1 : max(1, eventsPerIssue)
         let sampled = try await IssueEventSampler(
             firebase: firebase, eventsPerIssue: maxEvents
         ).sample(issues: issues)
-        var filtered: [CrashRecord] = []
+        var filtered: [CrashIssue] = []
         var samples = 0
         for sample in sampled where !sample.events.isEmpty {
             samples += sample.events.count
@@ -242,10 +253,10 @@ extension IssuesCommand {
     }
 
     func filterByLatestEventSince(
-        _ issues: [CrashRecord],
+        _ issues: [CrashIssue],
         firebase: FirebaseCrashlyticsClient,
         cutoff: Date?
-    ) async throws -> [CrashRecord] {
+    ) async throws -> [CrashIssue] {
         guard cutoff != nil else { return issues }
         let sampled = try await IssueEventSampler(
             firebase: firebase, eventsPerIssue: 1
@@ -266,7 +277,7 @@ extension IssuesCommand {
     /// One sampling pass per displayed issue: the newest event's time always
     /// (for last-seen), per-day counts only when --by-day asked for them.
     func loadActivity(
-        _ issues: [CrashRecord],
+        _ issues: [CrashIssue],
         firebase: FirebaseCrashlyticsClient,
         now: Date
     ) async throws -> IssueActivity {

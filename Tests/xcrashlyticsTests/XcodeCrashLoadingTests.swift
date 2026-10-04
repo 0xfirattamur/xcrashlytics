@@ -16,7 +16,6 @@ struct XcodeCrashLoadingTests {
             fileSystem: fs,
             processRunner: MockProcessRunner(),
             clock: SystemClock(),
-            keychain: InMemoryKeychainStore(),
             httpClient: MockHTTPClient()
         )
     }

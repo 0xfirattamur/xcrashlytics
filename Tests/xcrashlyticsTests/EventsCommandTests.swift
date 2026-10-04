@@ -22,8 +22,7 @@ struct EventsCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try EventsCommand.parse(["FB-I1"])
 
@@ -47,8 +46,7 @@ struct EventsCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try EventsCommand.parse(["FB-I1", "--format", "json"])
 
@@ -57,11 +55,14 @@ struct EventsCommandTests {
 
         )
 
-        #expect(output.contains(#""id" : "FB-I1/events/E1""#))
-        #expect(output.contains(#""deviceModel" : "iPhone 17 Pro Max""#))
-        #expect(output.contains(#""memoryFreeBytes" : 675335168"#))
-        #expect(output.contains(#""symbol" : "BlurDetectionService.classifyWithML(_:)"#))
-        #expect(!output.contains("rawJSON"))
+        let env = try Envelope(output)
+        let event = try #require(env.data["events"]?[0])
+        #expect(env.data["events"]?.array?.count == 1)
+        #expect(event["id"]?.string == "FB-I1/events/E1")
+        #expect(event["deviceModel"]?.string == "iPhone 17 Pro Max")
+        #expect(event["memoryFreeBytes"]?.int == 675335168)
+        #expect(event["frames"]?[0]?["symbol"]?.string == "BlurDetectionService.classifyWithML(_:)")
+        #expect(event["rawJSON"] == nil)
     }
 
     @Test("ndjson emits one event object per line")
@@ -70,8 +71,7 @@ struct EventsCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try EventsCommand.parse([
             "--issues", "FB-I1,FB-I2",
@@ -84,12 +84,12 @@ struct EventsCommandTests {
 
         )
 
-        let lines = output.split(separator: "\n")
+        let lines = try JSON.lines(output)
         #expect(lines.count == 2)
         for line in lines {
-            #expect(line.first == "{")
-            #expect(line.contains("\"id\""))
+            #expect(line["schemaVersion"]?.int == 1)
         }
+        #expect(Set(lines.compactMap { $0["id"]?.string }) == ["FB-I1/events/E1", "FB-I2/events/E2"])
     }
 
     @Test("filters events by raw Firebase user id")
@@ -98,8 +98,7 @@ struct EventsCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try EventsCommand.parse([
             "FB-I1",
@@ -112,8 +111,11 @@ struct EventsCommandTests {
 
         )
 
-        #expect(output.contains(#""id" : "FB-I1/events/E-target""#))
-        #expect(!output.contains("E-other"))
+        let env = try Envelope(output)
+        let events = try #require(env.data["events"]?.array)
+        #expect(events.compactMap { $0["id"]?.string } == ["FB-I1/events/E-target"])
+        #expect(events.first?["userIdHash"]?.string == Hashing.sha256Hex("target-user"))
+        // Leak guard: the raw user id must not appear in any field.
         #expect(!output.contains("target-user"))
     }
 
@@ -124,8 +126,7 @@ struct EventsCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try EventsCommand.parse(["FB-I1", "--latest", "--frames-only", "--format", "json"])
 
@@ -134,12 +135,14 @@ struct EventsCommandTests {
 
         )
 
-        #expect(output.contains(#""id" : "FB-I1/events/E1""#))
-        #expect(output.contains(#""blamedFrame" : {"#))
-        #expect(output.contains(#""file" : "BlurDetectionService.swift""#))
-        #expect(output.contains(#""line" : 42"#))
-        #expect(!output.contains("deviceModel"))
-        #expect(!output.contains("memoryFreeBytes"))
+        let env = try Envelope(output)
+        let event = try #require(env.data["events"]?[0])
+        #expect(event["id"]?.string == "FB-I1/events/E1")
+        let blamed = try #require(event["blamedFrame"]?.object)
+        #expect(blamed["file"]?.string == "BlurDetectionService.swift")
+        #expect(blamed["line"]?.int == 42)
+        #expect(event["deviceModel"] == nil)
+        #expect(event["memoryFreeBytes"] == nil)
     }
 
     @Test("filters frames to app frames only")
@@ -148,8 +151,7 @@ struct EventsCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try EventsCommand.parse([
             "FB-I1",
@@ -163,11 +165,14 @@ struct EventsCommandTests {
 
         )
 
-        #expect(output.contains(#""symbol" : "BlurDetectionService.classifyWithML(_:)"#))
-        #expect(output.contains(#""file" : "BlurDetectionService.swift""#))
-        #expect(!output.contains("<redacted>"))
-        #expect(!output.contains("<deduplicated_symbol>"))
-        #expect(!output.contains("libsystem_kernel.dylib"))
+        let env = try Envelope(output)
+        let frames = (env.data["events"]?.array ?? []).flatMap { $0["frames"]?.array ?? [] }
+        let symbols = frames.compactMap { $0["symbol"]?.string }
+        #expect(symbols.contains("BlurDetectionService.classifyWithML(_:)"))
+        #expect(frames.contains { $0["file"]?.string == "BlurDetectionService.swift" })
+        #expect(!symbols.contains("<redacted>"))
+        #expect(!symbols.contains("<deduplicated_symbol>"))
+        #expect(!frames.contains { $0["binaryName"]?.string == "libsystem_kernel.dylib" })
     }
 
     @Test("frame filters imply frames-only text output")
@@ -176,8 +181,7 @@ struct EventsCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try EventsCommand.parse(["FB-I1", "--crashing-thread-only", "--no-system-frames"])
 
@@ -198,8 +202,7 @@ struct EventsCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try EventsCommand.parse([
             "--issues", "FB-I1,FB-I2",
@@ -213,10 +216,10 @@ struct EventsCommandTests {
 
         )
 
-        #expect(output.contains(#""id" : "FB-I1/events/E1""#))
-        #expect(output.contains(#""id" : "FB-I2/events/E2""#))
-        #expect(output.contains(#""issueId" : "FB-I1""#))
-        #expect(output.contains(#""issueId" : "FB-I2""#))
+        let env = try Envelope(output)
+        let events = try #require(env.data["events"]?.array)
+        #expect(Set(events.compactMap { $0["id"]?.string }) == ["FB-I1/events/E1", "FB-I2/events/E2"])
+        #expect(Set(events.compactMap { $0["issueId"]?.string }) == ["FB-I1", "FB-I2"])
     }
 
     @Test("can request the crashing thread frames only")
@@ -225,8 +228,7 @@ struct EventsCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try EventsCommand.parse([
             "FB-I1",
@@ -240,8 +242,12 @@ struct EventsCommandTests {
 
         )
 
-        #expect(output.contains("BlurDetectionService.classifyWithML"))
-        #expect(!output.contains("BackgroundWorker.run"))
+        let env = try Envelope(output)
+        let symbols = (env.data["events"]?.array ?? [])
+            .flatMap { $0["frames"]?.array ?? [] }
+            .compactMap { $0["symbol"]?.string }
+        #expect(symbols.contains("BlurDetectionService.classifyWithML(_:)"))
+        #expect(!symbols.contains("BackgroundWorker.run()"))
     }
 
     @Test("user-id filter scans past --limit and reports scannedEvents")
@@ -250,8 +256,7 @@ struct EventsCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try EventsCommand.parse(["FB-I1", "--limit", "5", "--user-id", "U1", "--format", "json"])
 
@@ -260,11 +265,11 @@ struct EventsCommandTests {
 
         )
 
-        #expect(output.contains("\"scannedEvents\" : 20"))
-        #expect(output.contains("E-MATCH"))
-        // E-1 (non-matching user) must be absent; use the exact JSON token to avoid
-        // false negatives from substring matches against E-10, E-11, etc.
-        #expect(!output.contains("\"E-1\""))
+        let env = try Envelope(output)
+        #expect(env.data["scannedEvents"]?.int == 20)
+        // Only the matching event survives; non-matching events such as E-1 are dropped.
+        let eventIds = env.data["events"]?.array?.compactMap { $0["firebaseEventId"]?.string }
+        #expect(eventIds == ["E-MATCH"])
     }
 
     @Test("uses first thread frames when Firebase omits crashed flag")
@@ -273,8 +278,7 @@ struct EventsCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try EventsCommand.parse(["FB-I1", "--frames-only", "--format", "json"])
 
@@ -283,9 +287,13 @@ struct EventsCommandTests {
 
         )
 
-        #expect(output.contains(#""symbol" : "BlurDetectionService.classifyWithML(_:)"#))
-        #expect(output.contains(#""symbol" : "FIRCLSUserLoggingRecordError""#))
-        #expect(output.contains(#""isBlamed" : true"#))
+        let env = try Envelope(output)
+        let frames = try #require(env.data["events"]?[0]?["frames"]?.array)
+        let symbols = frames.compactMap { $0["symbol"]?.string }
+        #expect(symbols.contains("BlurDetectionService.classifyWithML(_:)"))
+        #expect(symbols.contains("FIRCLSUserLoggingRecordError"))
+        let blurFrame = frames.first { $0["symbol"]?.string == "BlurDetectionService.classifyWithML(_:)" }
+        #expect(blurFrame?["isBlamed"]?.bool == true)
     }
 
     private func makeConfig() throws -> InMemoryFileSystem {

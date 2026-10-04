@@ -29,8 +29,8 @@ jobs:
           BINPATH="$(swift build -c release --arch arm64 --arch x86_64 --show-bin-path)"
           mkdir -p dist
           cp "$BINPATH/xcrashlytics" dist/xcrashlytics
-          strip dist/xcrashlytics || true
-          lipo -info dist/xcrashlytics || true
+          strip dist/xcrashlytics
+          lipo dist/xcrashlytics -verify_arch arm64 x86_64
 
       - name: Package + checksum
         run: |
@@ -66,6 +66,8 @@ jobs:
           SHA="$(shasum -a 256 "$TARBALL" | awk '{print $1}')"
           sed -i '' -E "s/  version \".*\"/  version \"${VERSION}\"/" Formula/xcrashlytics.rb
           sed -i '' -E "s/  sha256 \".*\"/  sha256 \"${SHA}\"/" Formula/xcrashlytics.rb
+          grep -qx "  version \"${VERSION}\"" Formula/xcrashlytics.rb
+          grep -qx "  sha256 \"${SHA}\"" Formula/xcrashlytics.rb
           cat Formula/xcrashlytics.rb
 
       - name: Commit formula

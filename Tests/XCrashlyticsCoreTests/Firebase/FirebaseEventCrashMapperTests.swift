@@ -11,28 +11,8 @@ import Testing
 
 @Suite("FirebaseEventCrashMapper")
 struct FirebaseEventCrashMapperTests {
-    private func makeEvent(eventTime: String?) -> FirebaseDTO.EventDTO {
-        FirebaseDTO.EventDTO(
-            name: nil,
-            platform: nil,
-            eventId: "E1",
-            eventTime: eventTime,
-            bundleOrPackage: nil,
-            issue: nil,
-            issueTitle: nil,
-            issueSubtitle: nil,
-            processState: nil,
-            version: nil,
-            device: nil,
-            operatingSystem: nil,
-            memory: nil,
-            storage: nil,
-            user: nil,
-            blameFrame: nil,
-            exceptions: nil,
-            threads: nil,
-            rawJSON: nil
-        )
+    private func makeEvent(eventTime: String?) -> FirebaseEvent {
+        FirebaseEvent(eventId: "E1", eventTime: eventTime)
     }
 
     @Test("maps fractional-second eventTime to non-nil timestamp")
@@ -69,8 +49,8 @@ struct FirebaseEventCrashMapperTests {
           ]
         }
         """#
-        let event = try JSONDecoder().decode(FirebaseDTO.EventDTO.self, from: Data(json.utf8))
-        let frames = event.toFrames()
+        let event = try JSONDecoder().decode(FirebaseDTO.EventDTO.self, from: Data(json.utf8)).toFirebaseEvent()
+        let frames = event.representativeFrames()
         #expect(frames.count == 1)
         #expect(frames[0].address == nil)
     }

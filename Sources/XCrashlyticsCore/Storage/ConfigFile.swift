@@ -27,7 +27,7 @@ public struct ConfigFile: Sendable {
         do {
             return try JSONDecoder().decode(Config.self, from: data)
         } catch {
-            return Config()
+            throw ConfigError.invalidFile
         }
     }
 

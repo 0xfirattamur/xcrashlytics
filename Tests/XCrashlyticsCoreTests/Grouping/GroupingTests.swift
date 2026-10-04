@@ -11,20 +11,14 @@ import Testing
 
 @Suite("Crash grouping")
 struct GroupingTests {
-    private func firebase(_ id: String, title: String, events: Int = 0, users: Int = 0) -> CrashRecord {
-        var e = CrashRecord(
-            id: id, source: .firebase, crashedThreadIndex: 0,
-            exception: ExceptionInfo(exceptionType: "FATAL", signal: nil, subtype: "EXC_BAD_ACCESS", description: title),
-            frames: []
-        )
-        e.eventsCount = events
-        e.impactedUsersCount = users
-        return e
+    private func firebase(_ id: String, title: String, events: Int = 0, users: Int = 0) -> CrashIssue {
+        CrashIssue(providerId: id, title: title, subtitle: "EXC_BAD_ACCESS", exceptionType: "FATAL",
+        eventsCount: events, impactedUsersCount: users)
     }
 
     private func local(_ id: String, symbols: [(String, String)]) -> XcodeCrash {
         let frames = symbols.enumerated().map { Frame(index: $0.offset, binaryName: $0.element.0, symbol: $0.element.1, address: 0) }
-        let event = CrashRecord(
+        let event = CrashEvent(
             id: id, source: .xcode, crashedThreadIndex: 0,
             exception: ExceptionInfo(exceptionType: "EXC_BAD_ACCESS"),
             frames: frames

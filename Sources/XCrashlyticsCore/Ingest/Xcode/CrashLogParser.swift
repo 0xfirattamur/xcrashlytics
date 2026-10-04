@@ -38,7 +38,7 @@ public struct CrashLogParser: Sendable {
     }
 
     /// Reads `path` and parses it.
-    public func parse(path: String) throws -> CrashRecord {
+    public func parse(path: String) throws -> CrashEvent {
         let data = try fs.read(at: path)
         guard let text = String(data: data, encoding: .utf8) else {
             throw CrashParsingError.ioError("not utf8: \(path)")
@@ -47,7 +47,7 @@ public struct CrashLogParser: Sendable {
     }
 
     /// Parses raw text (useful in tests).
-    public func parse(text: String, path: String) throws -> CrashRecord {
+    public func parse(text: String, path: String) throws -> CrashEvent {
         let lines = text.components(separatedBy: "\n")
         let header = parseHeader(lines)
 
@@ -74,8 +74,9 @@ public struct CrashLogParser: Sendable {
         let deviceModel = header["Hardware Model"]
         let timestamp = (header["Date/Time"]).flatMap(Self.parseTimestamp)
 
-        return CrashRecord(
-            id: id,
+        return CrashEvent(
+            id: "XC-\(id)",
+            providerId: id,
             source: .xcode,
             bundleId: bundleId,
             bundleVersion: bundleVersion,

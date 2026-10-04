@@ -1,6 +1,7 @@
 import Foundation
 import Testing
 @testable import XCrashlyticsCore
+@testable import xcrashlytics
 
 @Suite("payload encoder")
 struct PayloadEncoderTests {
@@ -12,20 +13,24 @@ struct PayloadEncoderTests {
         var note = "line1\nline2"
     }
 
-    @Test("json is pretty, key-sorted, iso8601 dates, unescaped slashes, trailing newline")
+    @Test("json uses iso8601 dates, unescaped slashes, trailing newline")
     func json() throws {
         let out = try PayloadEncoder.json(Sample())
-        #expect(out.contains("\"a\" : \"one\""))
-        #expect(out.range(of: "\"a\"")!.lowerBound < out.range(of: "\"b\"")!.lowerBound)
-        #expect(out.contains("1970-01-01T00:00:00Z"))
+        let decoded = try JSON.parse(out)
+        #expect(decoded["a"]?.string == "one")
+        #expect(decoded["when"]?.string == "1970-01-01T00:00:00Z")
+        #expect(decoded["url"]?.string == "https://example.com/x")
         #expect(out.contains("https://example.com/x"))
         #expect(out.hasSuffix("\n"))
     }
 
-    @Test("ndjson line is compact with no trailing newline")
+    @Test("ndjson line is a single line with no trailing newline")
     func ndjsonLine() throws {
         let out = try PayloadEncoder.ndjsonLine(Sample())
         #expect(!out.contains("\n"))
-        #expect(out.contains("\"a\":\"one\""))
+        let decoded = try JSON.parse(out)
+        #expect(decoded["a"]?.string == "one")
+        #expect(decoded["when"]?.string == "1970-01-01T00:00:00Z")
+        #expect(decoded["note"]?.string == "line1\nline2")
     }
 }

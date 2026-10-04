@@ -12,8 +12,7 @@ extension IssuesCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try IssuesCommand.parse(["blur", "--format", "ndjson", "--limit", "200"])
 
@@ -22,10 +21,11 @@ extension IssuesCommandTests {
 
         )
 
-        let lines = output.split(separator: "\n")
+        let lines = try JSON.lines(output)
         #expect(lines.count == 2)
-        #expect(lines.allSatisfy { $0.contains(#""id":"FB-I"#) || $0.contains(#""id" : "FB-I"#) })
-        #expect(!output.contains(#""issues""#))
+        #expect(lines.allSatisfy { $0["schemaVersion"]?.int == 1 })
+        #expect(lines.allSatisfy { $0["id"]?.string?.hasPrefix("FB-I") == true })
+        #expect(lines.allSatisfy { $0["issues"] == nil && $0["data"] == nil })
     }
 
     @Test("uses the active profile app id for Firebase requests")
@@ -46,8 +46,7 @@ extension IssuesCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try IssuesCommand.parse(["--format", "json"])
 
@@ -66,8 +65,7 @@ extension IssuesCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try IssuesCommand.parse([
             "com.metrickit.diagnostics.cpu",
@@ -79,8 +77,9 @@ extension IssuesCommandTests {
 
         )
 
-        #expect(output.contains(#""id" : "FB-MX""#))
-        #expect(output.contains(#""eventMetadataSamples" : 1"#))
+        let env = try Envelope(output)
+        #expect(env.data["issues"]?.array?.contains { $0["id"]?.string == "FB-MX" } == true)
+        #expect(env.data["eventMetadataSamples"]?.int == 1)
     }
 
     @Test("filters issues by event domain and userInfo key")
@@ -90,8 +89,7 @@ extension IssuesCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try IssuesCommand.parse([
             "--domain", "com.metrickit.diagnostics.cpu",
@@ -104,8 +102,10 @@ extension IssuesCommandTests {
 
         )
 
-        #expect(output.contains(#""id" : "FB-MX""#))
-        #expect(!output.contains(#""id" : "FB-OTHER""#))
+        let env = try Envelope(output)
+        let ids = env.data["issues"]?.array?.compactMap { $0["id"]?.string } ?? []
+        #expect(ids.contains("FB-MX"))
+        #expect(!ids.contains("FB-OTHER"))
     }
 
     @Test("filters issues by raw Firebase user id across sampled events")
@@ -114,8 +114,7 @@ extension IssuesCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try IssuesCommand.parse([
             "--user-id", "target-user",
@@ -128,13 +127,16 @@ extension IssuesCommandTests {
 
         )
 
-        #expect(output.contains(#""id" : "FB-I1""#))
-        #expect(!output.contains(#""id" : "FB-I2""#))
+        let env = try Envelope(output)
+        let ids = env.data["issues"]?.array?.compactMap { $0["id"]?.string } ?? []
+        #expect(ids.contains("FB-I1"))
+        #expect(!ids.contains("FB-I2"))
+        // The raw user id is a filter input only; it must not leak anywhere in the output.
         #expect(!output.contains("target-user"))
     }
 
-    @Test("empty Firebase results with Xcode crashes include a dSYM hint")
-    func emptyResultsIncludeDSYMHints() async throws {
+    @Test("filters Xcode crashes using the same issue criteria")
+    func filtersXcodeCrashesWithIssueCriteria() async throws {
         let http = makeRankedIssuesHTTP(matchIndex: nil, total: 2)
         let fs = InMemoryFileSystem()
         try ConfigFile(fileSystem: fs).save(Config(appId: appId))
@@ -143,17 +145,17 @@ extension IssuesCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try IssuesCommand.parse(["missing", "--xcode", "--format", "json"])
-
         let output = try await cmd.runWithContext(
             ctx.withFirebaseHTTP(http),
             crashDirectories: [crashDir]
         )
-
-        #expect(output.contains(#""symbolicationHint" : "1 app dSYM UUID(s) may be needed for 1 Xcode crash(es).""#))
+        let env = try Envelope(output)
+        // sample.crash does not match "missing", so the Xcode list is present but filtered empty.
+        #expect(env.data["xcodeCrashes"]?.array?.isEmpty == true)
+        #expect(env.data["symbolicationHint"] == nil)
     }
 
     @Test("since all disables time filtering while since-version still applies")
@@ -163,8 +165,7 @@ extension IssuesCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try IssuesCommand.parse([
             "--since", "all",
@@ -177,8 +178,10 @@ extension IssuesCommandTests {
 
         )
 
-        #expect(output.contains(#""id" : "FB-NEW""#))
-        #expect(!output.contains(#""id" : "FB-OLD""#))
+        let env = try Envelope(output)
+        let ids = env.data["issues"]?.array?.compactMap { $0["id"]?.string } ?? []
+        #expect(ids.contains("FB-NEW"))
+        #expect(!ids.contains("FB-OLD"))
     }
 
     @Test("by-day adds per-issue event trend counts")
@@ -189,8 +192,7 @@ extension IssuesCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(now),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock(now)
         )
         let cmd = try IssuesCommand.parse([
             "--since", "7d",
@@ -203,12 +205,15 @@ extension IssuesCommandTests {
 
         )
 
-        #expect(output.contains(#""dailyEvents" : ["#))
-        #expect(output.contains(#""day" : "2026-06-07""#))
-        #expect(output.contains(#""eventsCount" : 2"#))
-        #expect(output.contains(#""day" : "2026-06-08""#))
-        #expect(output.contains(#""eventsCount" : 1"#))
-        #expect(output.contains(#""dailyEventsTruncated" : false"#))
+        let env = try Envelope(output)
+        let issue = try #require(env.data["issues"]?[0])
+        let days = try #require(issue["dailyEvents"]?.array)
+        try #require(days.count == 2)
+        #expect(days[0]["day"]?.string == "2026-06-07")
+        #expect(days[0]["eventsCount"]?.int == 2)
+        #expect(days[1]["day"]?.string == "2026-06-08")
+        #expect(days[1]["eventsCount"]?.int == 1)
+        #expect(issue["dailyEventsTruncated"]?.bool == false)
     }
 
     @Test("bare listing samples each issue's latest event for lastSeenAt")
@@ -218,8 +223,7 @@ extension IssuesCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try IssuesCommand.parse(["--format", "json"])
 
@@ -228,8 +232,13 @@ extension IssuesCommandTests {
 
         )
 
-        #expect(output.contains(#""lastSeenAt" : "2026-06-07T20:00:00Z""#))
-        #expect(output.contains(#""lastSeenAt" : "2026-06-01T20:00:00Z""#))
+        let env = try Envelope(output)
+        let issues = env.data["issues"]?.array ?? []
+        func lastSeen(_ id: String) -> String? {
+            issues.first { $0["id"]?.string == id }?["lastSeenAt"]?.string
+        }
+        #expect(lastSeen("FB-I1") == "2026-06-07T20:00:00Z")
+        #expect(lastSeen("FB-I2") == "2026-06-01T20:00:00Z")
     }
 
     @Test("by-day flags truncated trends when sample covers fewer events than total")
@@ -240,8 +249,7 @@ extension IssuesCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(now),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock(now)
         )
         let cmd = try IssuesCommand.parse([
             "--by-day",
@@ -253,8 +261,10 @@ extension IssuesCommandTests {
 
         )
 
-        #expect(output.contains(#""dailyEventsSampledCount" : 3"#))
-        #expect(output.contains(#""dailyEventsTruncated" : true"#))
+        let env = try Envelope(output)
+        let issue = try #require(env.data["issues"]?[0])
+        #expect(issue["dailyEventsSampledCount"]?.int == 3)
+        #expect(issue["dailyEventsTruncated"]?.bool == true)
     }
 
     @Test("by-day text marks oldest sampled day partial for truncated trends")
@@ -265,8 +275,7 @@ extension IssuesCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(now),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock(now)
         )
         let cmd = try IssuesCommand.parse(["--by-day"])
 

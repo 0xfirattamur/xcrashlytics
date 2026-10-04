@@ -21,8 +21,7 @@ struct IssuesAgentErgonomicsTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try IssuesCommand.parse([
             "--since-version", "6.16.0",
@@ -35,9 +34,11 @@ struct IssuesAgentErgonomicsTests {
 
         )
 
-        #expect(output.contains(#""id" : "FB-I2""#))
-        #expect(output.contains(#""id" : "FB-I3""#))
-        #expect(!output.contains(#""id" : "FB-I1""#))
+        let env = try Envelope(output)
+        let ids = env.data["issues"]?.array?.compactMap { $0["id"]?.string } ?? []
+        #expect(ids.contains("FB-I2"))
+        #expect(ids.contains("FB-I3"))
+        #expect(!ids.contains("FB-I1"))
     }
 
     @Test("agent JSON includes compact related group hints by default")
@@ -46,8 +47,7 @@ struct IssuesAgentErgonomicsTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try IssuesCommand.parse(["blur", "--format", "json", "--limit", "200"])
 
@@ -56,10 +56,11 @@ struct IssuesAgentErgonomicsTests {
 
         )
 
-        #expect(output.contains("relatedGroups"))
-        #expect(output.contains(#""issueIds" : ["#))
-        #expect(output.contains(#""FB-I1""#))
-        #expect(output.contains(#""FB-I2""#))
+        let env = try Envelope(output)
+        let group = try #require(env.data["relatedGroups"]?[0])
+        let groupIds = group["issueIds"]?.array?.compactMap(\.string) ?? []
+        #expect(groupIds.contains("FB-I1"))
+        #expect(groupIds.contains("FB-I2"))
     }
 
     private func makeConfig() throws -> InMemoryFileSystem {

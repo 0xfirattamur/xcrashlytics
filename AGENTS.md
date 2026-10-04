@@ -13,16 +13,23 @@ xcrashlytics blame --since 7d --top 20 --format json       # hot files/symbols a
 
 Narrowing by user: `xcrashlytics issues --user-id USER_ID --events-per-issue 10 --format json`, then `xcrashlytics events FB-ISSUE_ID --user-id USER_ID --format json`.
 
+A user-pasted console link works as an id: `xcrashlytics show '<https://console.firebase.google.com/…/issues/…>' --format json`. It resolves against the profile whose bundle id matches the link.
+
+Setup: `xcrashlytics init --scan` discovers every app in the repo. If it reports no active profile, run `xcrashlytics use <profile>`.
+
 ## Local Xcode crashes (iOS)
 
 `issues --xcode` and `groups --xcode` add crash reports the Xcode Organizer has already downloaded to `~/Library/Developer/Xcode/Products/<bundle-id>/Crashes/` — read from disk only, no Apple connection. Their ids are `XC-<id>` and work with `show` and `open`. Requirements: the active profile must carry a bundle id (`init --bundle-id`), and the Organizer must have been opened at least once so reports exist on disk. `--crash-directory <path>` (repeatable) scans explicit directories instead and needs no bundle id.
 
 ## Output contract
 
-- JSON fields are only added, never renamed or removed.
-- `--format ndjson` (issues, events, blame) emits one compact object per line.
-- Empty search results include a `hint` field; when a wider scan could help it contains the exact rerun command (e.g. `--search-limit 1000`, `--all`).
-- `events --user-id` scans up to max(--limit, 50) events per issue and reports the depth as `scannedEvents`.
+- Every JSON success is `{"schemaVersion": 1, "data": …, "warnings": [...]}`. Read results from `data`, and check `schemaVersion`.
+- `warnings[]` entries are `{code, message, path?}`. Codes: `XCODE_PARSE_FAILED`, `XCODE_SCAN_FAILED`, `SEARCH_TRUNCATED`, `SCAN_TRUNCATED`, `EVENT_NOT_RESOLVED`. A warning means the result may be partial; the command still succeeded.
+- `--format ndjson` (issues, events, blame) emits one compact record per line, each with `schemaVersion`. Warnings go to stderr, never stdout.
+- Ids are canonical: `FB-<issue>`, `FB-<issue>/events/<event>`, `XC-<incident>`. Pass them back verbatim. Raw ids are in `providerId` / `firebaseIssueId` / `firebaseEventId`.
+- Within `schemaVersion` 1, fields are only added, never renamed or removed.
+- Empty search results include a `data.hint` field; when a wider scan could help it contains the exact rerun command (e.g. `--search-limit 1000`, `--all`).
+- `events --user-id` scans up to max(--limit, 50) events per issue and reports the depth as `data.scannedEvents`. `events --since` scans up to 2000 per issue and warns `SCAN_TRUNCATED` when it hits that cap.
 
 ## Errors
 
@@ -34,7 +41,8 @@ Failures with `--format json`/`ndjson` print one JSON object to stdout:
     "code" : "AUTH_REQUIRED",
     "hint" : "Run: firebase login",
     "message" : "firebase CLI is not authenticated."
-  }
+  },
+  "schemaVersion" : 1
 }
 ```
 

@@ -16,7 +16,6 @@ public struct CommandContext: Sendable {
     public let fileSystem: FileSystem
     public let processRunner: ProcessRunner
     public let clock: Clock
-    public let keychainStore: KeychainStore
     public let console: CLIConsole
     public let httpClient: HTTPClient
 
@@ -24,31 +23,28 @@ public struct CommandContext: Sendable {
         fileSystem: FileSystem,
         processRunner: ProcessRunner,
         clock: Clock,
-        keychain: KeychainStore,
         httpClient: HTTPClient = URLSessionHTTPClient(),
         console: CLIConsole = StandardConsole()
     ) {
         self.fileSystem = fileSystem
         self.processRunner = processRunner
         self.clock = clock
-        self.keychainStore = keychain
         self.httpClient = httpClient
         self.console = console
     }
 
-    /// Default production context: real disk, real subprocesses, real keychain.
+    /// Default production context: real disk, real subprocesses, real clock.
     public static func live() -> CommandContext {
         CommandContext(
             fileSystem: DiskFileSystem(),
             processRunner: ShellProcessRunner(),
-            clock: SystemClock(),
-            keychain: SystemKeychainStore()
+            clock: SystemClock()
         )
     }
 
-    func firebaseClient() throws -> FirebaseCrashlyticsClient {
+    func firebaseClient(appId override: String? = nil) throws -> FirebaseCrashlyticsClient {
         let config = try ConfigFile(fileSystem: fileSystem).load()
-        guard let appId = config.resolvedAppId else {
+        guard let appId = override ?? config.resolvedAppId else {
             throw ConfigError.missingAppId
         }
         return try FirebaseClient(

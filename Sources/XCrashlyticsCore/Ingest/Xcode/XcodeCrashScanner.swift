@@ -21,14 +21,15 @@ public struct XcodeCrashScanner: Sendable {
     /// sorted for determinism, plus a warning per directory that exists but
     /// failed to enumerate. Missing directories are skipped silently because
     /// `FileSystem.enumerate` returns an empty list for nonexistent paths.
-    public func scan(directories: [String]) -> (paths: [String], warnings: [String]) {
+    public func scan(directories: [String]) -> (paths: [String], warnings: [CrashLoadWarning]) {
         var paths: [String] = []
-        var warnings: [String] = []
+        var warnings: [CrashLoadWarning] = []
         for dir in directories {
             do {
                 paths.append(contentsOf: try fs.enumerate(at: dir, matchingExtensions: Self.supportedExtensions))
             } catch {
-                warnings.append("failed to scan \(dir): \(error)")
+                warnings.append(CrashLoadWarning(
+                    code: "XCODE_SCAN_FAILED", message: "failed to scan \(dir): \(error)", path: dir))
             }
         }
         return (paths.sorted(), warnings)

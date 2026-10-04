@@ -24,7 +24,7 @@ public enum EventDates {
 
     /// Whether an event falls on or after the cutoff. No cutoff admits everything;
     /// an unparseable timestamp is excluded.
-    public static func isIncluded(event: FirebaseDTO.EventDTO, onOrAfter cutoff: Date?) -> Bool {
+    public static func isIncluded(event: FirebaseEvent, onOrAfter cutoff: Date?) -> Bool {
         guard let cutoff else { return true }
         guard let eventTime = event.eventTime, let date = parse(eventTime) else { return false }
         return date >= cutoff

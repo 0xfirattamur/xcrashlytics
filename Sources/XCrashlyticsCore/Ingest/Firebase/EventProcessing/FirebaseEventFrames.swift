@@ -23,15 +23,15 @@ public struct FirebaseFrameFilterOptions: Sendable, Equatable {
 
 public enum FirebaseEventFrames {
     public static func frameDTOs(
-        from event: FirebaseDTO.EventDTO,
+        from event: FirebaseEvent,
         options: FirebaseFrameFilterOptions = FirebaseFrameFilterOptions()
-    ) -> [FirebaseDTO.FrameDTO] {
+    ) -> [FirebaseFrame] {
         let frames = selectedFrameDTOs(from: event, crashingThreadOnly: options.crashingThreadOnly)
         return frames.filter { includes($0, options: options) }
     }
 
     public static func frames(
-        from event: FirebaseDTO.EventDTO,
+        from event: FirebaseEvent,
         options: FirebaseFrameFilterOptions = FirebaseFrameFilterOptions()
     ) -> [Frame] {
         frameDTOs(from: event, options: options).enumerated().map { index, frame in
@@ -40,7 +40,7 @@ public enum FirebaseEventFrames {
                 binaryName: frame.library ?? "?",
                 symbol: frame.symbol,
                 file: frame.file,
-                line: frame.line.flatMap(Int.init),
+                line: frame.line,
                 column: nil,
                 address: nil,
                 imageUUID: nil,
@@ -50,39 +50,31 @@ public enum FirebaseEventFrames {
     }
 
     public static func selectedFrameDTOs(
-        from event: FirebaseDTO.EventDTO,
+        from event: FirebaseEvent,
         crashingThreadOnly: Bool = false
-    ) -> [FirebaseDTO.FrameDTO] {
-        let frames: [FirebaseDTO.FrameDTO]
-        if crashingThreadOnly {
-            frames = event.threads?.first(where: { $0.crashed == true })?.frames
-                ?? event.threads?.first?.frames
-                ?? event.exceptions?.first?.frames
-                ?? []
-        } else {
-            frames = event.threads?.first(where: { $0.crashed == true })?.frames
-                ?? event.threads?.first?.frames
-                ?? event.exceptions?.first?.frames
-                ?? []
-        }
+    ) -> [FirebaseFrame] {
+        let frames = event.threads.first(where: \.crashed)?.frames.nilIfEmpty
+            ?? event.threads.first?.frames.nilIfEmpty
+            ?? event.exceptions.first?.frames.nilIfEmpty
+            ?? []
         guard let blameFrame = event.blameFrame else {
             return frames
         }
         return frames.contains(where: { matches($0, blameFrame) }) ? frames : [blameFrame] + frames
     }
 
-    public static func blamedFrame(from event: FirebaseDTO.EventDTO) -> FirebaseDTO.FrameDTO? {
+    public static func blamedFrame(from event: FirebaseEvent) -> FirebaseFrame? {
         event.blameFrame
             ?? frameDTOs(from: event).first(where: { isBlamed($0, in: event) })
             ?? frameDTOs(from: event).first
     }
 
-    public static func isBlamed(_ frame: FirebaseDTO.FrameDTO, in event: FirebaseDTO.EventDTO) -> Bool {
+    public static func isBlamed(_ frame: FirebaseFrame, in event: FirebaseEvent) -> Bool {
         frame.blamed == true || event.blameFrame.map { matches(frame, $0) } == true
     }
 
     public static func topFrameDescription(
-        for event: FirebaseDTO.EventDTO,
+        for event: FirebaseEvent,
         options: FirebaseFrameFilterOptions = FirebaseFrameFilterOptions()
     ) -> String? {
         let frames = frameDTOs(from: event, options: options)
@@ -97,7 +89,7 @@ public enum FirebaseEventFrames {
         return frame.file ?? frame.library ?? "?"
     }
 
-    public static func location(for frame: FirebaseDTO.FrameDTO) -> String {
+    public static func location(for frame: FirebaseFrame) -> String {
         switch (frame.file, frame.line) {
         case let (file?, line?):
             return "\(file):\(line)"
@@ -108,7 +100,7 @@ public enum FirebaseEventFrames {
         }
     }
 
-    public static func matches(_ lhs: FirebaseDTO.FrameDTO, _ rhs: FirebaseDTO.FrameDTO) -> Bool {
+    public static func matches(_ lhs: FirebaseFrame, _ rhs: FirebaseFrame) -> Bool {
         lhs.symbol == rhs.symbol
             && lhs.file == rhs.file
             && lhs.line == rhs.line
@@ -116,7 +108,7 @@ public enum FirebaseEventFrames {
     }
 
     private static func includes(
-        _ frame: FirebaseDTO.FrameDTO,
+        _ frame: FirebaseFrame,
         options: FirebaseFrameFilterOptions
     ) -> Bool {
         if options.appFramesOnly {
@@ -128,7 +120,7 @@ public enum FirebaseEventFrames {
         return true
     }
 
-    private static func isAppFrame(_ frame: FirebaseDTO.FrameDTO) -> Bool {
+    private static func isAppFrame(_ frame: FirebaseFrame) -> Bool {
         if isRedactedOrDeduplicated(frame) || isKnownSdkNoise(frame) {
             return false
         }
@@ -147,7 +139,7 @@ public enum FirebaseEventFrames {
         return frame.file.map(isLikelySourceFile) ?? false
     }
 
-    private static func isSystemFrame(_ frame: FirebaseDTO.FrameDTO) -> Bool {
+    private static func isSystemFrame(_ frame: FirebaseFrame) -> Bool {
         if isRedactedOrDeduplicated(frame) || isKnownSdkNoise(frame) {
             return true
         }
@@ -160,7 +152,7 @@ public enum FirebaseEventFrames {
         return isKnownSystemLibrary(frame.library)
     }
 
-    private static func normalizedOwner(_ frame: FirebaseDTO.FrameDTO) -> String? {
+    private static func normalizedOwner(_ frame: FirebaseFrame) -> String? {
         frame.owner?.trimmingCharacters(in: .whitespacesAndNewlines).lowercased()
     }
 
@@ -172,12 +164,12 @@ public enum FirebaseEventFrames {
         ["system", "platform", "runtime", "library", "sdk"]
     }
 
-    private static func isRedactedOrDeduplicated(_ frame: FirebaseDTO.FrameDTO) -> Bool {
+    private static func isRedactedOrDeduplicated(_ frame: FirebaseFrame) -> Bool {
         guard let symbol = frame.symbol?.lowercased() else { return false }
         return symbol == "<redacted>" || symbol == "<deduplicated_symbol>"
     }
 
-    private static func isKnownSdkNoise(_ frame: FirebaseDTO.FrameDTO) -> Bool {
+    private static func isKnownSdkNoise(_ frame: FirebaseFrame) -> Bool {
         guard let symbol = frame.symbol?.lowercased() else { return false }
         return symbol.hasPrefix("fircls")
             || symbol.hasPrefix("firebasecrashlytics")

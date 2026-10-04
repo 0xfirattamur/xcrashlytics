@@ -45,17 +45,17 @@ public struct IssueActivitySummary: Encodable, Sendable, Equatable {
         self.distinctUsers = distinctUsers
     }
 
-    public init(events: [FirebaseDTO.EventDTO]) {
+    public init(events: [FirebaseEvent]) {
         let times = events.compactMap(\.eventTime).sorted()
-        let users = Set(events.compactMap { $0.user?.id })
+        let users = Set(events.compactMap { $0.userId })
         self.init(
             sampledEvents: events.count,
             firstEventAt: times.first,
             lastEventAt: times.last,
             osSpread: Self.spread(events.compactMap { event in
-                event.operatingSystem?.displayVersion.map { "iOS \($0)" }
+                event.osVersion.map { "iOS \($0)" }
             }),
-            deviceSpread: Self.spread(events.compactMap { $0.device?.model }),
+            deviceSpread: Self.spread(events.compactMap { $0.deviceModel }),
             distinctUsers: users.isEmpty ? nil : users.count
         )
     }

@@ -26,27 +26,7 @@ struct EventMetadataTests {
           }
         }
         """#
-        let event = FirebaseDTO.EventDTO(
-            name: nil,
-            platform: nil,
-            eventId: "E1",
-            eventTime: nil,
-            bundleOrPackage: nil,
-            issue: nil,
-            issueTitle: nil,
-            issueSubtitle: nil,
-            processState: nil,
-            version: nil,
-            device: nil,
-            operatingSystem: nil,
-            memory: nil,
-            storage: nil,
-            user: nil,
-            blameFrame: nil,
-            exceptions: nil,
-            threads: nil,
-            rawJSON: json
-        )
+        let event = FirebaseEvent(eventId: "E1", rawJSON: json)
         let metadata = FirebaseEventMetadata(event)
 
         #expect(metadata.matches("com.metrickit.diagnostics.cpu"))

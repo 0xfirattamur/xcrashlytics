@@ -104,7 +104,7 @@ struct OpenCommand: AsyncParsableCommand {
         let eventReference = FirebaseEventRef(id)
         let issueId = eventReference?.issueId ?? FirebaseIdentifiers.issueId(from: id)
         let events = try await firebase.listEvents(issueID: issueId, maxEvents: FirebaseEventSampling.limit)
-        let event: FirebaseDTO.EventDTO? = if let eventReference {
+        let event: FirebaseEvent? = if let eventReference {
             events.first { FirebaseIdentifiers.canonicalEventId($0, issueId: eventReference.issueId) == id }
         } else {
             events.first
@@ -119,9 +119,9 @@ struct OpenCommand: AsyncParsableCommand {
     }
 
     private func xcodeCrash(ctx: CommandContext) throws -> XcodeCrash {
-        let crashes = try ctx.loadXcodeCrashes(directories: ctx.xcodeCrashDirectories())
-        let needle = String(id.dropFirst("XC-".count))
-        guard let match = crashes.first(where: { $0.event.id == needle }) else {
+        let load = ctx.loadXcodeCrashes(directories: try ctx.xcodeCrashDirectories())
+        ctx.report(load.warnings, format: .text)
+        guard let match = load.crashes.first(where: { $0.event.id == id }) else {
             throw ValidationError("no crash found with id '\(id)'.")
         }
         return match
@@ -137,7 +137,7 @@ struct OpenCommand: AsyncParsableCommand {
     /// First located frame after the app-frames filter (drops Crashlytics SDK
     /// noise and system libraries); falls back to the unfiltered list so an
     /// SDK/system location still beats opening nothing.
-    private func firebaseLocation(in event: FirebaseDTO.EventDTO) -> (file: String, line: Int?)? {
+    private func firebaseLocation(in event: FirebaseEvent) -> (file: String, line: Int?)? {
         firstSourceLocation(
             in: FirebaseEventFrames.frames(from: event, options: FirebaseFrameFilterOptions(appFramesOnly: true))
         ) ?? firstSourceLocation(in: FirebaseEventFrames.frames(from: event))

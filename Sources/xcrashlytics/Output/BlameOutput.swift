@@ -5,6 +5,8 @@
 //  Created by FIRAT TAMUR on 8.06.2026.
 //
 
+import XCrashlyticsCore
+
 public struct BlamePayload: Encodable, Sendable {
     public var since: String
     public var issueLimit: Int
@@ -43,11 +45,11 @@ public enum BlameRenderer {
         }.joined(separator: "\n") + "\n"
     }
 
-    public static func json(_ payload: BlamePayload) throws -> String {
-        try PayloadEncoder.json(payload)
+    static func json(_ payload: BlamePayload) throws -> String {
+        try PayloadEncoder.envelope(payload, warnings: [])
     }
 
-    public static func ndjson(_ rows: [BlameSummary]) throws -> String {
-        try rows.map { try PayloadEncoder.ndjsonLine($0) }.joined(separator: "\n") + "\n"
+    static func ndjson(_ rows: [BlameSummary]) throws -> String {
+        try PayloadEncoder.ndjson(rows)
     }
 }

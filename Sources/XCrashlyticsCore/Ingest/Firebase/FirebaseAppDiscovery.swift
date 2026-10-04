@@ -11,12 +11,15 @@ public struct DiscoveredFirebaseApp: Sendable, Equatable {
     public var profileName: String
     public var appId: String
     public var platform: String
+    /// iOS `BUNDLE_ID` or Android `package_name`, when the config file has one.
+    public var bundleId: String?
     public var sourcePath: String
 
-    public init(profileName: String, appId: String, platform: String, sourcePath: String) {
+    public init(profileName: String, appId: String, platform: String, bundleId: String? = nil, sourcePath: String) {
         self.profileName = profileName
         self.appId = appId
         self.platform = platform
+        self.bundleId = bundleId
         self.sourcePath = sourcePath
     }
 }
@@ -28,26 +31,36 @@ public struct FirebaseAppDiscovery: Sendable {
         self.fs = fs
     }
 
+    /// Directories holding build outputs or vendored copies — scanning them
+    /// would turn one app into several duplicate profiles.
+    static let skippedDirectories: Set<String> = [".build", "DerivedData", "Pods", "node_modules", "build", ".git"]
+
     public func discover(from root: String) throws -> [DiscoveredFirebaseApp] {
+        func isScanned(_ path: String) -> Bool {
+            !relativePath(path, root: root).split(separator: "/").dropLast()
+                .contains { Self.skippedDirectories.contains(String($0)) }
+        }
         let plistApps = try fs.enumerate(at: root, matchingExtensions: ["plist"])
-            .filter { ($0 as NSString).lastPathComponent.hasSuffix("GoogleService-Info.plist") }
+            .filter { ($0 as NSString).lastPathComponent.hasSuffix("GoogleService-Info.plist") && isScanned($0) }
             .compactMap { path -> DiscoveredFirebaseApp? in
-                guard let appId = try appIdFromPlist(path: path) else { return nil }
+                guard let ids = try idsFromPlist(path: path) else { return nil }
                 return DiscoveredFirebaseApp(
                     profileName: profileName(for: path, root: root),
-                    appId: appId,
+                    appId: ids.appId,
                     platform: "ios",
+                    bundleId: ids.bundleId,
                     sourcePath: relativePath(path, root: root)
                 )
             }
         let jsonApps = try fs.enumerate(at: root, matchingExtensions: ["json"])
-            .filter { ($0 as NSString).lastPathComponent == "google-services.json" }
+            .filter { ($0 as NSString).lastPathComponent == "google-services.json" && isScanned($0) }
             .compactMap { path -> DiscoveredFirebaseApp? in
-                guard let appId = try appIdFromGoogleServicesJSON(path: path) else { return nil }
+                guard let ids = try idsFromGoogleServicesJSON(path: path) else { return nil }
                 return DiscoveredFirebaseApp(
                     profileName: profileName(for: path, root: root),
-                    appId: appId,
+                    appId: ids.appId,
                     platform: "android",
+                    bundleId: ids.bundleId,
                     sourcePath: relativePath(path, root: root)
                 )
             }
@@ -55,7 +68,7 @@ public struct FirebaseAppDiscovery: Sendable {
             .sorted { $0.profileName.localizedCaseInsensitiveCompare($1.profileName) == .orderedAscending }
     }
 
-    private func appIdFromPlist(path: String) throws -> String? {
+    private func idsFromPlist(path: String) throws -> (appId: String, bundleId: String?)? {
         let data = try fs.read(at: path)
         guard
             let object = try PropertyListSerialization.propertyList(
@@ -68,10 +81,10 @@ public struct FirebaseAppDiscovery: Sendable {
         else {
             return nil
         }
-        return appId
+        return (appId, (object["BUNDLE_ID"] as? String)?.trimmedNonEmpty)
     }
 
-    private func appIdFromGoogleServicesJSON(path: String) throws -> String? {
+    private func idsFromGoogleServicesJSON(path: String) throws -> (appId: String, bundleId: String?)? {
         let data = try fs.read(at: path)
         guard
             let object = try JSONSerialization.jsonObject(with: data) as? [String: Any],
@@ -87,7 +100,8 @@ public struct FirebaseAppDiscovery: Sendable {
             else {
                 continue
             }
-            return appId
+            let android = info["android_client_info"] as? [String: Any]
+            return (appId, (android?["package_name"] as? String)?.trimmedNonEmpty)
         }
         return nil
     }
@@ -110,13 +124,17 @@ public struct FirebaseAppDiscovery: Sendable {
     }
 
     private func uniqueProfileNames(for apps: [DiscoveredFirebaseApp]) -> [DiscoveredFirebaseApp] {
-        var counts: [String: Int] = [:]
+        var used = Set<String>()
         return apps.map { app in
-            let count = counts[app.profileName, default: 0]
-            counts[app.profileName] = count + 1
-            guard count > 0 else { return app }
             var copy = app
-            copy.profileName = "\(app.profileName)-\(count + 1)"
+            var name = app.profileName
+            var suffix = 2
+            while used.contains(name) {
+                name = "\(app.profileName)-\(suffix)"
+                suffix += 1
+            }
+            copy.profileName = name
+            used.insert(name)
             return copy
         }
     }

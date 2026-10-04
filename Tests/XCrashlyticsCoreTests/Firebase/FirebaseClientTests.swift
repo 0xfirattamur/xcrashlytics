@@ -72,7 +72,8 @@ struct FirebaseClientTests {
         }
         let client = try makeClient(http: http)
         let events = try await client.listIssues()
-        #expect(events.map { $0.id } == ["I1", "I2", "I3"])
+        #expect(events.map { $0.id } == ["FB-I1", "FB-I2", "FB-I3"])
+        #expect(events.map { $0.providerId } == ["I1", "I2", "I3"])
         #expect(events.allSatisfy { $0.source == .firebase })
         #expect(counter.n == 2)
     }
@@ -92,7 +93,7 @@ struct FirebaseClientTests {
         }
         let client = try makeClient(http: http)
         let events = try await client.listIssues(maxIssues: 1)
-        #expect(events.map { $0.id } == ["I1"])
+        #expect(events.map { $0.id } == ["FB-I1"])
         #expect(counter.n == 1) // never fetched the second page
     }
 
@@ -209,16 +210,16 @@ struct FirebaseClientTests {
 
         #expect(events.count == 1)
         #expect(events[0].eventId == "E1")
-        #expect(events[0].version?.displayVersion == "6.16.0")
-        #expect(events[0].version?.buildVersion == "937")
-        #expect(events[0].device?.model == "iPhone 17 Pro Max")
-        #expect(events[0].device?.orientation == "PORTRAIT")
-        #expect(events[0].operatingSystem?.displayVersion == "26.4.1")
-        #expect(events[0].operatingSystem?.jailbroken == false)
-        #expect(events[0].memory?.free?.intValue == 675_335_168)
-        #expect(events[0].storage?.used?.intValue == 67_890)
-        #expect(events[0].user?.id == "033EF509-4BDD-4596-8BA9-E988E3342614")
-        #expect(events[0].toFrames().first?.symbol == "BlurDetectionService.classifyWithML(_:)")
+        #expect(events[0].displayVersion == "6.16.0")
+        #expect(events[0].buildVersion == "937")
+        #expect(events[0].deviceModel == "iPhone 17 Pro Max")
+        #expect(events[0].deviceOrientation == "PORTRAIT")
+        #expect(events[0].osVersion == "26.4.1")
+        #expect(events[0].jailbroken == false)
+        #expect(events[0].memoryFree == 675_335_168)
+        #expect(events[0].storageUsed == 67_890)
+        #expect(events[0].userId == "033EF509-4BDD-4596-8BA9-E988E3342614")
+        #expect(events[0].representativeFrames().first?.symbol == "BlurDetectionService.classifyWithML(_:)")
         #expect(events[0].rawJSON?.contains(#""unknownRuntime":"keep""#) == true)
     }
 
@@ -244,9 +245,8 @@ struct FirebaseClientTests {
         let events = try await client.listEvents(issueID: "3aedb610eee1a41872d991ca62ce8566", maxEvents: 1)
 
         #expect(events.count == 1)
-        #expect(events[0].issue?.id == "3aedb610eee1a41872d991ca62ce8566")
-        #expect(events[0].issue?.title == "Blur crash")
-        #expect(events[0].toFrames().first?.symbol == "BlurDetectionService.classifyWithML(_:)")
+        #expect(events[0].issueId == "3aedb610eee1a41872d991ca62ce8566")
+        #expect(events[0].representativeFrames().first?.symbol == "BlurDetectionService.classifyWithML(_:)")
     }
 
     @Test("representativeFrames returns empty when the issue has no events")

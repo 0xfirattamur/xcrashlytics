@@ -16,7 +16,7 @@ public enum SymbolicationAdvisor {
         for crash in crashes {
             let missingForCrash = crash.event.binaryImages.filter(isAppOwned)
             guard !missingForCrash.isEmpty else { continue }
-            crashIds.insert(crash.localId)
+            crashIds.insert(crash.event.id)
             missingUUIDs.formUnion(missingForCrash.map(\.uuid))
         }
         guard !missingUUIDs.isEmpty else { return nil }

@@ -34,6 +34,9 @@ struct EventsCommand: AsyncParsableCommand {
     @Option(name: .long, help: "Only include events for this exact Firebase user id.")
     var userId: String?
 
+    @Option(name: .long, help: "Only include events since 7d, 24h, 30m, or all.")
+    var since: String?
+
     @Flag(name: .long, help: "Fetch only the latest event.")
     var latest: Bool = false
 
@@ -63,17 +66,35 @@ struct EventsCommand: AsyncParsableCommand {
     ) async throws -> String {
         let firebase = try ctx.firebaseClient()
         let issueIds = try requestedIssueIds()
-        let requestedLimit = latest ? 1 : limit
-        let fetchDepth = normalizedUserId == nil ? requestedLimit : max(requestedLimit, Self.userIdMinFetchDepth)
+        let cutoff: Date? = if let since {
+            try SinceDuration.cutoffDate(from: since, now: ctx.clock.now())
+        } else {
+            nil
+        }
+        let requestedLimit = latest ? 1 : max(1, limit)
+        let fetchDepth: Int
+        if since != nil {
+            fetchDepth = max(requestedLimit, 2_000)
+        } else if normalizedUserId != nil {
+            fetchDepth = max(requestedLimit, Self.userIdMinFetchDepth)
+        } else {
+            fetchDepth = requestedLimit
+        }
         var issueEvents: [IssueEvents] = []
         var scannedEvents = 0
+        var warnings: [CLIWarning] = []
         for issueId in issueIds {
             let events = try await firebase.listEvents(
                 issueID: FirebaseIdentifiers.issueId(from: issueId),
                 maxEvents: fetchDepth
             )
             scannedEvents += events.count
-            let kept = Array(filterByUserId(events).prefix(requestedLimit))
+            if since != nil, events.count >= fetchDepth {
+                warnings.append(CLIWarning(
+                    code: "SCAN_TRUNCATED",
+                    message: "\(issueId): scanned the newest \(fetchDepth) events; older events in the --since window were not checked."))
+            }
+            let kept = Array(filterBySince(filterByUserId(events), cutoff: cutoff).prefix(requestedLimit))
             issueEvents.append(IssueEvents(issueId: issueId, events: kept))
         }
 
@@ -94,11 +115,13 @@ struct EventsCommand: AsyncParsableCommand {
                 issueEvents,
                 framesOnly: effectiveFramesOnly,
                 frameOptions: frameOptions,
-                scannedEvents: normalizedUserId == nil ? nil : scannedEvents
+                scannedEvents: normalizedUserId == nil ? nil : scannedEvents,
+                warnings: warnings
             )
         case .ndjson:
             output = try EventsRenderer.ndjson(issueEvents, framesOnly: effectiveFramesOnly, frameOptions: frameOptions)
         }
+        ctx.report(warnings, format: format)
         ctx.console.output(output)
         return output
     }
@@ -121,9 +144,20 @@ struct EventsCommand: AsyncParsableCommand {
         userId?.trimmedNonEmpty
     }
 
-    private func filterByUserId(_ events: [FirebaseDTO.EventDTO]) -> [FirebaseDTO.EventDTO] {
+    private func filterBySince(
+        _ events: [FirebaseEvent],
+        cutoff: Date?
+    ) -> [FirebaseEvent] {
+        guard let cutoff else { return events }
+        return events.filter { event in
+            guard let raw = event.eventTime, let date = EventDates.parse(raw) else { return false }
+            return date >= cutoff
+        }
+    }
+
+    private func filterByUserId(_ events: [FirebaseEvent]) -> [FirebaseEvent] {
         guard let normalizedUserId else { return events }
-        return events.filter { $0.user?.id == normalizedUserId }
+        return events.filter { $0.userId == normalizedUserId }
     }
 
 }

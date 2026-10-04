@@ -73,22 +73,28 @@ struct ErrorContractTests {
         #expect(failure.exitCode == 1)
     }
 
-    @Test("json body wraps failure in error object, sorted keys, trailing newline")
+    @Test("json body wraps failure in versioned error object with trailing newline")
     func jsonBody() throws {
         let body = try ErrorContract.jsonBody(
             CommandFailure(code: "API_ERROR", exitCode: 6, message: "boom", hint: nil))
-        #expect(body.contains("\"error\""))
-        #expect(body.contains("\"code\" : \"API_ERROR\""))
-        #expect(body.contains("\"message\" : \"boom\""))
-        #expect(!body.contains("hint"))
+        let root = try JSON.parse(body)
+        #expect(root["schemaVersion"]?.int == 1)
+        #expect(root["data"] == nil)
+        let error = try #require(root["error"]?.object)
+        #expect(error["code"]?.string == "API_ERROR")
+        #expect(error["message"]?.string == "boom")
+        #expect(error["hint"] == nil)
         #expect(body.hasSuffix("\n"))
+        #expect(!body.hasSuffix("\n\n"))
     }
 
     @Test("json body includes hint when present")
     func jsonBodyWithHint() throws {
         let body = try ErrorContract.jsonBody(
             CommandFailure(code: "AUTH_REQUIRED", exitCode: 2, message: "not authenticated", hint: "Run: firebase login"))
-        #expect(body.contains("\"hint\" : \"Run: firebase login\""))
+        let root = try JSON.parse(body)
+        #expect(root["schemaVersion"]?.int == 1)
+        #expect(root["error"]?["hint"]?.string == "Run: firebase login")
     }
 
     @Test("text body is error line plus hint line")

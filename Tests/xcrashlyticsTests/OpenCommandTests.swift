@@ -59,8 +59,7 @@ struct OpenCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: processRunner,
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try OpenCommand.parse(["FB-I1"])
 
@@ -81,8 +80,7 @@ struct OpenCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: processRunner,
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try OpenCommand.parse(["FB-I1/events/E2"])
 
@@ -106,8 +104,7 @@ struct OpenCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: processRunner,
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try OpenCommand.parse(["FB-I1"])
 
@@ -126,8 +123,7 @@ struct OpenCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: processRunner,
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try OpenCommand.parse(["FB-I1"])
 
@@ -152,8 +148,7 @@ struct OpenCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: processRunner,
-            clock: SystemClock(),
-            keychain: InMemoryKeychainStore()
+            clock: SystemClock()
         )
         let cmd = try OpenCommand.parse(["XC-AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE"])
 
@@ -177,8 +172,7 @@ struct OpenCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: SystemClock(),
-            keychain: InMemoryKeychainStore()
+            clock: SystemClock()
         )
         let cmd = try OpenCommand.parse(["XC-AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE"])
 
@@ -192,8 +186,7 @@ struct OpenCommandTests {
         let opening = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner { _, _ in ProcessResult(exitCode: 0, stdout: "", stderr: "") },
-            clock: SystemClock(),
-            keychain: InMemoryKeychainStore()
+            clock: SystemClock()
         )
         let output = try await cmd.runWithContext(opening)
         #expect(output.contains("in Xcode."))
@@ -213,8 +206,7 @@ struct OpenCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: processRunner,
-            clock: SystemClock(),
-            keychain: InMemoryKeychainStore()
+            clock: SystemClock()
         )
         let cmd = try OpenCommand.parse(["XC-AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE"])
 
@@ -240,8 +232,7 @@ struct OpenCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: processRunner,
-            clock: SystemClock(),
-            keychain: InMemoryKeychainStore()
+            clock: SystemClock()
         )
         let cmd = try OpenCommand.parse(["XC-CCCCCCCC-BBBB-CCCC-DDDD-EEEEEEEEEEEE"])
 
@@ -265,8 +256,7 @@ struct OpenCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: processRunner,
-            clock: SystemClock(),
-            keychain: InMemoryKeychainStore()
+            clock: SystemClock()
         )
         let cmd = try OpenCommand.parse(["XC-CCCCCCCC-BBBB-CCCC-DDDD-EEEEEEEEEEEE"])
 
@@ -296,8 +286,7 @@ struct OpenCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: processRunner,
-            clock: SystemClock(),
-            keychain: InMemoryKeychainStore()
+            clock: SystemClock()
         )
         let cmd = try OpenCommand.parse(["XC-CCCCCCCC-BBBB-CCCC-DDDD-EEEEEEEEEEEE"])
 
@@ -332,8 +321,7 @@ struct OpenCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: processRunner,
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try OpenCommand.parse(["FB-I1"])
 
@@ -361,8 +349,7 @@ struct OpenCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: processRunner,
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try OpenCommand.parse(["FB-I1"])
 
@@ -385,8 +372,7 @@ struct OpenCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: processRunner,
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try OpenCommand.parse(["FB-I1"])
 
@@ -403,8 +389,7 @@ struct OpenCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: processRunner,
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try OpenCommand.parse(["FB-I1"])
 
@@ -432,8 +417,7 @@ struct OpenCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: processRunner,
-            clock: SystemClock(),
-            keychain: InMemoryKeychainStore()
+            clock: SystemClock()
         )
         let cmd = try OpenCommand.parse(["XC-AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE"])
 

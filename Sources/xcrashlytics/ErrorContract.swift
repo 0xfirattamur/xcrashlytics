@@ -115,6 +115,13 @@ enum ErrorContract {
                 message: profile.map { "profile '\($0)' has no bundle id." } ?? "no bundle id configured.",
                 hint: "Run: xcrashlytics init --app-id <GOOGLE_APP_ID> --profile \(name) --bundle-id <BUNDLE_ID>"
             )
+        case ConfigError.invalidFile:
+            return CommandFailure(
+                code: "CONFIG_MISSING",
+                exitCode: 4,
+                message: "the .xcrashlytics.json file is invalid.",
+                hint: "Fix or remove .xcrashlytics.json, then run xcrashlytics init."
+            )
         default:
             return nil
         }
@@ -178,6 +185,7 @@ enum ErrorContract {
                 var message: String
                 var hint: String?
             }
+            var schemaVersion = outputSchemaVersion
             var error: Body
         }
         return try PayloadEncoder.json(

@@ -8,14 +8,11 @@
 import XCrashlyticsCore
 
 extension CommandContext {
-    /// Loads local Xcode crashes from the given directories, surfacing loader
-    /// warnings on the console.
-    func loadXcodeCrashes(directories: [String]) -> [XcodeCrash] {
+    /// Loads local Xcode crashes from the given directories. Warnings are
+    /// returned, not printed: the command decides where they go.
+    func loadXcodeCrashes(directories: [String]) -> (crashes: [XcodeCrash], warnings: [CLIWarning]) {
         let result = XcodeCrashLoader(fs: fileSystem).load(directories: directories)
-        for warning in result.warnings {
-            console.warn(warning)
-        }
-        return result.crashes
+        return (result.crashes, result.warnings.map(CLIWarning.init))
     }
 
     /// Organizer crash directories, scoped to the configured bundle id.

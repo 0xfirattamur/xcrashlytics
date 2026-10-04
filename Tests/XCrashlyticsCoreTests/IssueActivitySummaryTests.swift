@@ -13,14 +13,14 @@ import Testing
 struct IssueActivitySummaryTests {
     private func event(
         time: String?, os: String? = nil, device: String? = nil, user: String? = nil
-    ) throws -> FirebaseDTO.EventDTO {
+    ) throws -> FirebaseEvent {
         var fields = [#""eventId": "E""#]
         if let time { fields.append(#""eventTime": "\#(time)""#) }
         if let os { fields.append(#""operatingSystem": {"displayVersion": "\#(os)"}"#) }
         if let device { fields.append(#""device": {"model": "\#(device)"}"#) }
         if let user { fields.append(#""user": {"id": "\#(user)"}"#) }
         let json = "{\(fields.joined(separator: ","))}"
-        return try JSONDecoder().decode(FirebaseDTO.EventDTO.self, from: Data(json.utf8))
+        return try JSONDecoder().decode(FirebaseDTO.EventDTO.self, from: Data(json.utf8)).toFirebaseEvent()
     }
 
     @Test("summarises date range, spreads, and distinct users from sampled events")

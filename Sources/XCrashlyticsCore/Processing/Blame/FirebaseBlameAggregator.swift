@@ -58,7 +58,7 @@ public struct FirebaseBlameAggregator {
         self.concurrency = concurrency
     }
 
-    public func aggregate(issues: [CrashRecord]) async throws -> [BlameSummary] {
+    public func aggregate(issues: [CrashIssue]) async throws -> [BlameSummary] {
         var buckets: [BlameKey: BlameBucket] = [:]
         let samples = try await IssueEventSampler(
             firebase: firebase, eventsPerIssue: eventsPerIssue, concurrency: concurrency
@@ -78,8 +78,8 @@ public struct FirebaseBlameAggregator {
     }
 
     private func add(
-        events: [FirebaseDTO.EventDTO],
-        issue: CrashRecord,
+        events: [FirebaseEvent],
+        issue: CrashIssue,
         to buckets: inout [BlameKey: BlameBucket]
     ) {
         for event in events where EventDates.isIncluded(event: event, onOrAfter: cutoff) {
@@ -87,27 +87,16 @@ public struct FirebaseBlameAggregator {
             let key = BlameKey(frame: frame)
             var bucket = buckets[key] ?? BlameBucket(key: key)
             bucket.eventCount += 1
-            if let userId = event.user?.id {
+            if let userId = event.userId {
                 bucket.userHashes.insert(Hashing.sha256Hex(userId))
             }
-            let issueId = Self.canonicalIssueId(issue.id)
-            bucket.issueEventCounts[issueId, default: 0] += 1
-            bucket.exampleIssueId = bucket.exampleIssueId ?? issueId
+            bucket.issueEventCounts[issue.id, default: 0] += 1
+            bucket.exampleIssueId = bucket.exampleIssueId ?? issue.id
             bucket.exampleEventId = bucket.exampleEventId
-                ?? Self.canonicalEventId(event, issueId: issue.id)
+                ?? FirebaseIdentifiers.canonicalEventId(event, issueId: issue.id)
             buckets[key] = bucket
         }
     }
-
-    private static func canonicalIssueId(_ issueId: String) -> String {
-        issueId.hasPrefix("FB-") ? issueId : "FB-\(issueId)"
-    }
-
-    private static func canonicalEventId(_ event: FirebaseDTO.EventDTO, issueId: String) -> String {
-        let firebaseEventId = event.eventId ?? event.name?.split(separator: "/").last.map(String.init) ?? "unknown"
-        return "\(canonicalIssueId(issueId))/events/\(firebaseEventId)"
-    }
-
 }
 
 private struct BlameKey: Hashable {
@@ -116,9 +105,9 @@ private struct BlameKey: Hashable {
     var symbol: String?
     var binaryName: String?
 
-    init(frame: FirebaseDTO.FrameDTO) {
+    init(frame: FirebaseFrame) {
         self.file = frame.file
-        self.line = frame.line.flatMap(Int.init)
+        self.line = frame.line
         self.symbol = frame.symbol
         self.binaryName = frame.library
     }

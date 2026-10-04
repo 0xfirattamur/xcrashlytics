@@ -11,7 +11,7 @@ public struct FirebaseEventMetadata: Sendable {
     private let searchText: String
     private let userInfo: [String: [String]]
 
-    public init(_ event: FirebaseDTO.EventDTO) {
+    public init(_ event: FirebaseEvent) {
         var strings: [String] = [
             event.issueTitle,
             event.issueSubtitle,

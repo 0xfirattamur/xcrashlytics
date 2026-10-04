@@ -6,14 +6,15 @@
 //
 
 import Foundation
+import XCrashlyticsCore
 
 // MARK: - IssueEvents
 
 public struct IssueEvents: Sendable {
     public var issueId: String
-    public var events: [FirebaseDTO.EventDTO]
+    public var events: [FirebaseEvent]
 
-    public init(issueId: String, events: [FirebaseDTO.EventDTO]) {
+    public init(issueId: String, events: [FirebaseEvent]) {
         self.issueId = issueId
         self.events = events
     }
@@ -54,13 +55,19 @@ public enum EventsRenderer {
         let rows = issueEvents.flatMap { group in
             group.events.map { event in
                 let eventId = FirebaseIdentifiers.canonicalEventId(event, issueId: group.issueId)
-                let frames = FirebaseEventFrames.frameDTOs(from: event, options: frameOptions).enumerated().map { index, frame in
+                let frames = FirebaseEventFrames.frameDTOs(from: event, options: frameOptions)
+                guard !frames.isEmpty else {
+                    return frameOptions.appFramesOnly
+                        ? "No app-owned frames found for \(eventId). Retry without --app-frames-only or run xcrashlytics blame."
+                        : "\(eventId) has no frames."
+                }
+                let rendered = frames.enumerated().map { index, frame in
                     let marker = FirebaseEventFrames.isBlamed(frame, in: event) ? "*" : " "
                     let location = FirebaseEventFrames.location(for: frame)
                     let symbol = frame.symbol ?? "?"
                     return "  \(marker) \(index) \(location) \(symbol)"
                 }
-                return ([eventId] + frames).joined(separator: "\n")
+                return ([eventId] + rendered).joined(separator: "\n")
             }
         }
         guard !rows.isEmpty else {
@@ -69,51 +76,48 @@ public enum EventsRenderer {
         return rows.joined(separator: "\n") + "\n"
     }
 
-    public static func ndjson(
+    static func ndjson(
         _ issueEvents: [IssueEvents],
         framesOnly: Bool,
         frameOptions: FirebaseFrameFilterOptions
     ) throws -> String {
-        let lines: [String] = try issueEvents.flatMap { group in
-            try group.events.map { event in
-                if framesOnly {
-                    return try PayloadEncoder.ndjsonLine(
-                        EventFramesOnlySummary(event, issueId: group.issueId, options: frameOptions))
-                }
-                return try PayloadEncoder.ndjsonLine(
-                    EventSummary(event, issueId: group.issueId, options: frameOptions))
-            }
+        if framesOnly {
+            return try PayloadEncoder.ndjson(issueEvents.flatMap { group in
+                group.events.map { EventFramesOnlySummary($0, issueId: group.issueId, options: frameOptions) }
+            })
         }
-        return lines.joined(separator: "\n") + "\n"
+        return try PayloadEncoder.ndjson(issueEvents.flatMap { group in
+            group.events.map { EventSummary($0, issueId: group.issueId, options: frameOptions) }
+        })
     }
 
-    public static func json(
+    static func json(
         _ issueEvents: [IssueEvents],
         framesOnly: Bool,
         frameOptions: FirebaseFrameFilterOptions,
-        scannedEvents: Int? = nil
+        scannedEvents: Int? = nil,
+        warnings: [CLIWarning] = []
     ) throws -> String {
         if framesOnly {
-            return try PayloadEncoder.json(EventsFramesOnlyPayload(
+            return try PayloadEncoder.envelope(EventsFramesOnlyPayload(
                 events: issueEvents.flatMap { group in
                     group.events.map { EventFramesOnlySummary($0, issueId: group.issueId, options: frameOptions) }
                 },
                 scannedEvents: scannedEvents
-            ))
-        } else {
-            return try PayloadEncoder.json(EventsPayload(
-                events: issueEvents.flatMap { group in
-                    group.events.map { EventSummary($0, issueId: group.issueId, options: frameOptions) }
-                },
-                scannedEvents: scannedEvents
-            ))
+            ), warnings: warnings)
         }
+        return try PayloadEncoder.envelope(EventsPayload(
+            events: issueEvents.flatMap { group in
+                group.events.map { EventSummary($0, issueId: group.issueId, options: frameOptions) }
+            },
+            scannedEvents: scannedEvents
+        ), warnings: warnings)
     }
 
     // MARK: - Private helpers
 
-    private static func appVersion(for event: FirebaseDTO.EventDTO) -> String? {
-        switch (event.version?.displayVersion, event.version?.buildVersion) {
+    private static func appVersion(for event: FirebaseEvent) -> String? {
+        switch (event.displayVersion, event.buildVersion) {
         case let (version?, build?):
             return "\(version) (\(build))"
         case let (version?, nil):
@@ -125,15 +129,15 @@ public enum EventsRenderer {
         }
     }
 
-    private static func runtimeSummary(for event: FirebaseDTO.EventDTO) -> String? {
-        let device = event.device?.model
-        let os = event.operatingSystem?.displayVersion.map { "iOS \($0)" }
+    private static func runtimeSummary(for event: FirebaseEvent) -> String? {
+        let device = event.deviceModel
+        let os = event.osVersion.map { "iOS \($0)" }
         let parts = [device, os].compactMap { $0 }
         return parts.isEmpty ? nil : parts.joined(separator: " / ")
     }
 
-    private static func memorySummary(for event: FirebaseDTO.EventDTO) -> String? {
-        guard let bytes = event.memory?.free?.intValue else { return nil }
+    private static func memorySummary(for event: FirebaseEvent) -> String? {
+        guard let bytes = event.memoryFree else { return nil }
         return "\(mibString(bytes)) free RAM"
     }
 
@@ -173,7 +177,7 @@ public struct EventFramesOnlySummary: Encodable, Sendable {
     public var frames: [FrameSummary]
 
     public init(
-        _ event: FirebaseDTO.EventDTO,
+        _ event: FirebaseEvent,
         issueId: String,
         options: FirebaseFrameFilterOptions = FirebaseFrameFilterOptions()
     ) {
@@ -181,7 +185,7 @@ public struct EventFramesOnlySummary: Encodable, Sendable {
             FrameSummary(index: index, frame: frame, isBlamed: FirebaseEventFrames.isBlamed(frame, in: event))
         }
         self.id = FirebaseIdentifiers.canonicalEventId(event, issueId: issueId)
-        self.firebaseEventId = event.eventId ?? event.name?.split(separator: "/").last.map(String.init) ?? "unknown"
+        self.firebaseEventId = event.eventId ?? "unknown"
         self.issueId = FirebaseIdentifiers.canonicalIssueId(issueId)
         self.eventTime = event.eventTime
         self.blamedFrame = frames.first(where: { $0.isBlamed }) ?? frames.first
@@ -210,26 +214,26 @@ public struct EventSummary: Encodable, Sendable {
     public var frames: [FrameSummary]
 
     public init(
-        _ event: FirebaseDTO.EventDTO,
+        _ event: FirebaseEvent,
         issueId: String,
         options: FirebaseFrameFilterOptions = FirebaseFrameFilterOptions()
     ) {
         self.id = FirebaseIdentifiers.canonicalEventId(event, issueId: issueId)
-        self.firebaseEventId = event.eventId ?? event.name?.split(separator: "/").last.map(String.init) ?? "unknown"
+        self.firebaseEventId = event.eventId ?? "unknown"
         self.issueId = FirebaseIdentifiers.canonicalIssueId(issueId)
         self.eventTime = event.eventTime
-        self.appVersion = event.version?.displayVersion
-        self.appBuild = event.version?.buildVersion
-        self.deviceModel = event.device?.model
-        self.deviceOrientation = event.device?.orientation
-        self.osVersion = event.operatingSystem?.displayVersion
-        self.osOrientation = event.operatingSystem?.orientation
-        self.isJailbroken = event.operatingSystem?.jailbroken
-        self.memoryFreeBytes = event.memory?.free?.intValue
-        self.memoryUsedBytes = event.memory?.used?.intValue
-        self.storageFreeBytes = event.storage?.free?.intValue
-        self.storageUsedBytes = event.storage?.used?.intValue
-        self.userIdHash = event.user?.id.map(Hashing.sha256Hex)
+        self.appVersion = event.displayVersion
+        self.appBuild = event.buildVersion
+        self.deviceModel = event.deviceModel
+        self.deviceOrientation = event.deviceOrientation
+        self.osVersion = event.osVersion
+        self.osOrientation = event.osOrientation
+        self.isJailbroken = event.jailbroken
+        self.memoryFreeBytes = event.memoryFree
+        self.memoryUsedBytes = event.memoryUsed
+        self.storageFreeBytes = event.storageFree
+        self.storageUsedBytes = event.storageUsed
+        self.userIdHash = event.userId.map(Hashing.sha256Hex)
         self.processState = event.processState
         self.frames = FirebaseEventFrames.frameDTOs(from: event, options: options).enumerated().map { index, frame in
             FrameSummary(index: index, frame: frame, isBlamed: FirebaseEventFrames.isBlamed(frame, in: event))
@@ -245,12 +249,12 @@ public struct FrameSummary: Encodable, Sendable {
     public var line: Int?
     public var isBlamed: Bool
 
-    public init(index: Int, frame: FirebaseDTO.FrameDTO, isBlamed: Bool? = nil) {
+    public init(index: Int, frame: FirebaseFrame, isBlamed: Bool? = nil) {
         self.index = index
         self.binaryName = frame.library ?? "?"
         self.symbol = frame.symbol
         self.file = frame.file
-        self.line = frame.line.flatMap(Int.init)
-        self.isBlamed = isBlamed ?? frame.blamed ?? false
+        self.line = frame.line
+        self.isBlamed = isBlamed ?? frame.blamed
     }
 }

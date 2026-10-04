@@ -13,7 +13,7 @@ import Foundation
 public struct CrashGrouper: Sendable {
     public init() {}
 
-    public func group(local: [XcodeCrash], firebase: [CrashRecord]) -> [CrashGroup] {
+    public func group(local: [XcodeCrash], firebase: [CrashIssue]) -> [CrashGroup] {
         // De-duplicate local crashes by incident id — the Organizer stores the
         // same crash under several filter folders.
         var seen = Set<String>()
@@ -21,12 +21,18 @@ public struct CrashGrouper: Sendable {
 
         // Bucket by signature symbol. Crashes with no usable culprit get a
         // unique key so they stay separate rather than merging by accident.
-        var firebaseByKey: [String: [CrashRecord]] = [:]
+        var firebaseByKey: [String: [CrashIssue]] = [:]
         var localByKey: [String: [XcodeCrash]] = [:]
         var moduleByKey: [String: String?] = [:]
         var order: [String] = []
 
-        func key(for event: CrashRecord) -> (key: String, module: String?) {
+        func key(for issue: CrashIssue) -> (key: String, module: String?) {
+            if let sig = CrashSignature.of(issue) {
+                return (sig.symbol, sig.module)
+            }
+            return ("\(issue.source.rawValue):\(issue.id)", nil)
+        }
+        func key(for event: CrashEvent) -> (key: String, module: String?) {
             if let sig = CrashSignature.of(event) {
                 return (sig.symbol, sig.module)
             }

@@ -9,7 +9,8 @@ import Foundation
 
 /// Wire-level types that mirror `firebasecrashlytics.googleapis.com/v1alpha`
 /// (the same schema documented at firebase.google.com/docs/reference/crashlytics/rest).
-public enum FirebaseDTO {
+/// Internal: callers see `CrashIssue` / `FirebaseEvent`, never wire shapes.
+enum FirebaseDTO {
     // MARK: - topIssues report
 
     /// Response from `reports/topIssues`.
@@ -207,7 +208,7 @@ public enum FirebaseDTO {
 extension FirebaseDTO.EventsResponse {
     /// Decodes events and attaches each raw event object so callers can keep
     /// fields that are not yet promoted to typed properties.
-    public static func decodePreservingRawEvents(from data: Data) throws -> Self {
+    static func decodePreservingRawEvents(from data: Data) throws -> Self {
         let decoded = try JSONDecoder().decode(Self.self, from: data)
         guard
             let events = decoded.events,
@@ -268,27 +269,19 @@ extension FirebaseDTO.EventDTO {
 }
 
 extension FirebaseDTO.IssueDTO {
-    /// Maps a Firebase issue to xcrashlytics' canonical `CrashRecord`.
-    public func toCrashRecord() -> CrashRecord {
-        let primarySignal = signals?.first?.signal
-        return CrashRecord(
-            id: id,
-            source: .firebase,
-            bundleId: nil,
-            bundleVersion: lastSeenVersion ?? firstSeenVersion,
-            osVersion: nil,
-            deviceModel: nil,
-            crashedThreadIndex: 0,
-            exception: ExceptionInfo(
-                exceptionType: errorType ?? title ?? "UNKNOWN",
-                signal: primarySignal,
-                subtype: subtitle,
-                description: title
-            ),
-            frames: [],
-            binaryImages: [],
-            timestamp: nil,
-            rawPath: nil,
+    /// Maps a Firebase issue to the domain issue aggregate.
+    func toCrashIssue(
+        eventsCount: Int? = nil,
+        impactedUsersCount: Int? = nil
+    ) -> CrashIssue {
+        CrashIssue(
+            providerId: id,
+            title: title,
+            subtitle: subtitle,
+            exceptionType: errorType ?? title ?? "UNKNOWN",
+            signal: signals?.first?.signal,
+            eventsCount: eventsCount,
+            impactedUsersCount: impactedUsersCount,
             firstSeenVersion: firstSeenVersion,
             lastSeenVersion: lastSeenVersion
         )
@@ -296,29 +289,50 @@ extension FirebaseDTO.IssueDTO {
 }
 
 extension FirebaseDTO.EventDTO {
-    /// Maps event frames into our `Frame` model. Drops the wire-only `owner` /
-    /// `blamed` / `offset` flags.
-    public func toFrames() -> [Frame] {
-        guard let chosen = (
-            threads?.first(where: { $0.crashed == true })?.frames
-                ?? threads?.first?.frames
-                ?? exceptions?.first?.frames
-                ?? blameFrame.map { [$0] }
-        ) else {
-            return []
-        }
-        return chosen.enumerated().map { idx, f in
-            Frame(
-                index: idx,
-                binaryName: f.library ?? "?",
-                symbol: f.symbol,
-                file: f.file,
-                line: f.line.flatMap(Int.init),
-                column: nil,
-                address: nil,
-                imageUUID: nil,
-                isSymbolicated: f.symbol != nil
-            )
-        }
+    /// Flattens the wire event into the domain shape.
+    func toFirebaseEvent() -> FirebaseEvent {
+        FirebaseEvent(
+            eventId: eventId ?? name?.split(separator: "/").last.map(String.init),
+            issueId: issue?.id,
+            issueTitle: issueTitle,
+            issueSubtitle: issueSubtitle,
+            eventTime: eventTime,
+            platform: platform,
+            bundleOrPackage: bundleOrPackage,
+            processState: processState,
+            displayVersion: version?.displayVersion,
+            buildVersion: version?.buildVersion,
+            deviceModel: device?.model,
+            deviceOrientation: device?.orientation,
+            osVersion: operatingSystem?.displayVersion,
+            osOrientation: operatingSystem?.orientation,
+            jailbroken: operatingSystem?.jailbroken,
+            memoryFree: memory?.free?.intValue,
+            memoryUsed: memory?.used?.intValue,
+            storageFree: storage?.free?.intValue,
+            storageUsed: storage?.used?.intValue,
+            userId: user?.id,
+            blameFrame: blameFrame?.toFirebaseFrame(),
+            exceptions: (exceptions ?? []).map {
+                FirebaseException(
+                    type: $0.type, exceptionMessage: $0.exceptionMessage,
+                    title: $0.title, subtitle: $0.subtitle,
+                    blamed: $0.blamed == true, frames: ($0.frames ?? []).map { $0.toFirebaseFrame() })
+            },
+            threads: (threads ?? []).map {
+                FirebaseThread(
+                    name: $0.name, title: $0.title, crashed: $0.crashed == true,
+                    frames: ($0.frames ?? []).map { $0.toFirebaseFrame() })
+            },
+            rawJSON: rawJSON
+        )
+    }
+}
+
+extension FirebaseDTO.FrameDTO {
+    func toFirebaseFrame() -> FirebaseFrame {
+        FirebaseFrame(
+            symbol: symbol, file: file, line: line.flatMap(Int.init),
+            library: library, owner: owner, blamed: blamed == true, offset: offset)
     }
 }

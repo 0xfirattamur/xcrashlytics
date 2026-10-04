@@ -28,12 +28,12 @@ struct IssueEventSamplerTests {
     struct TrackingClient: FirebaseCrashlyticsClient {
         let tracker: CallTracker
 
-        func listIssues(maxIssues: Int?) async throws -> [CrashRecord] { [] }
+        func listIssues(maxIssues: Int?) async throws -> [CrashIssue] { [] }
         func representativeFrames(issueID: String) async throws -> [Frame] { [] }
-        func getIssueDetail(id: String) async throws -> CrashRecord {
+        func getIssueDetail(id: String) async throws -> CrashIssue {
             throw FirebaseError.apiError(code: -1, message: "unused in sampler tests")
         }
-        func listEvents(issueID: String, maxEvents: Int?) async throws -> [FirebaseDTO.EventDTO] {
+        func listEvents(issueID: String, maxEvents: Int?) async throws -> [FirebaseEvent] {
             await tracker.begin(issueID)
             try await Task.sleep(nanoseconds: 20_000_000)
             await tracker.end()
@@ -41,10 +41,8 @@ struct IssueEventSamplerTests {
         }
     }
 
-    func makeIssue(_ id: String) -> CrashRecord {
-        CrashRecord(
-            id: id, source: .firebase, crashedThreadIndex: 0,
-            exception: ExceptionInfo(exceptionType: "FATAL"), frames: [])
+    func makeIssue(_ id: String) -> CrashIssue {
+        CrashIssue(providerId: id, exceptionType: "FATAL")
     }
 
     @Test("runs at most `concurrency` requests in parallel, and more than one")
@@ -64,6 +62,6 @@ struct IssueEventSamplerTests {
         let sampler = IssueEventSampler(
             firebase: TrackingClient(tracker: tracker), eventsPerIssue: 1, concurrency: 4)
         let samples = try await sampler.sample(issues: (0..<8).map { makeIssue("I\($0)") })
-        #expect(samples.map(\.issue.id) == (0..<8).map { "I\($0)" })
+        #expect(samples.map(\.issue.providerId) == (0..<8).map { "I\($0)" })
     }
 }

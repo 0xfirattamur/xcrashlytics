@@ -8,8 +8,8 @@ extension CommandContext {
             fileSystem: FirebaseToolsAuthFileSystem(base: fileSystem),
             processRunner: processRunner,
             clock: clock,
-            keychain: keychainStore,
-            httpClient: FirebaseToolsAuthHTTPClient(firebaseHTTPClient: httpClient)
+            httpClient: FirebaseToolsAuthHTTPClient(firebaseHTTPClient: httpClient),
+            console: console
         )
     }
 }

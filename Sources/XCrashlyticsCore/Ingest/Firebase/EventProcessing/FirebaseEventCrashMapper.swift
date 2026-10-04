@@ -9,20 +9,21 @@ import Foundation
 
 public enum FirebaseEventCrashMapper {
     public static func crashRecord(
-        from event: FirebaseDTO.EventDTO,
+        from event: FirebaseEvent,
         canonicalId: String,
         frameOptions: FirebaseFrameFilterOptions = FirebaseFrameFilterOptions()
-    ) -> CrashRecord {
+    ) -> CrashEvent {
         let frames = FirebaseEventFrames.frames(from: event, options: frameOptions)
         let timestamp = event.eventTime.flatMap(EventDates.parse)
-        return CrashRecord(
+        return CrashEvent(
             id: canonicalId,
+            providerId: event.eventId,
             source: .firebase,
-            bundleVersion: event.version?.displayVersion,
-            osVersion: event.operatingSystem?.displayVersion,
-            deviceModel: event.device?.model,
+            bundleVersion: event.displayVersion,
+            osVersion: event.osVersion,
+            deviceModel: event.deviceModel,
             crashedThreadIndex: 0,
-            exception: ExceptionInfo(exceptionType: event.exceptions?.first?.type ?? "FIREBASE_EVENT"),
+            exception: ExceptionInfo(exceptionType: event.exceptions.first?.type ?? "FIREBASE_EVENT"),
             frames: frames,
             timestamp: timestamp
         )

@@ -8,11 +8,12 @@
 import Foundation
 import Testing
 @testable import XCrashlyticsCore
+@testable import xcrashlytics
 
 @Suite("Renderers")
 struct RendererTests {
-    private func event(_ id: String, source: CrashSource, bundle: String? = "com.x.app", exc: String = "EXC_BAD_ACCESS") -> CrashRecord {
-        CrashRecord(
+    private func event(_ id: String, source: CrashSource, bundle: String? = "com.x.app", exc: String = "EXC_BAD_ACCESS") -> CrashEvent {
+        CrashEvent(
             id: id, source: source, bundleId: bundle,
             crashedThreadIndex: 0,
             exception: ExceptionInfo(exceptionType: exc),
@@ -21,9 +22,13 @@ struct RendererTests {
         )
     }
 
+    private func issue(_ id: String) -> CrashIssue {
+        CrashIssue(providerId: id, exceptionType: "EXC_BAD_ACCESS")
+    }
+
     private func xcode(_ id: String) -> XcodeCrash {
         XcodeCrash(
-            event: event(id, source: .xcode),
+            event: event("XC-\(id)", source: .xcode),
             filePath: "/p/\(id).ips",
             fileMtime: Date(timeIntervalSince1970: 1_700_000_000),
             fileSize: 0
@@ -34,21 +39,23 @@ struct RendererTests {
     func jsonDetail() throws {
         let r = JSONRenderer()
         let out = try r.renderDetail(event("F1", source: .firebase))
-        #expect(out.contains("\"source\" : \"firebase\""))
-        #expect(out.contains("F1"))
+        let data = try Envelope(out).data
+        #expect(data["source"]?.string == "firebase")
+        #expect(data["id"]?.string == "F1")
     }
 
     @Test("JSON renders groups with limit")
     func jsonGroups() throws {
         let r = JSONRenderer()
         let groups = [
-            CrashGroup(symbol: "first", module: "App", firebase: [event("F1", source: .firebase)], xcode: [xcode("L1")]),
-            CrashGroup(symbol: "second", module: "App", firebase: [event("F2", source: .firebase)], xcode: [])
+            CrashGroup(symbol: "first", module: "App", firebase: [issue("F1")], xcode: [xcode("L1")]),
+            CrashGroup(symbol: "second", module: "App", firebase: [issue("F2")], xcode: [])
         ]
         let out = try r.renderGroups(groups, limit: 1)
-        #expect(out.contains("\"symbol\" : \"first\""))
-        #expect(!out.contains("\"symbol\" : \"second\""))
-        #expect(out.contains("\"crossSource\" : true"))
+        let rendered = try #require(Envelope(out).data["groups"]?.array)
+        #expect(rendered.count == 1)
+        #expect(rendered.first?["symbol"]?.string == "first")
+        #expect(rendered.first?["crossSource"]?.bool == true)
     }
 
     @Test("plain text renders crash detail")
@@ -87,14 +94,15 @@ struct RendererTests {
             Frame(index: 0, binaryName: "MyApp", symbol: "doWork()", address: nil)
         ]
         let out = try JSONRenderer().renderDetail(record)
-        #expect(!out.contains(#""address""#))
+        let frame = try #require(Envelope(out).data["frames"]?[0]?.object)
+        #expect(frame["symbol"]?.string == "doWork()")
+        #expect(frame["address"] == nil)
     }
 
     @Test("plain text detail renders sampled activity header")
     func textDetailActivityHeader() {
-        var record = event("F1", source: .firebase)
-        record.eventsCount = 737
-        record.impactedUsersCount = 120
+        let record = event("F1", source: .firebase)
+        let issue = CrashIssue(providerId: "F1", exceptionType: "EXC_BAD_ACCESS", eventsCount: 737, impactedUsersCount: 120)
         let activity = IssueActivitySummary(
             sampledEvents: 100,
             firstEventAt: "2026-06-01T08:00:00Z",
@@ -103,7 +111,7 @@ struct RendererTests {
             deviceSpread: [SpreadCount(name: "iPhone 17 Pro Max", count: 40)],
             distinctUsers: 14
         )
-        let out = PlainTextRenderer().renderDetail(record, activity: activity)
+        let out = PlainTextRenderer().renderDetail(record, issue: issue, activity: activity)
         #expect(out.contains("Impact:    737 events / 120 users"))
         #expect(out.contains("Sampled:   newest 100 events, 2026-06-01 → 2026-06-10, 14 users"))
         #expect(out.contains("OS:        iOS 26.4.1 ×62, iOS 26.3.0 ×38"))
@@ -121,9 +129,9 @@ struct RendererTests {
             distinctUsers: nil
         )
         let out = try JSONRenderer().renderDetail(event("F1", source: .firebase), activity: activity)
-        #expect(out.contains(#""activity""#))
-        #expect(out.contains(#""sampledEvents" : 3"#))
-        #expect(out.contains(#""source" : "firebase""#))
+        let data = try Envelope(out).data
+        #expect(data["activity"]?["sampledEvents"]?.int == 3)
+        #expect(data["source"]?.string == "firebase")
     }
 
     @Test("plain text renders groups")
@@ -131,7 +139,7 @@ struct RendererTests {
         let group = CrashGroup(
             symbol: "analyzeBlur",
             module: "App",
-            firebase: [event("F1", source: .firebase)],
+            firebase: [issue("F1")],
             xcode: [xcode("L1")]
         )
         let out = PlainTextRenderer().renderGroups([group])

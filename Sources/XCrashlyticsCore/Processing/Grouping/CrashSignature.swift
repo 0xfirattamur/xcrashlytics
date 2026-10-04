@@ -31,22 +31,35 @@ public enum CrashSignature {
 
     /// Derives a crash's signature, or `nil` when there's no usable culprit
     /// (e.g. an unsymbolicated local crash, or a Firebase issue with no title).
-    public static func of(_ event: CrashRecord) -> Signature? {
+    public static func of(_ event: CrashEvent) -> Signature? {
         switch event.source {
         case .firebase: return fromTitle(event.exception.description)
         case .xcode:    return fromFrames(event.frames)
         }
     }
+    /// Derives a Firebase issue signature from its title.
+    public static func of(_ issue: CrashIssue) -> Signature? {
+        fromTitle(issue.title)
+    }
 
-    /// Local crashes: the top frame past the runtime/abort plumbing.
+    /// Local crashes: the first symbol past runtime and generic termination plumbing.
     static func fromFrames(_ frames: [Frame]) -> Signature? {
-        guard let frame = FrameNormalizer.meaningful(frames).first(where: { $0.symbol?.isEmpty == false }),
-              let symbol = frame.symbol else { return nil }
+        guard let frame = FrameNormalizer.meaningful(frames).first(where: {
+            guard let symbol = $0.symbol, !symbol.isEmpty else { return false }
+            return !genericTerminationSymbols.contains(normalize(symbol))
+        }), let symbol = frame.symbol else { return nil }
         let module = frame.binaryName
             .replacingOccurrences(of: " [unsymbolicated]", with: "")
             .trimmingCharacters(in: .whitespaces)
         return Signature(symbol: normalize(symbol), module: module.isEmpty ? nil : module)
     }
+
+    private static let genericTerminationSymbols: Set<String> = [
+        "_objc_terminate", "objc_terminate", "std::terminate()",
+        "std::terminate", "abort", "trap", "fatalerror",
+        "swift_fatalerror", "swift_concurrency_fatalerror",
+        "__pthread_kill", "raise"
+    ]
 
     /// Firebase issues: parse `[Module] File.swift - Symbol` (the message lives
     /// in the subtitle, so the title is just the culprit location).

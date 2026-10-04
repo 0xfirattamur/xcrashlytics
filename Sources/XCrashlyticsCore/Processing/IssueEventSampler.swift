@@ -8,10 +8,10 @@ import Foundation
 /// One issue's sampled events, tagged with its position in the input list.
 public struct IssueEventSample: Sendable {
     public var index: Int
-    public var issue: CrashRecord
-    public var events: [FirebaseDTO.EventDTO]
+    public var issue: CrashIssue
+    public var events: [FirebaseEvent]
 
-    public init(index: Int, issue: CrashRecord, events: [FirebaseDTO.EventDTO]) {
+    public init(index: Int, issue: CrashIssue, events: [FirebaseEvent]) {
         self.index = index
         self.issue = issue
         self.events = events
@@ -31,7 +31,7 @@ public struct IssueEventSampler: Sendable {
         self.concurrency = max(1, concurrency)
     }
 
-    public func sample(issues: [CrashRecord]) async throws -> [IssueEventSample] {
+    public func sample(issues: [CrashIssue]) async throws -> [IssueEventSample] {
         var samples: [IssueEventSample] = []
         try await withThrowingTaskGroup(of: IssueEventSample.self) { group in
             var iterator = issues.enumerated().makeIterator()
@@ -48,14 +48,14 @@ public struct IssueEventSampler: Sendable {
     }
 
     private func enqueueNext(
-        from iterator: inout EnumeratedSequence<[CrashRecord]>.Iterator,
+        from iterator: inout EnumeratedSequence<[CrashIssue]>.Iterator,
         into group: inout ThrowingTaskGroup<IssueEventSample, Error>
     ) {
         guard let (index, issue) = iterator.next() else { return }
         let firebase = firebase
         let eventsPerIssue = eventsPerIssue
         group.addTask {
-            let events = try await firebase.listEvents(issueID: issue.id, maxEvents: eventsPerIssue)
+            let events = try await firebase.listEvents(issueID: issue.providerId, maxEvents: eventsPerIssue)
             return IssueEventSample(index: index, issue: issue, events: events)
         }
     }

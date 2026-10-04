@@ -7,4 +7,6 @@ public enum ConfigError: Error, Equatable, Sendable {
     /// Active profile has no bundle id — Xcode crash commands cannot scope
     /// their scan to `~/Library/Developer/Xcode/Products/<bundleId>`.
     case missingBundleId(profile: String?)
+    /// Project config exists but is not valid JSON.
+    case invalidFile
 }

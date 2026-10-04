@@ -61,7 +61,8 @@ struct XcodeCrashLoaderTests {
 
         #expect(result.crashes.count == 2)
         #expect(result.warnings.count == 1)
-        #expect(result.warnings.first?.contains("C-bad.crash") == true)
+        #expect(result.warnings.first?.code == "XCODE_PARSE_FAILED")
+        #expect(result.warnings.first?.path == "\(dir)/C-bad.crash")
 
         // newest first by mtime — A is mtime=2000, B is mtime=1000
         #expect(result.crashes[0].filePath.hasSuffix("A-good.crash"))
@@ -83,7 +84,8 @@ struct XcodeCrashLoaderTests {
         let result = loader.load(directories: ["/some/dir"])
         #expect(result.crashes.isEmpty)
         #expect(result.warnings.count == 1)
-        #expect(result.warnings[0].contains("/some/dir"))
+        #expect(result.warnings[0].code == "XCODE_SCAN_FAILED")
+        #expect(result.warnings[0].path == "/some/dir")
     }
 
     @Test("duplicate incident keeps the source-located copy even when the raw twin is newer")

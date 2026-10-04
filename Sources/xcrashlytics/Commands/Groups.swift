@@ -21,7 +21,7 @@ struct GroupsCommand: AsyncParsableCommand {
     @Option(name: .long, help: "Maximum number of Firebase issues to fetch.")
     var firebaseLimit: Int = 100
 
-    @Option(name: .long, help: "Limit to one Firebase issue id, for example FB-ISSUE_ID.")
+    @Argument(help: "Optional Firebase issue id, for example FB-ISSUE_ID.")
     var issue: String?
 
     @Option(name: .long, help: "Limit to N groups.")
@@ -53,7 +53,8 @@ struct GroupsCommand: AsyncParsableCommand {
         let firebase = try ctx.firebaseClient()
         let firebaseIssues = try await firebase.listIssues(maxIssues: firebaseLimit)
             .filter(matchesIssueFilter)
-        let xcodeCrashes = try loadXcodeCrashes(ctx: ctx, overrideDirectories: overrideDirectories)
+        let xcodeLoad = try loadXcodeCrashes(ctx: ctx, overrideDirectories: overrideDirectories)
+        let xcodeCrashes = xcodeLoad.crashes
         let groups = CrashGrouper().group(local: xcodeCrashes, firebase: firebaseIssues)
 
         let output: String
@@ -62,25 +63,25 @@ struct GroupsCommand: AsyncParsableCommand {
             let limited = limit.map { Array(groups.prefix($0)) } ?? groups
             output = PlainTextRenderer().renderGroups(limited)
         case .json:
-            output = try JSONRenderer().renderGroups(groups, limit: limit)
+            output = try JSONRenderer().renderGroups(groups, limit: limit, warnings: xcodeLoad.warnings)
         case .ndjson:
             throw ValidationError("--format ndjson is not supported by this command.")
         }
+        ctx.report(xcodeLoad.warnings, format: format)
         ctx.console.output(output)
         return output
     }
 
-    private func matchesIssueFilter(_ event: CrashRecord) -> Bool {
+    private func matchesIssueFilter(_ candidate: CrashIssue) -> Bool {
         guard let issue else { return true }
-        let needle = issue.hasPrefix("FB-") ? String(issue.dropFirst(3)) : issue
-        return event.id == needle
+        return candidate.id == FirebaseIdentifiers.canonicalIssueId(issue)
     }
 
     private func loadXcodeCrashes(
         ctx: CommandContext,
         overrideDirectories: [String]?
-    ) throws -> [XcodeCrash] {
-        guard xcode else { return [] }
+    ) throws -> (crashes: [XcodeCrash], warnings: [CLIWarning]) {
+        guard xcode else { return ([], []) }
         let directories = try overrideDirectories ?? (
             crashDirectories.isEmpty ? ctx.xcodeCrashDirectories() : crashDirectories
         )

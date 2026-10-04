@@ -2,9 +2,9 @@
 # release workflow (.github/workflows/release.yml) on each tagged release.
 class Xcrashlytics < Formula
   desc "Firebase Crashlytics CLI with agent-readable JSON"
-  homepage "https://github.com/firattamurcw/xcrashlytics"
+  homepage "https://github.com/0xfirattamur/xcrashlytics"
   version "0.0.0"
-  url "https://github.com/firattamurcw/xcrashlytics/releases/download/v#{version}/xcrashlytics-v#{version}-macos-universal.tar.gz"
+  url "https://github.com/0xfirattamur/xcrashlytics/releases/download/v#{version}/xcrashlytics-v#{version}-macos-universal.tar.gz"
   sha256 "0000000000000000000000000000000000000000000000000000000000000000"
   license "MIT"
 

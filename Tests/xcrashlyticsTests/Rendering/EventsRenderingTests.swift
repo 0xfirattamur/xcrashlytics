@@ -8,11 +8,12 @@
 import Foundation
 import Testing
 @testable import XCrashlyticsCore
+@testable import xcrashlytics
 
 @Suite("events rendering")
 struct EventsRenderingTests {
-    private func event(_ json: String) throws -> FirebaseDTO.EventDTO {
-        try JSONDecoder().decode(FirebaseDTO.EventDTO.self, from: Data(json.utf8))
+    private func event(_ json: String) throws -> FirebaseEvent {
+        try JSONDecoder().decode(FirebaseDTO.EventDTO.self, from: Data(json.utf8)).toFirebaseEvent()
     }
 
     @Test("rows omit unknown placeholders instead of printing them")

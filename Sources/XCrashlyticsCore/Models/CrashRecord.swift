@@ -7,48 +7,30 @@
 
 import Foundation
 
-/// A single crash event — the shared shape used across both `.xcode` and
-/// `.firebase` sources.
+/// A single crash event from Firebase or a local Xcode report.
 ///
-/// Holds the crashed thread's frames, binary images for symbolication, and
-/// metadata about the device/app.
-public struct CrashRecord: Codable, Sendable, Hashable {
-    /// Source-specific identifier (Firebase issue id, or local incident UUID).
+/// Issue aggregates belong to `CrashIssue`; this value contains only one
+/// occurrence and its event-level metadata.
+public struct CrashEvent: Codable, Sendable, Hashable {
+    /// Canonical CLI id: `XC-<incident>` or `FB-<issue>/events/<event>`.
     public var id: String
-    /// Where this crash came from.
+    /// Raw source identifier (incident UUID or Firebase event id).
+    public var providerId: String?
     public var source: CrashSource
-    /// App bundle identifier (e.g. `com.example.MyApp`).
     public var bundleId: String?
-    /// `CFBundleVersion` build number.
     public var bundleVersion: String?
-    /// OS version string (e.g. `iPhone OS 17.0 (21A329)`).
     public var osVersion: String?
-    /// Hardware model code (e.g. `iPhone14,2`).
     public var deviceModel: String?
-    /// Number of the thread that triggered the crash, as reported by the log.
     public var crashedThreadIndex: Int
-    /// Exception summary.
     public var exception: ExceptionInfo
-    /// Frames of the crashed thread.
     public var frames: [Frame]
-    /// All loaded binaries at crash time — keyed by `imageUUID` for symbolication.
     public var binaryImages: [BinaryImage]
-    /// Wall-clock time the crash occurred, if recorded.
     public var timestamp: Date?
-    /// Original file path the report was parsed from (only set for `.xcode`).
     public var rawPath: String?
-    /// Total number of crash events observed (Firebase only).
-    public var eventsCount: Int?
-    /// Number of unique impacted users (Firebase only).
-    public var impactedUsersCount: Int?
-    /// Version the issue was first seen in (Firebase only). `bundleVersion`
-    /// holds the last-seen version, falling back to this when absent.
-    public var firstSeenVersion: String?
-    /// Version the issue was last seen in (Firebase only).
-    public var lastSeenVersion: String?
 
     public init(
         id: String,
+        providerId: String? = nil,
         source: CrashSource,
         bundleId: String? = nil,
         bundleVersion: String? = nil,
@@ -59,13 +41,10 @@ public struct CrashRecord: Codable, Sendable, Hashable {
         frames: [Frame],
         binaryImages: [BinaryImage] = [],
         timestamp: Date? = nil,
-        rawPath: String? = nil,
-        eventsCount: Int? = nil,
-        impactedUsersCount: Int? = nil,
-        firstSeenVersion: String? = nil,
-        lastSeenVersion: String? = nil
+        rawPath: String? = nil
     ) {
         self.id = id
+        self.providerId = providerId
         self.source = source
         self.bundleId = bundleId
         self.bundleVersion = bundleVersion
@@ -77,9 +56,55 @@ public struct CrashRecord: Codable, Sendable, Hashable {
         self.binaryImages = binaryImages
         self.timestamp = timestamp
         self.rawPath = rawPath
+    }
+}
+
+/// A Firebase Crashlytics issue aggregate.
+public struct CrashIssue: Codable, Sendable, Hashable {
+    /// Canonical CLI id: `FB-<issue>`.
+    public var id: String
+    /// Raw Firebase issue id, used for API calls.
+    public var providerId: String
+    public var source: CrashSource
+    public var title: String?
+    public var subtitle: String?
+    public var exceptionType: String
+    public var signal: String?
+    public var eventsCount: Int?
+    public var impactedUsersCount: Int?
+    public var firstSeenVersion: String?
+    public var lastSeenVersion: String?
+
+    public init(
+        providerId: String,
+        source: CrashSource = .firebase,
+        title: String? = nil,
+        subtitle: String? = nil,
+        exceptionType: String,
+        signal: String? = nil,
+        eventsCount: Int? = nil,
+        impactedUsersCount: Int? = nil,
+        firstSeenVersion: String? = nil,
+        lastSeenVersion: String? = nil
+    ) {
+        self.id = FirebaseIdentifiers.canonicalIssueId(providerId)
+        self.providerId = providerId
+        self.source = source
+        self.title = title
+        self.subtitle = subtitle
+        self.exceptionType = exceptionType
+        self.signal = signal
         self.eventsCount = eventsCount
         self.impactedUsersCount = impactedUsersCount
         self.firstSeenVersion = firstSeenVersion
         self.lastSeenVersion = lastSeenVersion
+    }
+
+    /// Last-seen version, falling back to first-seen.
+    public var bundleVersion: String? { lastSeenVersion ?? firstSeenVersion }
+
+    /// Issue-level exception summary; title carries the culprit location.
+    public var exception: ExceptionInfo {
+        ExceptionInfo(exceptionType: exceptionType, signal: signal, subtype: subtitle, description: title)
     }
 }

@@ -15,8 +15,7 @@ struct IssuesCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try IssuesCommand.parse(["--format", "json"])
 
@@ -24,11 +23,13 @@ struct IssuesCommandTests {
             ctx.withFirebaseHTTP(http)
             )
 
-        #expect(output.contains(#""id" : "FB-I1""#))
-        #expect(output.contains(#""title" : "Crash in Checkout""#))
-        #expect(output.contains(#""eventsCount" : 42"#))
-        #expect(output.contains(#""impactedUsersCount" : 12"#))
-        #expect(!output.contains("rawJSON"))
+        let env = try Envelope(output)
+        let issue = try #require(env.data["issues"]?[0])
+        #expect(issue["id"]?.string == "FB-I1")
+        #expect(issue["title"]?.string == "Crash in Checkout")
+        #expect(issue["eventsCount"]?.int == 42)
+        #expect(issue["impactedUsersCount"]?.int == 12)
+        #expect(issue["rawJSON"] == nil)
     }
 
     @Test("renders compact text from live Firebase")
@@ -38,8 +39,7 @@ struct IssuesCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try IssuesCommand.parse([])
 
@@ -59,8 +59,7 @@ struct IssuesCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try IssuesCommand.parse([
             "blur",
@@ -78,10 +77,12 @@ struct IssuesCommandTests {
             ctx.withFirebaseHTTP(http)
             )
 
-        #expect(output.contains(#""id" : "FB-I1""#))
-        #expect(output.contains("BlurDetectionService"))
-        #expect(!output.contains(#""id" : "FB-I2""#))
-        #expect(!output.contains(#""id" : "FB-I3""#))
+        let env = try Envelope(output)
+        let ids = env.data["issues"]?.array?.compactMap { $0["id"]?.string } ?? []
+        #expect(ids.contains("FB-I1"))
+        #expect(!ids.contains("FB-I2"))
+        #expect(!ids.contains("FB-I3"))
+        #expect(env.data["issues"]?[0]?["title"]?.string?.contains("BlurDetectionService") == true)
     }
 
     @Test("filters issues by latest event time when since is provided")
@@ -92,8 +93,7 @@ struct IssuesCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(now),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock(now)
         )
         let cmd = try IssuesCommand.parse([
             "--since", "24h",
@@ -105,9 +105,11 @@ struct IssuesCommandTests {
             ctx.withFirebaseHTTP(http)
             )
 
-        #expect(output.contains(#""id" : "FB-I1""#))
-        #expect(!output.contains(#""id" : "FB-I2""#))
-        #expect(!output.contains(#""id" : "FB-I3""#))
+        let env = try Envelope(output)
+        let ids = env.data["issues"]?.array?.compactMap { $0["id"]?.string } ?? []
+        #expect(ids.contains("FB-I1"))
+        #expect(!ids.contains("FB-I2"))
+        #expect(!ids.contains("FB-I3"))
     }
 
     @Test("query auto widens fetch window while limit controls displayed matches")
@@ -122,8 +124,7 @@ struct IssuesCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try IssuesCommand.parse(["blur", "--format", "json", "--limit", "1"])
 
@@ -132,9 +133,10 @@ struct IssuesCommandTests {
             )
 
         #expect(requestedPageSize == "100")
-        #expect(output.contains(#""id" : "FB-I70""#))
-        #expect(output.contains(#""limit" : 1"#))
-        #expect(output.contains(#""searchLimit" : 200"#))
+        let env = try Envelope(output)
+        #expect(env.data["issues"]?.array?.compactMap { $0["id"]?.string } == ["FB-I70"])
+        #expect(env.data["limit"]?.int == 1)
+        #expect(env.data["searchLimit"]?.int == 200)
     }
 
     @Test("search-limit overrides the query fetch window")
@@ -149,8 +151,7 @@ struct IssuesCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try IssuesCommand.parse(["blur", "--search-limit", "50", "--format", "json"])
 
@@ -159,8 +160,9 @@ struct IssuesCommandTests {
             )
 
         #expect(requestedPageSize == "50")
-        #expect(output.contains(#""id" : "FB-I40""#))
-        #expect(output.contains(#""searchLimit" : 50"#))
+        let env = try Envelope(output)
+        #expect(env.data["issues"]?.array?.contains { $0["id"]?.string == "FB-I40" } == true)
+        #expect(env.data["searchLimit"]?.int == 50)
     }
 
     @Test("empty filtered result includes an anti-silent-miss hint")
@@ -170,8 +172,7 @@ struct IssuesCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try IssuesCommand.parse(["missing", "--search-limit", "20", "--format", "json"])
 
@@ -179,8 +180,9 @@ struct IssuesCommandTests {
             ctx.withFirebaseHTTP(http)
             )
 
-        #expect(output.contains(#""issues" : ["#))
-        #expect(output.contains(#""hint" : "0 matches in top 20 by impact. Rerun with --search-limit 500.""#))
+        let env = try Envelope(output)
+        #expect(env.data["issues"]?.array?.isEmpty == true)
+        #expect(env.data["hint"]?.string == "0 matches in top 20 by impact. Rerun with --search-limit 500.")
     }
 
     @Test("empty result does not suggest widening when fetched issues are exhausted")
@@ -190,8 +192,7 @@ struct IssuesCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try IssuesCommand.parse(["missing", "--format", "json"])
 
@@ -199,7 +200,8 @@ struct IssuesCommandTests {
             ctx.withFirebaseHTTP(http)
             )
 
-        #expect(output.contains(#""hint" : "0 matches in all 2 fetched issues.""#))
+        let env = try Envelope(output)
+        #expect(env.data["hint"]?.string == "0 matches in all 2 fetched issues.")
     }
 
     @Test("all searches use the capped exhaustive fetch limit")
@@ -214,8 +216,7 @@ struct IssuesCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try IssuesCommand.parse(["blur", "--all", "--format", "json"])
 
@@ -224,50 +225,28 @@ struct IssuesCommandTests {
             )
 
         #expect(requestedPageSize == "100")
-        #expect(output.contains(#""id" : "FB-I120""#))
-        #expect(output.contains(#""searchLimit" : 2000"#))
+        let env = try Envelope(output)
+        #expect(env.data["issues"]?.array?.contains { $0["id"]?.string == "FB-I120" } == true)
+        #expect(env.data["searchLimit"]?.int == 2000)
     }
 
-    @Test("agent JSON omits candidate pairs unless requested")
-    func hidesCandidatePairsByDefault() async throws {
+    @Test("agent JSON uses compact related groups without candidate pairs")
+    func relatedGroupsReplaceCandidatePairs() async throws {
         let fs = try makeMultiIssuesHTTPConfig()
         let http = makeMultiIssuesHTTP()
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try IssuesCommand.parse(["blur", "--format", "json", "--limit", "200"])
-
-        let output = try await cmd.runWithContext(
-            ctx.withFirebaseHTTP(http)
-            )
-
-        #expect(output.contains(#""issues""#))
-        #expect(!output.contains("candidatePairs"))
+        let output = try await cmd.runWithContext(ctx.withFirebaseHTTP(http))
+        let env = try Envelope(output)
+        #expect(env.data["issues"]?.array != nil)
+        #expect(env.data["relatedGroups"]?.array?.isEmpty == false)
+        #expect(env.data["candidatePairs"] == nil)
     }
 
-    @Test("agent JSON includes candidate pairs when requested")
-    func showsCandidatePairsOnRequest() async throws {
-        let fs = try makeMultiIssuesHTTPConfig()
-        let http = makeMultiIssuesHTTP()
-        let ctx = CommandContext(
-            fileSystem: fs,
-            processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
-        )
-        let cmd = try IssuesCommand.parse(["blur", "--format", "json", "--show-pairs", "--limit", "200"])
-
-        let output = try await cmd.runWithContext(
-            ctx.withFirebaseHTTP(http)
-            )
-
-        #expect(output.contains("candidatePairs"))
-        #expect(output.contains(#""left" : "FB-I1""#))
-        #expect(output.contains(#""right" : "FB-I2""#))
-    }
 
     @Test("includes Xcode crashes when requested")
     func includesXcodeCrashes() async throws {
@@ -279,8 +258,7 @@ struct IssuesCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try IssuesCommand.parse(["--xcode", "--format", "json"])
 
@@ -289,7 +267,8 @@ struct IssuesCommandTests {
             crashDirectories: [crashDir]
         )
 
-        #expect(output.contains(#""xcodeCrashes""#))
-        #expect(output.contains("XC-AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE"))
+        let env = try Envelope(output)
+        let xcodeIds = env.data["xcodeCrashes"]?.array?.compactMap { $0["id"]?.string }
+        #expect(xcodeIds == ["XC-AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE"])
     }
 }

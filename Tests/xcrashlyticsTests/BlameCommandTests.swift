@@ -31,8 +31,7 @@ struct BlameCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(now),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock(now)
         )
         let cmd = try BlameCommand.parse([
             "--format", "json",
@@ -46,15 +45,19 @@ struct BlameCommandTests {
             ctx.withFirebaseHTTP(makeHTTP())
         )
 
-        #expect(output.contains(#""file" : "BlurDetectionService.swift""#))
-        #expect(output.contains(#""symbol" : "BlurDetectionService.classifyWithML(_:)"#))
-        #expect(output.contains(#""eventCount" : 2"#))
-        #expect(output.contains(#""users" : 2"#))
-        #expect(output.contains(#""exampleIssueId" : "FB-I1""#))
-        #expect(output.contains(#""topIssueIds" : ["#))
-        #expect(output.contains(#""FB-I1""#))
-        #expect(output.contains(#""FB-I2""#))
-        #expect(!output.contains("OldService"))
+        let env = try Envelope(output)
+        let items = try #require(env.data["items"]?.array)
+        // E-old (OldService) falls outside --since 7d, so only the shared Blur frame remains.
+        #expect(items.count == 1)
+        let item = try #require(items.first)
+        #expect(item["file"]?.string == "BlurDetectionService.swift")
+        #expect(item["symbol"]?.string == "BlurDetectionService.classifyWithML(_:)")
+        #expect(item["eventCount"]?.int == 2)
+        #expect(item["users"]?.int == 2)
+        #expect(item["exampleIssueId"]?.string == "FB-I1")
+        let topIssueIds = Set(item["topIssueIds"]?.array?.compactMap(\.string) ?? [])
+        #expect(topIssueIds == ["FB-I1", "FB-I2"])
+        #expect(!items.contains { $0["symbol"]?.string == "OldService.crash()" })
     }
 
     @Test("ndjson emits one BlameSummary object per line")
@@ -64,8 +67,7 @@ struct BlameCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(now),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock(now)
         )
         let cmd = try BlameCommand.parse([
             "--format", "ndjson",
@@ -80,12 +82,14 @@ struct BlameCommandTests {
         )
 
         // Two distinct blamed symbols → two BlameSummary rows → two ndjson lines
-        let lines = output.split(separator: "\n")
+        let lines = try JSON.lines(output)
         #expect(lines.count == 2)
         for line in lines {
-            #expect(line.first == "{")
-            #expect(line.contains("\"eventCount\""))
+            #expect(line["schemaVersion"]?.int == 1)
+            #expect(line["eventCount"]?.int != nil)
         }
+        let symbols = Set(lines.compactMap { $0["symbol"]?.string })
+        #expect(symbols == ["BlurDetectionService.classifyWithML(_:)", "CameraPipeline.run()"])
     }
 
     /// Two issues, each blaming a distinct symbol — produces two BlameSummary rows.

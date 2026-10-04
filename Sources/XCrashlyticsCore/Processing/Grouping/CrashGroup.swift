@@ -15,10 +15,10 @@ public struct CrashGroup: Sendable, Equatable {
     public let symbol: String
     /// Owning module/binary, for display.
     public let module: String?
-    public let firebase: [CrashRecord]
+    public let firebase: [CrashIssue]
     public let xcode: [XcodeCrash]
 
-    public init(symbol: String, module: String?, firebase: [CrashRecord], xcode: [XcodeCrash]) {
+    public init(symbol: String, module: String?, firebase: [CrashIssue], xcode: [XcodeCrash]) {
         self.symbol = symbol
         self.module = module
         self.firebase = firebase

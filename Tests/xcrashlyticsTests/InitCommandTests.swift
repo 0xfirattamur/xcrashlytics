@@ -43,7 +43,6 @@ struct InitCommandTests {
             fileSystem: fs,
             processRunner: proc,
             clock: SystemClock(),
-            keychain: InMemoryKeychainStore(),
             httpClient: http,
             console: console
         )
@@ -57,7 +56,6 @@ struct InitCommandTests {
             fileSystem: fs,
             processRunner: MockProcessRunner(),
             clock: SystemClock(),
-            keychain: InMemoryKeychainStore(),
             httpClient: MockHTTPClient()
         )
 
@@ -217,7 +215,6 @@ struct InitCommandTests {
             fileSystem: fs,
             processRunner: proc,
             clock: SystemClock(),
-            keychain: InMemoryKeychainStore(),
             httpClient: http
         )
 
@@ -231,5 +228,80 @@ struct InitCommandTests {
         #expect(output.contains("[WARN] firebase token exchange failed"))
         #expect(output.contains("advisory"))
         #expect(fs.fileExists(at: configPath))
+    }
+
+    // MARK: - --scan
+
+    private var cwd: String { FileManager.default.currentDirectoryPath }
+
+    private func seedPlist(_ fs: InMemoryFileSystem, _ relative: String, appId: String, bundleId: String?) {
+        let bundle = bundleId.map { "<key>BUNDLE_ID</key><string>\($0)</string>" } ?? ""
+        fs.seed("\(cwd)/\(relative)", text: """
+        <?xml version="1.0" encoding="UTF-8"?>
+        <plist version="1.0"><dict><key>GOOGLE_APP_ID</key><string>\(appId)</string>\(bundle)</dict></plist>
+        """)
+    }
+
+    @Test("--scan writes one profile per app and never guesses the active one")
+    func scanWritesAllProfilesWithoutGuessing() async throws {
+        let fs = InMemoryFileSystem()
+        seedPlist(fs, "Debug/GoogleService-Info.plist", appId: "1:1111111111:ios:debug", bundleId: "com.x.app.debug")
+        seedPlist(fs, "Release/GoogleService-Info.plist", appId: "1:2222222222:ios:release", bundleId: "com.x.app")
+
+        let output = try await InitCommand.parse(["--scan"]).runWithContext(loggedInContext(fs: fs))
+
+        let config = try ConfigFile(fileSystem: fs).load()
+        #expect(config.profiles["debug"] == AppProfile(
+            appId: "1:1111111111:ios:debug", bundleId: "com.x.app.debug", sourcePath: "Debug/GoogleService-Info.plist"))
+        #expect(config.profiles["release"]?.bundleId == "com.x.app")
+        #expect(config.activeProfile == nil)
+        #expect(output.contains("xcrashlytics use <profile>"))
+    }
+
+    @Test("--scan keeps a still-valid active profile")
+    func scanKeepsActiveProfile() async throws {
+        let fs = InMemoryFileSystem()
+        try ConfigFile(fileSystem: fs).save(Config(activeProfile: "release", profiles: [
+            "release": AppProfile(appId: "1:2222222222:ios:old"),
+        ]))
+        seedPlist(fs, "Debug/GoogleService-Info.plist", appId: "1:1111111111:ios:debug", bundleId: nil)
+        seedPlist(fs, "Release/GoogleService-Info.plist", appId: "1:2222222222:ios:release", bundleId: "com.x.app")
+
+        _ = try await InitCommand.parse(["--scan"]).runWithContext(loggedInContext(fs: fs))
+
+        let config = try ConfigFile(fileSystem: fs).load()
+        #expect(config.activeProfile == "release")
+        #expect(config.resolvedAppId == "1:2222222222:ios:release")
+    }
+
+    @Test("--scan activates a lone discovery and ignores build-output copies")
+    func scanActivatesSingleAppIgnoringBuildCopies() async throws {
+        let fs = InMemoryFileSystem()
+        seedPlist(fs, "App/GoogleService-Info.plist", appId: "1:1111111111:ios:app", bundleId: "com.x.app")
+        seedPlist(fs, ".build/debug/App/GoogleService-Info.plist", appId: "1:1111111111:ios:app", bundleId: "com.x.app")
+        seedPlist(fs, "Pods/Vendor/GoogleService-Info.plist", appId: "1:9999999999:ios:vendor", bundleId: "vendor")
+
+        _ = try await InitCommand.parse(["--scan"]).runWithContext(loggedInContext(fs: fs))
+
+        let config = try ConfigFile(fileSystem: fs).load()
+        #expect(Set(config.profiles.keys) == ["app"])
+        #expect(config.activeProfile == "app")
+    }
+
+    @Test("--scan with nothing to find fails and writes nothing")
+    func scanFindsNothing() async throws {
+        let fs = InMemoryFileSystem()
+        let ctx = loggedInContext(fs: fs)
+        let cmd = try InitCommand.parse(["--scan"])
+
+        await #expect(throws: ExitCode.self) { _ = try await cmd.runWithContext(ctx) }
+        #expect(fs.fileExists(at: configPath) == false)
+    }
+
+    @Test("--scan and manual flags are mutually exclusive; manual needs both flags")
+    func scanFlagValidation() {
+        #expect(throws: (any Error).self) { try InitCommand.parse(["--scan", "--app-id", "1:1:ios:x"]) }
+        #expect(throws: (any Error).self) { try InitCommand.parse(["--app-id", "1:1:ios:x"]) }
+        #expect(throws: (any Error).self) { try InitCommand.parse([]) }
     }
 }

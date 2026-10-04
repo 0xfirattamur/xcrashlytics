@@ -14,11 +14,9 @@ struct IssueFilterTests {
         version: String? = "6.16.0",
         description: String? = "[Core] BlurDetectionService.swift - BlurDetectionService.classifyWithML(_:)",
         eventsCount: Int? = 42
-    ) -> CrashRecord {
-        CrashRecord(
-            id: id, source: .firebase, bundleVersion: version, crashedThreadIndex: 0,
-            exception: ExceptionInfo(exceptionType: type, description: description),
-            frames: [], eventsCount: eventsCount)
+    ) -> CrashIssue {
+        CrashIssue(providerId: id, title: description, exceptionType: type,
+        eventsCount: eventsCount, lastSeenVersion: version)
     }
 
     @Test("matchesIssueFields applies type, minEvents, version, file, and symbol filters")
@@ -34,12 +32,8 @@ struct IssueFilterTests {
 
     @Test("app-version matches either the first- or last-seen version")
     func appVersionMatchesSeenRange() {
-        let issue = CrashRecord(
-            id: "I1", source: .firebase, bundleVersion: "6.16.0",
-            crashedThreadIndex: 0,
-            exception: ExceptionInfo(exceptionType: "EXC_BAD_ACCESS"),
-            frames: [],
-            firstSeenVersion: "6.2.0", lastSeenVersion: "6.16.0")
+        let issue = CrashIssue(providerId: "I1", exceptionType: "EXC_BAD_ACCESS",
+        firstSeenVersion: "6.2.0", lastSeenVersion: "6.16.0")
         #expect(IssueFilter(criteria: .init(appVersion: "6.16.0")).matchesIssueFields(issue))
         #expect(IssueFilter(criteria: .init(appVersion: "6.2.0")).matchesIssueFields(issue))
         #expect(!IssueFilter(criteria: .init(appVersion: "6.10.0")).matchesIssueFields(issue))
@@ -47,12 +41,8 @@ struct IssueFilterTests {
 
     @Test("since-version compares against the last-seen version")
     func sinceVersionUsesLastSeen() {
-        let issue = CrashRecord(
-            id: "I1", source: .firebase, bundleVersion: "6.16.0",
-            crashedThreadIndex: 0,
-            exception: ExceptionInfo(exceptionType: "EXC_BAD_ACCESS"),
-            frames: [],
-            firstSeenVersion: "6.2.0", lastSeenVersion: "6.16.0")
+        let issue = CrashIssue(providerId: "I1", exceptionType: "EXC_BAD_ACCESS",
+        firstSeenVersion: "6.2.0", lastSeenVersion: "6.16.0")
         #expect(IssueFilter(criteria: .init(sinceVersion: "6.10.0")).matchesIssueFields(issue))
         #expect(!IssueFilter(criteria: .init(sinceVersion: "6.17.0")).matchesIssueFields(issue))
     }
@@ -100,16 +90,8 @@ struct IssueFilterTests {
 
     // MARK: - matchesEventMetadata
 
-    private func makeEvent(userId: String? = nil, rawJSON: String? = nil) -> FirebaseDTO.EventDTO {
-        FirebaseDTO.EventDTO(
-            name: nil, platform: nil, eventId: "E1", eventTime: nil,
-            bundleOrPackage: nil, issue: nil, issueTitle: nil, issueSubtitle: nil,
-            processState: nil, version: nil, device: nil, operatingSystem: nil,
-            memory: nil, storage: nil,
-            user: userId.map { FirebaseDTO.UserDTO(id: $0) },
-            blameFrame: nil, exceptions: nil, threads: nil,
-            rawJSON: rawJSON
-        )
+    private func makeEvent(userId: String? = nil, rawJSON: String? = nil) -> FirebaseEvent {
+        FirebaseEvent(eventId: "E1", userId: userId, rawJSON: rawJSON)
     }
 
     @Test("matchesEventMetadata: userId match vs mismatch")

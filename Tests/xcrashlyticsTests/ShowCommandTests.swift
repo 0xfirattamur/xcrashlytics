@@ -32,8 +32,7 @@ struct ShowCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: SystemClock(),
-            keychain: InMemoryKeychainStore()
+            clock: SystemClock()
         )
 
         let cmd = try ShowCommand.parse([
@@ -50,8 +49,7 @@ struct ShowCommandTests {
         let ctx = CommandContext(
             fileSystem: InMemoryFileSystem(),
             processRunner: MockProcessRunner(),
-            clock: SystemClock(),
-            keychain: InMemoryKeychainStore()
+            clock: SystemClock()
         )
         let cmd = try ShowCommand.parse(["BOGUS-abc"])
         await #expect(throws: (any Error).self) {
@@ -82,8 +80,7 @@ struct ShowCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try ShowCommand.parse(["FB-I1", "--format", "json"])
 
@@ -91,9 +88,11 @@ struct ShowCommandTests {
             ctx.withFirebaseHTTP(http)
         )
 
-        #expect(output.contains(#""id" : "I1""#))
-        #expect(output.contains(#""symbol" : "BlurDetectionService.classifyWithML(_:)"#))
-        #expect(output.contains(#""file" : "BlurDetectionService.swift""#))
+        let data = try Envelope(output).data
+        #expect(data["id"]?.string == "FB-I1")
+        #expect(data["providerId"]?.string == "I1")
+        #expect(data["frames"]?[0]?["symbol"]?.string == "BlurDetectionService.classifyWithML(_:)")
+        #expect(data["frames"]?[0]?["file"]?.string == "BlurDetectionService.swift")
     }
 
     @Test("FB issue show renders a sampled summary header")
@@ -123,8 +122,7 @@ struct ShowCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try ShowCommand.parse(["FB-I1"])
 
@@ -168,8 +166,7 @@ struct ShowCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try ShowCommand.parse(["FB-I1", "--app-frames-only", "--format", "json"])
 
@@ -177,9 +174,10 @@ struct ShowCommandTests {
             ctx.withFirebaseHTTP(http)
         )
 
-        #expect(output.contains(#""symbol" : "BlurDetectionService.classifyWithML(_:)"#))
-        #expect(!output.contains("<redacted>"))
-        #expect(!output.contains("libsystem_kernel.dylib"))
+        let frames = try #require(Envelope(output).data["frames"]?.array)
+        #expect(frames.count == 1)
+        #expect(frames.first?["symbol"]?.string == "BlurDetectionService.classifyWithML(_:)")
+        #expect(!frames.contains { $0["binaryName"]?.string == "libsystem_kernel.dylib" })
     }
 
     @Test("FB event id shows that event's frames")
@@ -203,8 +201,7 @@ struct ShowCommandTests {
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
-            clock: FixedClock(),
-            keychain: InMemoryKeychainStore()
+            clock: FixedClock()
         )
         let cmd = try ShowCommand.parse(["FB-I1/events/E1", "--format", "json"])
 
@@ -212,9 +209,10 @@ struct ShowCommandTests {
             ctx.withFirebaseHTTP(http)
         )
 
-        #expect(output.contains(#""id" : "FB-I1/events/E1""#))
-        #expect(output.contains(#""deviceModel" : "iPhone 17 Pro Max""#))
-        #expect(output.contains(#""symbol" : "BlurDetectionService.classifyWithML(_:)"#))
+        let data = try Envelope(output).data
+        #expect(data["id"]?.string == "FB-I1/events/E1")
+        #expect(data["deviceModel"]?.string == "iPhone 17 Pro Max")
+        #expect(data["frames"]?[0]?["symbol"]?.string == "BlurDetectionService.classifyWithML(_:)")
     }
 
     private func makeConfig() throws -> InMemoryFileSystem {

@@ -16,12 +16,24 @@ Search production crashes, inspect stack traces, and identify hot files without 
 
 `xcrashlytics` is a macOS CLI for inspecting Firebase Crashlytics issues, events, stacks, and hot files without opening the Firebase console.
 
+It gives developers and AI coding agents a fast path from “production crash” to “file worth opening”:
+
+```bash
+xcrashlytics issues "checkout" --format json
+xcrashlytics events FB-ISSUE_ID --latest --app-frames-only --format json
+xcrashlytics blame --since 7d --top 10 --format json
+```
+
+The output is structured for agents, readable in the terminal, and safe to pipe into scripts.
+
 It is built for:
 
 - Developers who want fast, readable crash output in the terminal.
 - AI coding agents that need stable JSON while investigating bugs.
 
 Firebase commands work for iOS, Android, macOS, and other Firebase Crashlytics apps. iOS projects can also include the Xcode Organizer's local crash reports (App Store / TestFlight `.crash` logs, already symbolicated) for grouping against Firebase issues.
+
+If this saves you time investigating production crashes, [star the repository](https://github.com/0xfirattamur/xcrashlytics).
 
 <details>
 <summary><strong>📖 Table of contents</strong></summary>
@@ -57,6 +69,25 @@ brew install xcrashlytics
 > install with `Error: ... is not trusted`. You only need to run it once — trust
 > is recorded per-machine in `~/.homebrew/trust.json`, keyed by the tap's remote
 > URL.[^tap-trust]
+
+### Direct download
+
+Download the universal binary and checksum from the [latest GitHub release](https://github.com/0xfirattamur/xcrashlytics/releases/latest):
+
+```bash
+VERSION="v0.1.0"
+curl -fL -o xcrashlytics.tar.gz \
+  "https://github.com/0xfirattamur/xcrashlytics/releases/download/${VERSION}/xcrashlytics-${VERSION}-macos-universal.tar.gz"
+curl -fL -o xcrashlytics.tar.gz.sha256 \
+  "https://github.com/0xfirattamur/xcrashlytics/releases/download/${VERSION}/xcrashlytics-${VERSION}-macos-universal.tar.gz.sha256"
+shasum -a 256 -c xcrashlytics.tar.gz.sha256
+tar -xzf xcrashlytics.tar.gz
+mkdir -p "$HOME/.local/bin"
+install -m 755 xcrashlytics "$HOME/.local/bin/xcrashlytics"
+```
+
+The release binary is universal for Apple Silicon and Intel Macs. Releases are
+not code-signed or notarized; verify the checksum before installing.
 
 From source:
 

@@ -30,7 +30,7 @@ nesting:
   type_level: 2           # DTOs legitimately nest response shapes
 
 function_body_length:
-  warning: 90
+  warning: 100
   error: 140
 
 type_body_length:

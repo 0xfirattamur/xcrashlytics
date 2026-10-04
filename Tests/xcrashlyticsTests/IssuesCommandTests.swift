@@ -247,7 +247,6 @@ struct IssuesCommandTests {
         #expect(env.data["candidatePairs"] == nil)
     }
 
-
     @Test("includes Xcode crashes when requested")
     func includesXcodeCrashes() async throws {
         let http = makeIssuesHTTP()

@@ -98,7 +98,6 @@ struct IssuesCommand: AsyncParsableCommand {
     @Flag(name: .long, help: "Include local crash reports downloaded by the Xcode Organizer.")
     var xcode: Bool = false
 
-
     @Option(
         name: .customLong("crash-directory"), help: "Xcode crash directory to scan. Repeatable.")
     var crashDirectories: [String] = []

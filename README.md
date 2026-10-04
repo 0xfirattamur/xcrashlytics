@@ -70,6 +70,17 @@ brew install xcrashlytics
 > is recorded per-machine in `~/.homebrew/trust.json`, keyed by the tap's remote
 > URL.[^tap-trust]
 
+### Single-line installer
+
+Install the latest checksum-verified release into `~/.local/bin`:
+
+```bash
+curl -fsSL https://raw.githubusercontent.com/0xfirattamur/xcrashlytics/main/scripts/install.sh | sh
+```
+
+The installer resolves the latest release, downloads the universal binary and
+its SHA-256 file, verifies the archive, and installs the CLI.
+
 ### Direct download
 
 Download the universal binary and checksum from the [latest GitHub release](https://github.com/0xfirattamur/xcrashlytics/releases/latest):

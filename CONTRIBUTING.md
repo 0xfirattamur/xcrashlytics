@@ -9,15 +9,18 @@ Requires macOS 15+ and Xcode 16+ (Swift 6.0 toolchain).
 ```bash
 git clone https://github.com/0xfirattamur/xcrashlytics.git
 cd xcrashlytics
-swift build
-swift test
+make bootstrap   # installs the pinned SwiftLint via mise
+make ci          # lint, tests, release build: what CI runs
 swift run xcrashlytics --help
 ```
+
+Without [mise](https://mise.jdx.dev), `make` uses the `swiftlint` on your PATH;
+CI uses the version pinned in `.mise.toml`.
 
 To test a local build through the brew-installed `xcrashlytics` on your PATH:
 
 ```bash
-scripts/install-local.sh   # builds release, overwrites the brew keg binary
+make install   # builds release, overwrites the brew keg binary
 ```
 
 `brew reinstall xcrashlytics` restores the released version.
@@ -63,12 +66,15 @@ records authorship and history.
 
 - Use [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `docs:`, `test:`, `refactor:`, `chore:`.
 - TDD: failing test first, then minimal implementation, then commit.
-- Run `swiftlint lint --strict`, `swift test`, and `swift build -c release` before pushing.
+- Run `make ci` before pushing.
 - Use `swift test --enable-code-coverage` to measure coverage. A high percentage
   does not replace assertions for important edge cases or a real CLI smoke run.
 - Test doubles used by concurrent code must synchronize shared mutable state;
   `@unchecked Sendable` alone does not make them thread-safe.
 - Open a PR against `main`. CI must be green.
+- Releasing: set the version in `XcrashlyticsCommand.swift`, commit, then push a
+  `v<version>` tag. The release workflow fails if the binary's `--version`
+  does not match the tag.
 
 ## Filing issues
 

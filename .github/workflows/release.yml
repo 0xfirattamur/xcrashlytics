@@ -13,13 +13,17 @@ on:
 permissions:
   contents: write
 
+concurrency:
+  group: release
+  cancel-in-progress: false
+
 env:
   # Tag on a tag-push; the manual input on a workflow_dispatch run.
   REF_NAME: ${{ github.event_name == 'workflow_dispatch' && inputs.tag || github.ref_name }}
 
 jobs:
   release:
-    runs-on: macos-latest
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
 
@@ -31,6 +35,14 @@ jobs:
           cp "$BINPATH/xcrashlytics" dist/xcrashlytics
           strip dist/xcrashlytics
           lipo dist/xcrashlytics -verify_arch arm64 x86_64
+
+      - name: Check version matches tag
+        run: |
+          BUILT="$(dist/xcrashlytics --version)"
+          if [ "$BUILT" != "${REF_NAME#v}" ]; then
+            echo "::error::binary reports '$BUILT' but the tag is '$REF_NAME'. Update the version in XcrashlyticsCommand.swift first."
+            exit 1
+          fi
 
       - name: Package + checksum
         run: |
@@ -51,7 +63,7 @@ jobs:
 
   formula:
     needs: release
-    runs-on: macos-latest
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
         with:

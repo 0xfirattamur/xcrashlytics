@@ -6,30 +6,31 @@ on:
   pull_request:
     branches: [main]
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.event.pull_request.number || github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  lint:
-    runs-on: macos-latest
+  ci:
+    runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
 
-      - name: Install SwiftLint
-        run: brew install swiftlint
+      - uses: jdx/mise-action@v2
 
-      - name: SwiftLint
-        run: swiftlint lint --strict
-
-  build-test:
-    runs-on: macos-latest
-    steps:
-      - uses: actions/checkout@v4
+      - uses: actions/cache@v4
+        with:
+          path: .build
+          key: spm-${{ runner.os }}-${{ hashFiles('Package.resolved') }}
+          restore-keys: spm-${{ runner.os }}-
 
       - name: Show toolchain
         run: |
           swift --version
           xcodebuild -version
 
-      - name: Build
-        run: swift build -c release
-
-      - name: Test
-        run: swift test
+      - name: make ci
+        run: make ci

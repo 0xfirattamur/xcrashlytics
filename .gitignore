@@ -27,11 +27,11 @@ Icon
 .netrc
 .env
 .env.local
-.env.local
 .mise.local.toml
 
 # Agent tools: shared config may be committed; personal overrides never
 .claude/settings.local.json
+
 # Editor / IDE
 .vscode/
 .idea/

@@ -1,7 +1,5 @@
 import Foundation
 import Testing
-@testable import XCrashlyticsCore
-import XCrashlyticsTestSupport
 @testable import xcrashlytics
 
 extension IssuesCommandTests {
@@ -39,7 +37,7 @@ extension IssuesCommandTests {
             ]
         ))
         var requestedPath: String?
-        let http = MockHTTPClient { request in
+        let http = MockHTTPTransport { request in
             requestedPath = request.url?.path
             return try makeIssuesHTTP().handler!(request)
         }

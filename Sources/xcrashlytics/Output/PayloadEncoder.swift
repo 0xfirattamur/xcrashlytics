@@ -1,10 +1,9 @@
 import Foundation
-import XCrashlyticsCore
 
-/// The one JSON configuration every CLI payload uses, so field formatting
-/// never drifts between commands.
-public enum PayloadEncoder {
-    public static func json<T: Encodable>(_ value: T) throws -> String {
+/// Shared JSON settings for CLI payloads: sorted keys, unescaped slashes and
+/// ISO 8601 dates.
+enum PayloadEncoder {
+    static func json<T: Encodable>(_ value: T) throws -> String {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.prettyPrinted, .sortedKeys, .withoutEscapingSlashes]
         encoder.dateEncodingStrategy = .iso8601
@@ -12,7 +11,7 @@ public enum PayloadEncoder {
         return (String(data: data, encoding: .utf8) ?? "") + "\n"
     }
 
-    public static func ndjsonLine<T: Encodable>(_ value: T) throws -> String {
+    static func ndjsonLine<T: Encodable>(_ value: T) throws -> String {
         let encoder = JSONEncoder()
         encoder.outputFormatting = [.sortedKeys, .withoutEscapingSlashes]
         encoder.dateEncodingStrategy = .iso8601

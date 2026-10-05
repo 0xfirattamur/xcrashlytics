@@ -7,8 +7,6 @@
 
 import Foundation
 import Testing
-@testable import XCrashlyticsCore
-import XCrashlyticsTestSupport
 @testable import xcrashlytics
 
 @Suite("xcrashlytics show")
@@ -60,15 +58,15 @@ struct ShowCommandTests {
     @Test("FB issue detail includes latest event frames")
     func firebaseShowIncludesLatestEventFrames() async throws {
         let fs = try makeConfig()
-        let http = MockHTTPClient { request in
+        let http = MockHTTPTransport { request in
             if request.url?.path.hasSuffix("/issues/I1") == true {
-                return MockHTTPClient.response(request.url!, status: 200, body: Data(#"""
+                return MockHTTPTransport.response(request.url!, status: 200, body: Data(#"""
                 {"id":"I1","title":"Blur crash","errorType":"EXC_BAD_ACCESS","subtitle":"SIGSEGV","lastSeenVersion":"6.16.0"}
                 """#.utf8))
             }
             #expect(request.url?.path.hasSuffix("/events") == true)
             #expect(request.url?.query?.contains("filter.issue.id=I1") == true)
-            return MockHTTPClient.response(request.url!, status: 200, body: Data(#"""
+            return MockHTTPTransport.response(request.url!, status: 200, body: Data(#"""
             {"events":[{
               "eventId":"E1",
               "threads":[{"crashed":true,"frames":[
@@ -98,14 +96,14 @@ struct ShowCommandTests {
     @Test("FB issue show renders a sampled summary header")
     func firebaseShowRendersSummaryHeader() async throws {
         let fs = try makeConfig()
-        let http = MockHTTPClient { request in
+        let http = MockHTTPTransport { request in
             if request.url?.path.hasSuffix("/issues/I1") == true {
-                return MockHTTPClient.response(request.url!, status: 200, body: Data(#"""
+                return MockHTTPTransport.response(request.url!, status: 200, body: Data(#"""
                 {"id":"I1","title":"Blur crash","errorType":"EXC_BAD_ACCESS","subtitle":"SIGSEGV","firstSeenVersion":"6.2.0","lastSeenVersion":"6.16.0"}
                 """#.utf8))
             }
             #expect(request.url?.path.hasSuffix("/events") == true)
-            return MockHTTPClient.response(request.url!, status: 200, body: Data(#"""
+            return MockHTTPTransport.response(request.url!, status: 200, body: Data(#"""
             {"events":[
               {"eventId":"E1","eventTime":"2026-06-10T08:00:00Z",
                "device":{"model":"iPhone 17 Pro Max"},
@@ -139,14 +137,14 @@ struct ShowCommandTests {
     @Test("FB issue show can filter latest event frames to app frames")
     func firebaseShowFiltersAppFrames() async throws {
         let fs = try makeConfig()
-        let http = MockHTTPClient { request in
+        let http = MockHTTPTransport { request in
             if request.url?.path.hasSuffix("/issues/I1") == true {
-                return MockHTTPClient.response(request.url!, status: 200, body: Data(#"""
+                return MockHTTPTransport.response(request.url!, status: 200, body: Data(#"""
                 {"id":"I1","title":"Blur crash","errorType":"EXC_BAD_ACCESS","subtitle":"SIGSEGV","lastSeenVersion":"6.16.0"}
                 """#.utf8))
             }
             #expect(request.url?.path.hasSuffix("/events") == true)
-            return MockHTTPClient.response(request.url!, status: 200, body: Data(#"""
+            return MockHTTPTransport.response(request.url!, status: 200, body: Data(#"""
             {"events":[{
               "eventId":"E1",
               "threads":[{"crashed":true,"frames":[
@@ -183,10 +181,10 @@ struct ShowCommandTests {
     @Test("FB event id shows that event's frames")
     func firebaseEventShowIncludesFrames() async throws {
         let fs = try makeConfig()
-        let http = MockHTTPClient { request in
+        let http = MockHTTPTransport { request in
             #expect(request.url?.path.hasSuffix("/events") == true)
             #expect(request.url?.query?.contains("filter.issue.id=I1") == true)
-            return MockHTTPClient.response(request.url!, status: 200, body: Data(#"""
+            return MockHTTPTransport.response(request.url!, status: 200, body: Data(#"""
             {"events":[{
               "eventId":"E1",
               "eventTime":"2026-06-05T12:09:45Z",

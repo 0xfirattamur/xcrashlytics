@@ -7,7 +7,6 @@
 
 import ArgumentParser
 import Foundation
-import XCrashlyticsCore
 
 struct UseCommand: AsyncParsableCommand {
     static let configuration = CommandConfiguration(

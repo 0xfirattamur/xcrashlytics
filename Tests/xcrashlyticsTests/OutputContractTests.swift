@@ -8,8 +8,6 @@
 
 import Foundation
 import Testing
-@testable import XCrashlyticsCore
-import XCrashlyticsTestSupport
 @testable import xcrashlytics
 
 extension IssuesCommandTests {

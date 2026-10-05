@@ -8,8 +8,6 @@
 import ArgumentParser
 import Foundation
 import Testing
-@testable import XCrashlyticsCore
-import XCrashlyticsTestSupport
 @testable import xcrashlytics
 
 @Suite("xcrashlytics init")
@@ -29,8 +27,8 @@ struct InitCommandTests {
     /// refresh token, and a token endpoint that exchanges it successfully.
     private func loggedInContext(fs: InMemoryFileSystem, console: CLIConsole = StandardConsole()) -> CommandContext {
         fs.seed(firebaseToolsConfig, text: #"{"tokens":{"refresh_token":"R"}}"#)
-        let http = MockHTTPClient { _ in
-            MockHTTPClient.response(
+        let http = MockHTTPTransport { _ in
+            MockHTTPTransport.response(
                 FirebaseToolsTokenProvider.tokenEndpoint,
                 status: 200,
                 body: Data(#"{"access_token":"ya29.x","expires_in":3599}"#.utf8)
@@ -43,7 +41,7 @@ struct InitCommandTests {
             fileSystem: fs,
             processRunner: proc,
             clock: SystemClock(),
-            httpClient: http,
+            httpTransport: http,
             console: console
         )
     }
@@ -56,7 +54,7 @@ struct InitCommandTests {
             fileSystem: fs,
             processRunner: MockProcessRunner(),
             clock: SystemClock(),
-            httpClient: MockHTTPClient()
+            httpTransport: MockHTTPTransport()
         )
 
         let cmd = try InitCommand.parse([
@@ -201,8 +199,8 @@ struct InitCommandTests {
         let fs = InMemoryFileSystem()
         fs.seed(firebaseToolsConfig, text: #"{"tokens":{"refresh_token":"R"}}"#)
         // CLI present and logged in, but the token endpoint fails transiently.
-        let http = MockHTTPClient { _ in
-            MockHTTPClient.response(
+        let http = MockHTTPTransport { _ in
+            MockHTTPTransport.response(
                 FirebaseToolsTokenProvider.tokenEndpoint,
                 status: 500,
                 body: Data(#"{"error":"server_error"}"#.utf8)
@@ -215,7 +213,7 @@ struct InitCommandTests {
             fileSystem: fs,
             processRunner: proc,
             clock: SystemClock(),
-            httpClient: http
+            httpTransport: http
         )
 
         let cmd = try InitCommand.parse([

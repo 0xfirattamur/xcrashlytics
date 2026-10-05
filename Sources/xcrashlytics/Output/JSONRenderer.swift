@@ -6,12 +6,9 @@
 //
 
 import Foundation
-import XCrashlyticsCore
 
 /// Renders crash data as stable JSON for AI agents and scripts.
-public struct JSONRenderer: Sendable {
-    public init() {}
-
+struct JSONRenderer: Sendable {
     func renderDetail(
         _ event: CrashEvent,
         issue: CrashIssue? = nil,

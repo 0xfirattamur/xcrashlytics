@@ -24,22 +24,45 @@ scripts/install-local.sh   # builds release, overwrites the brew keg binary
 
 ## Project layout
 
+The package has one executable target and one test target. Folders organize
+responsibilities; they are not separate Swift modules.
+
+```text
+Sources/xcrashlytics/
+  Commands/          # argument parsing and command orchestration
+  Output/            # JSON, NDJSON and text rendering
+  Ingest/            # Firebase client and local Xcode crash parsing
+  Processing/        # filtering, grouping and blame aggregation
+  Models/            # crash, event and frame data
+  Storage/           # project configuration
+  System/            # filesystem, HTTP, clock and process dependencies
+  Support/           # shared utilities
+Tests/xcrashlyticsTests/
+  Support/           # test doubles
+  Fixtures/          # crash reports and recorded Firebase responses
 ```
-Sources/
-  XCrashlyticsCore/   # library — domain logic, parsers, matchers, clients
-  xcrashlytics/       # CLI executable (swift-argument-parser)
-Tests/
-  XCrashlyticsCoreTests/
-  xcrashlyticsTests/
-  Fixtures/           # sample .ips, recorded Firebase JSON, dSYMs, golden CLI output
-docs/                 # architecture, schema, errors, install, versioning
-```
+
+Use `@testable import xcrashlytics` in tests. Production declarations default
+to internal visibility; they do not need `public` for tests to exercise them.
+
+Name model files after the types they define: `CrashEvent.swift` represents one
+occurrence, while `CrashIssue.swift` represents a Firebase issue aggregate.
+Reserve `DTO` for wire-format types; processing helpers operate on domain models.
+
+`CrashlyticsClient` implements the Crashlytics REST API; `CrashlyticsAPI` is
+the narrow contract used by commands and processing. `HTTPTransport` only sends
+HTTP requests, with `URLSessionHTTPTransport` in production and
+`MockHTTPTransport` in tests.
 
 ## Workflow
 
 - Use [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `docs:`, `test:`, `refactor:`, `chore:`.
 - TDD: failing test first, then minimal implementation, then commit.
-- Run `swift-format lint --recursive --strict Sources/ Tests/` before pushing.
+- Run `swiftlint lint --strict`, `swift test`, and `swift build -c release` before pushing.
+- Use `swift test --enable-code-coverage` to measure coverage. A high percentage
+  does not replace assertions for important edge cases or a real CLI smoke run.
+- Test doubles used by concurrent code must synchronize shared mutable state;
+  `@unchecked Sendable` alone does not make them thread-safe.
 - Open a PR against `main`. CI must be green.
 
 ## Filing issues

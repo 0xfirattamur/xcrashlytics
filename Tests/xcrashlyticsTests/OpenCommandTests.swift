@@ -8,8 +8,6 @@
 import ArgumentParser
 import Foundation
 import Testing
-@testable import XCrashlyticsCore
-import XCrashlyticsTestSupport
 @testable import xcrashlytics
 
 @Suite("xcrashlytics open")
@@ -29,11 +27,11 @@ struct OpenCommandTests {
     }
 
     /// Events payload whose newest event blames BlurDetectionService.swift:42.
-    private func eventsHTTP() -> MockHTTPClient {
-        MockHTTPClient { request in
+    private func eventsHTTP() -> MockHTTPTransport {
+        MockHTTPTransport { request in
             #expect(request.url?.path.hasSuffix("/events") == true)
             #expect(request.url?.query?.contains("filter.issue.id=I1") == true)
-            return MockHTTPClient.response(request.url!, status: 200, body: Data(#"""
+            return MockHTTPTransport.response(request.url!, status: 200, body: Data(#"""
             {"events":[
               {"eventId":"E1","threads":[{"crashed":true,"frames":[
                 {"symbol":"<redacted>","library":"libsystem_kernel.dylib"},
@@ -93,8 +91,8 @@ struct OpenCommandTests {
     @Test("FB id errors when no frame carries a source location")
     func firebaseErrorsWithoutSourceLocation() async throws {
         let fs = try makeConfig()
-        let http = MockHTTPClient { request in
-            MockHTTPClient.response(request.url!, status: 200, body: Data(#"""
+        let http = MockHTTPTransport { request in
+            MockHTTPTransport.response(request.url!, status: 200, body: Data(#"""
             {"events":[{"eventId":"E1","threads":[{"crashed":true,"frames":[
               {"symbol":"<redacted>","library":"libsystem_kernel.dylib"}
             ]}]}]}
@@ -296,9 +294,9 @@ struct OpenCommandTests {
     }
 
     /// Events payload whose newest event lists an SDK frame (with file) above the app frame.
-    private func sdkFrameFirstHTTP() -> MockHTTPClient {
-        MockHTTPClient { request in
-            MockHTTPClient.response(request.url!, status: 200, body: Data(#"""
+    private func sdkFrameFirstHTTP() -> MockHTTPTransport {
+        MockHTTPTransport { request in
+            MockHTTPTransport.response(request.url!, status: 200, body: Data(#"""
             {"events":[
               {"eventId":"E1","threads":[{"crashed":true,"frames":[
                 {"symbol":"FIRCLSUserLoggingRecordKeyValue","library":"FirebaseCrashlytics","file":"FIRCLSUserLogging.m","line":"402"},
@@ -335,8 +333,8 @@ struct OpenCommandTests {
     func firebaseFallsBackToNonAppFrame() async throws {
         let fs = try makeConfig()
         fs.seed("\(cwd)/Vendor/FIRCLSUserLogging.m", text: "// sdk copy")
-        let http = MockHTTPClient { request in
-            MockHTTPClient.response(request.url!, status: 200, body: Data(#"""
+        let http = MockHTTPTransport { request in
+            MockHTTPTransport.response(request.url!, status: 200, body: Data(#"""
             {"events":[{"eventId":"E1","threads":[{"crashed":true,"frames":[
               {"symbol":"FIRCLSUserLoggingRecordKeyValue","library":"FirebaseCrashlytics","file":"FIRCLSUserLogging.m","line":"402"}
             ]}]}]}

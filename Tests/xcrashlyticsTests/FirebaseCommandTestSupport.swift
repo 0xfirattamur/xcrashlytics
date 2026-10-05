@@ -1,14 +1,13 @@
 import Foundation
-import XCrashlyticsCore
 @testable import xcrashlytics
 
 extension CommandContext {
-    func withFirebaseHTTP(_ httpClient: HTTPClient) -> CommandContext {
+    func withFirebaseHTTP(_ httpTransport: HTTPTransport) -> CommandContext {
         CommandContext(
             fileSystem: FirebaseToolsAuthFileSystem(base: fileSystem),
             processRunner: processRunner,
             clock: clock,
-            httpClient: FirebaseToolsAuthHTTPClient(firebaseHTTPClient: httpClient),
+            httpTransport: FirebaseToolsAuthHTTPTransport(firebaseTransport: httpTransport),
             console: console
         )
     }
@@ -64,11 +63,11 @@ private final class FirebaseToolsAuthFileSystem: FileSystem, @unchecked Sendable
     }
 }
 
-private final class FirebaseToolsAuthHTTPClient: HTTPClient, @unchecked Sendable {
-    private let firebaseHTTPClient: HTTPClient
+private final class FirebaseToolsAuthHTTPTransport: HTTPTransport, @unchecked Sendable {
+    private let firebaseTransport: HTTPTransport
 
-    init(firebaseHTTPClient: HTTPClient) {
-        self.firebaseHTTPClient = firebaseHTTPClient
+    init(firebaseTransport: HTTPTransport) {
+        self.firebaseTransport = firebaseTransport
     }
 
     func send(_ request: URLRequest) async throws -> (Data, HTTPURLResponse) {
@@ -82,6 +81,6 @@ private final class FirebaseToolsAuthHTTPClient: HTTPClient, @unchecked Sendable
             )!
             return (body, response)
         }
-        return try await firebaseHTTPClient.send(request)
+        return try await firebaseTransport.send(request)
     }
 }

@@ -7,7 +7,6 @@
 
 import ArgumentParser
 import Foundation
-import XCrashlyticsCore
 
 struct ShowCommand: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
@@ -87,7 +86,7 @@ struct ShowCommand: AsyncParsableCommand {
             }
             return Detail(event: match.event, warnings: load.warnings)
         }
-        let firebase = try ctx.firebaseClient()
+        let firebase = try ctx.crashlyticsClient()
         if let ref = FirebaseEventRef(id) {
             return Detail(event: try await firebaseEvent(ref, firebase: firebase))
         }
@@ -107,7 +106,7 @@ struct ShowCommand: AsyncParsableCommand {
                 "no profile for bundle id '\(link.bundleId)'. Add one: "
                     + "xcrashlytics init --app-id <APP_ID> --bundle-id \(link.bundleId) --profile <name>")
         }
-        let firebase = try ctx.firebaseClient(appId: appId)
+        let firebase = try ctx.crashlyticsClient(appId: appId)
         var (detail, events) = try await firebaseIssue(link.issueId, firebase: firebase)
         let candidates = link.candidateEventIds
         guard !candidates.isEmpty else { return detail }
@@ -117,7 +116,7 @@ struct ShowCommand: AsyncParsableCommand {
                 message: "the link's event is not among the newest \(FirebaseEventSampling.limit) events; showing the issue."))
             return detail
         }
-        detail.event = FirebaseEventCrashMapper.crashRecord(
+        detail.event = FirebaseEventCrashMapper.crashEvent(
             from: match,
             canonicalId: FirebaseIdentifiers.canonicalEventId(match, issueId: link.issueId),
             frameOptions: frameOptions)
@@ -126,7 +125,7 @@ struct ShowCommand: AsyncParsableCommand {
 
     private func firebaseEvent(
         _ ref: FirebaseEventRef,
-        firebase: FirebaseCrashlyticsClient
+        firebase: CrashlyticsAPI
     ) async throws -> CrashEvent {
         let events = try await firebase.listEvents(issueID: ref.issueId, maxEvents: FirebaseEventSampling.limit)
         guard let dto = events.first(where: { event in
@@ -135,14 +134,14 @@ struct ShowCommand: AsyncParsableCommand {
         }) else {
             throw ValidationError("no Firebase event found with id '\(id)'.")
         }
-        return FirebaseEventCrashMapper.crashRecord(from: dto, canonicalId: id, frameOptions: frameOptions)
+        return FirebaseEventCrashMapper.crashEvent(from: dto, canonicalId: id, frameOptions: frameOptions)
     }
 
     /// Issue aggregates plus the newest event's stack; also returns the
     /// sampled events so callers can pick a specific one.
     private func firebaseIssue(
         _ issueId: String,
-        firebase: FirebaseCrashlyticsClient
+        firebase: CrashlyticsAPI
     ) async throws -> (detail: Detail, events: [FirebaseEvent]) {
         let issue = try await firebase.getIssueDetail(id: issueId)
         let events = try await firebase.listEvents(issueID: issueId, maxEvents: FirebaseEventSampling.limit)

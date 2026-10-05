@@ -6,35 +6,33 @@
 //
 
 import Foundation
-import XCrashlyticsCore
 
 /// Production wiring of every protocol-shaped dependency the CLI needs.
 ///
 /// Commands take a `CommandContext` instead of constructing their own dependencies
 /// so tests can hand them an alternate context backed by in-memory fakes.
-public struct CommandContext: Sendable {
-    public let fileSystem: FileSystem
-    public let processRunner: ProcessRunner
-    public let clock: Clock
-    public let console: CLIConsole
-    public let httpClient: HTTPClient
+struct CommandContext: Sendable {
+    let fileSystem: FileSystem
+    let processRunner: ProcessRunner
+    let clock: Clock
+    let console: CLIConsole
+    let httpTransport: HTTPTransport
 
-    public init(
+    init(
         fileSystem: FileSystem,
         processRunner: ProcessRunner,
         clock: Clock,
-        httpClient: HTTPClient = URLSessionHTTPClient(),
+        httpTransport: HTTPTransport = URLSessionHTTPTransport(),
         console: CLIConsole = StandardConsole()
     ) {
         self.fileSystem = fileSystem
         self.processRunner = processRunner
         self.clock = clock
-        self.httpClient = httpClient
+        self.httpTransport = httpTransport
         self.console = console
     }
 
-    /// Default production context: real disk, real subprocesses, real clock.
-    public static func live() -> CommandContext {
+    static func live() -> CommandContext {
         CommandContext(
             fileSystem: DiskFileSystem(),
             processRunner: ShellProcessRunner(),
@@ -42,15 +40,15 @@ public struct CommandContext: Sendable {
         )
     }
 
-    func firebaseClient(appId override: String? = nil) throws -> FirebaseCrashlyticsClient {
+    func crashlyticsClient(appId override: String? = nil) throws -> CrashlyticsAPI {
         let config = try ConfigFile(fileSystem: fileSystem).load()
         guard let appId = override ?? config.resolvedAppId else {
             throw ConfigError.missingAppId
         }
-        return try FirebaseClient(
+        return try CrashlyticsClient(
             appId: appId,
             fileSystem: fileSystem,
-            httpClient: httpClient
+            httpTransport: httpTransport
         )
     }
 }

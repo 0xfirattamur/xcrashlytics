@@ -5,8 +5,6 @@
 
 import Foundation
 import Testing
-@testable import XCrashlyticsCore
-import XCrashlyticsTestSupport
 @testable import xcrashlytics
 
 @Suite("xcrashlytics show <console link>")
@@ -24,13 +22,13 @@ struct ShowConsoleLinkTests {
             "debug": AppProfile(appId: "1:1234567890:ios:debug", bundleId: "com.x.app.debug"),
             "release": AppProfile(appId: releaseAppId, bundleId: "com.x.app"),
         ]))
-        let http = MockHTTPClient { request in
+        let http = MockHTTPTransport { request in
             requests.append(request.url!)
             if request.url!.path.hasSuffix("/issues/I1") {
-                return MockHTTPClient.response(request.url!, status: 200, body: Data(
+                return MockHTTPTransport.response(request.url!, status: 200, body: Data(
                     #"{"id":"I1","title":"Blur crash","errorType":"EXC_BAD_ACCESS"}"#.utf8))
             }
-            return MockHTTPClient.response(request.url!, status: 200, body: Data(#"""
+            return MockHTTPTransport.response(request.url!, status: 200, body: Data(#"""
             {"events":[
               {"eventId":"E-NEW","threads":[{"crashed":true,"frames":[{"symbol":"newest()","library":"App"}]}]},
               {"eventId":"E-OLD","device":{"model":"iPhone15,2"},

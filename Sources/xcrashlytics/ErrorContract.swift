@@ -1,6 +1,5 @@
 import ArgumentParser
 import Foundation
-import XCrashlyticsCore
 
 extension AsyncParsableCommand {
     /// Wraps a command body: on failure, emits the contract (JSON to stdout

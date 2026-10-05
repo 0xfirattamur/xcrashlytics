@@ -7,7 +7,6 @@
 
 import ArgumentParser
 import Foundation
-import XCrashlyticsCore
 
 struct IssuesCommand: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
@@ -120,7 +119,7 @@ struct IssuesCommand: AsyncParsableCommand {
         _ ctx: CommandContext,
         crashDirectories overrideDirectories: [String]? = nil
     ) async throws -> String {
-        let firebase = try ctx.firebaseClient()
+        let firebase = try ctx.crashlyticsClient()
         let filter = issueFilter
         let outputLimit = max(1, limit)
         let fetchLimit = IssueSearchPlanner.resolvedSearchLimit(
@@ -233,7 +232,7 @@ struct IssuesCommand: AsyncParsableCommand {
 extension IssuesCommand {
     func filterByEventMetadata(
         _ issues: [CrashIssue],
-        firebase: FirebaseCrashlyticsClient,
+        firebase: CrashlyticsAPI,
         filter: IssueFilter
     ) async throws -> (issues: [CrashIssue], samples: Int) {
         let maxEvents = filter.normalizedUserId == nil ? 1 : max(1, eventsPerIssue)
@@ -253,7 +252,7 @@ extension IssuesCommand {
 
     func filterByLatestEventSince(
         _ issues: [CrashIssue],
-        firebase: FirebaseCrashlyticsClient,
+        firebase: CrashlyticsAPI,
         cutoff: Date?
     ) async throws -> [CrashIssue] {
         guard cutoff != nil else { return issues }
@@ -277,7 +276,7 @@ extension IssuesCommand {
     /// (for last-seen), per-day counts only when --by-day asked for them.
     func loadActivity(
         _ issues: [CrashIssue],
-        firebase: FirebaseCrashlyticsClient,
+        firebase: CrashlyticsAPI,
         now: Date
     ) async throws -> IssueActivity {
         guard !issues.isEmpty else { return IssueActivity() }

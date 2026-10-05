@@ -1,7 +1,5 @@
 import Foundation
 import Testing
-@testable import XCrashlyticsCore
-import XCrashlyticsTestSupport
 @testable import xcrashlytics
 
 extension IssuesCommandTests {
@@ -16,10 +14,10 @@ extension IssuesCommandTests {
         return fs
     }
 
-    func makeIssuesHTTP() -> MockHTTPClient {
-        MockHTTPClient { request in
+    func makeIssuesHTTP() -> MockHTTPTransport {
+        MockHTTPTransport { request in
             if request.url?.path.hasSuffix("/events") == true {
-                return MockHTTPClient.response(request.url!, status: 200, body: Data(#"{"events":[]}"#.utf8))
+                return MockHTTPTransport.response(request.url!, status: 200, body: Data(#"{"events":[]}"#.utf8))
             }
             #expect(request.url?.path.hasSuffix("/reports/topIssues") == true)
             let body = #"""
@@ -39,7 +37,7 @@ extension IssuesCommandTests {
               ]
             }
             """#
-            return MockHTTPClient.response(request.url!, status: 200, body: Data(body.utf8))
+            return MockHTTPTransport.response(request.url!, status: 200, body: Data(body.utf8))
         }
     }
 
@@ -47,10 +45,10 @@ extension IssuesCommandTests {
         try makeConfig()
     }
 
-    func makeMultiIssuesHTTP() -> MockHTTPClient {
-        MockHTTPClient { request in
+    func makeMultiIssuesHTTP() -> MockHTTPTransport {
+        MockHTTPTransport { request in
             if request.url?.path.hasSuffix("/events") == true {
-                return MockHTTPClient.response(request.url!, status: 200, body: Data(#"{"events":[]}"#.utf8))
+                return MockHTTPTransport.response(request.url!, status: 200, body: Data(#"{"events":[]}"#.utf8))
             }
             #expect(request.url?.path.hasSuffix("/reports/topIssues") == true)
             let body = #"""
@@ -91,37 +89,37 @@ extension IssuesCommandTests {
               ]
             }
             """#
-            return MockHTTPClient.response(request.url!, status: 200, body: Data(body.utf8))
+            return MockHTTPTransport.response(request.url!, status: 200, body: Data(body.utf8))
         }
     }
 
-    func makeMultiIssuesWithEventsHTTP() -> MockHTTPClient {
-        MockHTTPClient { request in
+    func makeMultiIssuesWithEventsHTTP() -> MockHTTPTransport {
+        MockHTTPTransport { request in
             guard let url = request.url else {
-                return MockHTTPClient.response(URL(string: "https://example.com")!, status: 500, body: Data())
+                return MockHTTPTransport.response(URL(string: "https://example.com")!, status: 500, body: Data())
             }
             if url.path.hasSuffix("/reports/topIssues") {
                 return try makeMultiIssuesHTTP().handler!(request)
             }
             #expect(url.path.hasSuffix("/events") == true)
             if url.query?.contains("filter.issue.id=I1") == true {
-                return MockHTTPClient.response(url, status: 200, body: Data(#"""
+                return MockHTTPTransport.response(url, status: 200, body: Data(#"""
                 {"events":[{"eventId":"E1","eventTime":"2026-06-07T20:00:00Z"}]}
                 """#.utf8))
             }
             if url.query?.contains("filter.issue.id=I2") == true {
-                return MockHTTPClient.response(url, status: 200, body: Data(#"""
+                return MockHTTPTransport.response(url, status: 200, body: Data(#"""
                 {"events":[{"eventId":"E2","eventTime":"2026-06-01T20:00:00Z"}]}
                 """#.utf8))
             }
-            return MockHTTPClient.response(url, status: 200, body: Data(#"{"events":[]}"#.utf8))
+            return MockHTTPTransport.response(url, status: 200, body: Data(#"{"events":[]}"#.utf8))
         }
     }
 
-    func makeMetricKitHTTP() -> MockHTTPClient {
-        MockHTTPClient { request in
+    func makeMetricKitHTTP() -> MockHTTPTransport {
+        MockHTTPTransport { request in
             guard let url = request.url else {
-                return MockHTTPClient.response(URL(string: "https://example.com")!, status: 500, body: Data())
+                return MockHTTPTransport.response(URL(string: "https://example.com")!, status: 500, body: Data())
             }
             if url.path.hasSuffix("/reports/topIssues") {
                 let body = #"""
@@ -150,11 +148,11 @@ extension IssuesCommandTests {
                   ]
                 }
                 """#
-                return MockHTTPClient.response(url, status: 200, body: Data(body.utf8))
+                return MockHTTPTransport.response(url, status: 200, body: Data(body.utf8))
             }
             #expect(url.path.hasSuffix("/events") == true)
             if url.query?.contains("filter.issue.id=MX") == true {
-                return MockHTTPClient.response(url, status: 200, body: Data(#"""
+                return MockHTTPTransport.response(url, status: 200, body: Data(#"""
                 {
                   "events": [
                     {
@@ -173,17 +171,17 @@ extension IssuesCommandTests {
                 }
                 """#.utf8))
             }
-            return MockHTTPClient.response(url, status: 200, body: Data(#"{"events":[]}"#.utf8))
+            return MockHTTPTransport.response(url, status: 200, body: Data(#"{"events":[]}"#.utf8))
         }
     }
 
-    func makeUserIssuesHTTP() -> MockHTTPClient {
-        MockHTTPClient { request in
+    func makeUserIssuesHTTP() -> MockHTTPTransport {
+        MockHTTPTransport { request in
             guard let url = request.url else {
-                return MockHTTPClient.response(URL(string: "https://example.com")!, status: 500, body: Data())
+                return MockHTTPTransport.response(URL(string: "https://example.com")!, status: 500, body: Data())
             }
             if url.path.hasSuffix("/reports/topIssues") {
-                return MockHTTPClient.response(url, status: 200, body: Data(#"""
+                return MockHTTPTransport.response(url, status: 200, body: Data(#"""
                 {
                   "groups": [
                     {
@@ -214,14 +212,14 @@ extension IssuesCommandTests {
             let pageSize = url.issuesQueryItem(named: "page_size")
             #expect(pageSize == "2" || pageSize == "1")
             if url.query?.contains("filter.issue.id=I1") == true {
-                return MockHTTPClient.response(url, status: 200, body: Data(#"""
+                return MockHTTPTransport.response(url, status: 200, body: Data(#"""
                 {"events":[
                   {"eventId":"E-other","user":{"id":"other-user"}},
                   {"eventId":"E-target","user":{"id":"target-user"}}
                 ]}
                 """#.utf8))
             }
-            return MockHTTPClient.response(url, status: 200, body: Data(#"""
+            return MockHTTPTransport.response(url, status: 200, body: Data(#"""
             {"events":[{"eventId":"E2","user":{"id":"other-user"}}]}
             """#.utf8))
         }
@@ -231,11 +229,11 @@ extension IssuesCommandTests {
         matchIndex: Int?,
         total: Int,
         inspect: ((URLRequest) -> Void)? = nil
-    ) -> MockHTTPClient {
-        MockHTTPClient { request in
+    ) -> MockHTTPTransport {
+        MockHTTPTransport { request in
             inspect?(request)
             if request.url?.path.hasSuffix("/events") == true {
-                return MockHTTPClient.response(request.url!, status: 200, body: Data(#"{"events":[]}"#.utf8))
+                return MockHTTPTransport.response(request.url!, status: 200, body: Data(#"{"events":[]}"#.utf8))
             }
             #expect(request.url?.path.hasSuffix("/reports/topIssues") == true)
             let groups = (1...total).map { index in
@@ -257,14 +255,14 @@ extension IssuesCommandTests {
                 """#
             }.joined(separator: ",")
             let body = #"{"groups":[\#(groups)]}"#
-            return MockHTTPClient.response(request.url!, status: 200, body: Data(body.utf8))
+            return MockHTTPTransport.response(request.url!, status: 200, body: Data(body.utf8))
         }
     }
 
-    func makeVersionedIssuesHTTP() -> MockHTTPClient {
-        MockHTTPClient { request in
+    func makeVersionedIssuesHTTP() -> MockHTTPTransport {
+        MockHTTPTransport { request in
             if request.url?.path.hasSuffix("/events") == true {
-                return MockHTTPClient.response(request.url!, status: 200, body: Data(#"{"events":[]}"#.utf8))
+                return MockHTTPTransport.response(request.url!, status: 200, body: Data(#"{"events":[]}"#.utf8))
             }
             #expect(request.url?.path.hasSuffix("/reports/topIssues") == true)
             let body = #"""
@@ -291,17 +289,17 @@ extension IssuesCommandTests {
               ]
             }
             """#
-            return MockHTTPClient.response(request.url!, status: 200, body: Data(body.utf8))
+            return MockHTTPTransport.response(request.url!, status: 200, body: Data(body.utf8))
         }
     }
 
-    func makeTruncatedTrendHTTP() -> MockHTTPClient {
-        MockHTTPClient { request in
+    func makeTruncatedTrendHTTP() -> MockHTTPTransport {
+        MockHTTPTransport { request in
             guard let url = request.url else {
-                return MockHTTPClient.response(URL(string: "https://example.com")!, status: 500, body: Data())
+                return MockHTTPTransport.response(URL(string: "https://example.com")!, status: 500, body: Data())
             }
             if url.path.hasSuffix("/reports/topIssues") {
-                return MockHTTPClient.response(url, status: 200, body: Data(#"""
+                return MockHTTPTransport.response(url, status: 200, body: Data(#"""
                 {
                   "groups": [
                     {
@@ -318,7 +316,7 @@ extension IssuesCommandTests {
                 """#.utf8))
             }
             #expect(url.path.hasSuffix("/events") == true)
-            return MockHTTPClient.response(url, status: 200, body: Data(#"""
+            return MockHTTPTransport.response(url, status: 200, body: Data(#"""
             {
               "events": [
                 {"eventId":"E1","eventTime":"2026-06-07T10:00:00Z"},
@@ -330,13 +328,13 @@ extension IssuesCommandTests {
         }
     }
 
-    func makeTrendHTTP() -> MockHTTPClient {
-        MockHTTPClient { request in
+    func makeTrendHTTP() -> MockHTTPTransport {
+        MockHTTPTransport { request in
             guard let url = request.url else {
-                return MockHTTPClient.response(URL(string: "https://example.com")!, status: 500, body: Data())
+                return MockHTTPTransport.response(URL(string: "https://example.com")!, status: 500, body: Data())
             }
             if url.path.hasSuffix("/reports/topIssues") {
-                return MockHTTPClient.response(url, status: 200, body: Data(#"""
+                return MockHTTPTransport.response(url, status: 200, body: Data(#"""
                 {
                   "groups": [
                     {
@@ -353,7 +351,7 @@ extension IssuesCommandTests {
                 """#.utf8))
             }
             #expect(url.path.hasSuffix("/events") == true)
-            return MockHTTPClient.response(url, status: 200, body: Data(#"""
+            return MockHTTPTransport.response(url, status: 200, body: Data(#"""
             {
               "events": [
                 {"eventId":"E1","eventTime":"2026-06-07T10:00:00Z"},

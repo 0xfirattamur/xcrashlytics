@@ -7,7 +7,6 @@
 
 import ArgumentParser
 import Foundation
-import XCrashlyticsCore
 
 struct GroupsCommand: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
@@ -50,7 +49,7 @@ struct GroupsCommand: AsyncParsableCommand {
         _ ctx: CommandContext,
         crashDirectories overrideDirectories: [String]? = nil
     ) async throws -> String {
-        let firebase = try ctx.firebaseClient()
+        let firebase = try ctx.crashlyticsClient()
         let firebaseIssues = try await firebase.listIssues(maxIssues: firebaseLimit)
             .filter(matchesIssueFilter)
         let xcodeLoad = try loadXcodeCrashes(ctx: ctx, overrideDirectories: overrideDirectories)

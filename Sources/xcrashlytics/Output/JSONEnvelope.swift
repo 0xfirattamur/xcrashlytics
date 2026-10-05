@@ -1,10 +1,3 @@
-//
-//  JSONEnvelope.swift
-//  xcrashlytics
-//
-
-import XCrashlyticsCore
-
 /// Version of the JSON / NDJSON output contract. Bumped only on breaking changes.
 let outputSchemaVersion = 1
 

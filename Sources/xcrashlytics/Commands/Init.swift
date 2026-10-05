@@ -7,7 +7,6 @@
 
 import ArgumentParser
 import Foundation
-import XCrashlyticsCore
 
 struct InitCommand: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
@@ -185,7 +184,7 @@ struct InitCommand: AsyncParsableCommand {
 
     private func checkFirebaseLogin(ctx: CommandContext, isFirebaseCLIInstalled: Bool) async throws
         -> Check {
-        let provider = FirebaseToolsTokenProvider(fs: ctx.fileSystem, httpClient: ctx.httpClient)
+        let provider = FirebaseToolsTokenProvider(fs: ctx.fileSystem, httpTransport: ctx.httpTransport)
         guard provider.isFirebaseLoggedIn() else {
             return isFirebaseCLIInstalled
                 ? .fail("firebase login not completed. Run: firebase login") : .ok
@@ -206,7 +205,7 @@ struct InitCommand: AsyncParsableCommand {
     }
 
     private func checkAppId(_ appId: String) -> Check {
-        guard FirebaseClient.projectNumber(fromAppId: appId) != nil else {
+        guard CrashlyticsClient.projectNumber(fromAppId: appId) != nil else {
             return .fail(
                 "appId=\(appId) has wrong format. Expected '1:<number>:<platform>:<hash>'.")
         }

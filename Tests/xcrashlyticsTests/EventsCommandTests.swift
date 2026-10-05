@@ -7,8 +7,6 @@
 
 import Foundation
 import Testing
-@testable import XCrashlyticsCore
-import XCrashlyticsTestSupport
 @testable import xcrashlytics
 
 @Suite("xcrashlytics events")
@@ -302,8 +300,8 @@ struct EventsCommandTests {
         return fs
     }
 
-    private func makeEventsHTTP(expectedPageSize: String = "10") -> MockHTTPClient {
-        MockHTTPClient { request in
+    private func makeEventsHTTP(expectedPageSize: String = "10") -> MockHTTPTransport {
+        MockHTTPTransport { request in
             #expect(request.url?.path.hasSuffix("/events") == true)
             #expect(request.url?.query?.contains("filter.issue.id=I1") == true)
             #expect(request.url?.query?.contains("page_size=\(expectedPageSize)") == true)
@@ -324,12 +322,12 @@ struct EventsCommandTests {
               ]}]
             }]}
             """#
-            return MockHTTPClient.response(request.url!, status: 200, body: Data(body.utf8))
+            return MockHTTPTransport.response(request.url!, status: 200, body: Data(body.utf8))
         }
     }
 
-    private func makeEventsHTTPWithoutCrashedThreadFlag() -> MockHTTPClient {
-        MockHTTPClient { request in
+    private func makeEventsHTTPWithoutCrashedThreadFlag() -> MockHTTPTransport {
+        MockHTTPTransport { request in
             #expect(request.url?.path.hasSuffix("/events") == true)
             let body = #"""
             {"events":[{
@@ -349,12 +347,12 @@ struct EventsCommandTests {
               ]}]
             }]}
             """#
-            return MockHTTPClient.response(request.url!, status: 200, body: Data(body.utf8))
+            return MockHTTPTransport.response(request.url!, status: 200, body: Data(body.utf8))
         }
     }
 
-    private func makeUserEventsHTTP() -> MockHTTPClient {
-        MockHTTPClient { request in
+    private func makeUserEventsHTTP() -> MockHTTPTransport {
+        MockHTTPTransport { request in
             #expect(request.url?.path.hasSuffix("/events") == true)
             let body = #"""
             {"events":[
@@ -376,12 +374,12 @@ struct EventsCommandTests {
               }
             ]}
             """#
-            return MockHTTPClient.response(request.url!, status: 200, body: Data(body.utf8))
+            return MockHTTPTransport.response(request.url!, status: 200, body: Data(body.utf8))
         }
     }
 
-    private func makeNoisyEventsHTTP() -> MockHTTPClient {
-        MockHTTPClient { request in
+    private func makeNoisyEventsHTTP() -> MockHTTPTransport {
+        MockHTTPTransport { request in
             #expect(request.url?.path.hasSuffix("/events") == true)
             let body = #"""
             {"events":[{
@@ -415,12 +413,12 @@ struct EventsCommandTests {
               ]
             }]}
             """#
-            return MockHTTPClient.response(request.url!, status: 200, body: Data(body.utf8))
+            return MockHTTPTransport.response(request.url!, status: 200, body: Data(body.utf8))
         }
     }
 
-    private func makeOverFetchEventsHTTP() -> MockHTTPClient {
-        MockHTTPClient { request in
+    private func makeOverFetchEventsHTTP() -> MockHTTPTransport {
+        MockHTTPTransport { request in
             #expect(request.url?.path.hasSuffix("/events") == true)
             #expect(request.url?.query?.contains("page_size=50") == true)
             // Build 20 events; only event 15 (index 14, 1-based = 15th) has user id "U1"
@@ -439,12 +437,12 @@ struct EventsCommandTests {
                 """
             }
             let body = "{\"events\":[\(events.joined(separator: ","))]}"
-            return MockHTTPClient.response(request.url!, status: 200, body: Data(body.utf8))
+            return MockHTTPTransport.response(request.url!, status: 200, body: Data(body.utf8))
         }
     }
 
-    private func makeBatchEventsHTTP() -> MockHTTPClient {
-        MockHTTPClient { request in
+    private func makeBatchEventsHTTP() -> MockHTTPTransport {
+        MockHTTPTransport { request in
             #expect(request.url?.path.hasSuffix("/events") == true)
             let issueId = request.url?.queryItem(named: "filter.issue.id")
             let eventId = issueId == "I2" ? "E2" : "E1"
@@ -458,7 +456,7 @@ struct EventsCommandTests {
               ]}]
             }]}
             """#
-            return MockHTTPClient.response(request.url!, status: 200, body: Data(body.utf8))
+            return MockHTTPTransport.response(request.url!, status: 200, body: Data(body.utf8))
         }
     }
 }

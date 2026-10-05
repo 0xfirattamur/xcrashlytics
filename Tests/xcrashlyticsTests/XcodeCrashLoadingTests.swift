@@ -1,7 +1,5 @@
 import Foundation
 import Testing
-@testable import XCrashlyticsCore
-import XCrashlyticsTestSupport
 @testable import xcrashlytics
 
 @Suite("xcodeCrashDirectories")
@@ -16,7 +14,7 @@ struct XcodeCrashLoadingTests {
             fileSystem: fs,
             processRunner: MockProcessRunner(),
             clock: SystemClock(),
-            httpClient: MockHTTPClient()
+            httpTransport: MockHTTPTransport()
         )
     }
 

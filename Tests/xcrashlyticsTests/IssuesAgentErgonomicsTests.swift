@@ -7,8 +7,6 @@
 
 import Foundation
 import Testing
-@testable import XCrashlyticsCore
-import XCrashlyticsTestSupport
 @testable import xcrashlytics
 
 @Suite("xcrashlytics issues agent ergonomics")
@@ -69,13 +67,13 @@ struct IssuesAgentErgonomicsTests {
         return fs
     }
 
-    private func makeVersionedIssuesHTTP() -> MockHTTPClient {
-        MockHTTPClient { request in
+    private func makeVersionedIssuesHTTP() -> MockHTTPTransport {
+        MockHTTPTransport { request in
             if request.url?.path.hasSuffix("/events") == true {
-                return MockHTTPClient.response(request.url!, status: 200, body: Data(#"{"events":[]}"#.utf8))
+                return MockHTTPTransport.response(request.url!, status: 200, body: Data(#"{"events":[]}"#.utf8))
             }
             #expect(request.url?.path.hasSuffix("/reports/topIssues") == true)
-            return MockHTTPClient.response(request.url!, status: 200, body: Data(#"""
+            return MockHTTPTransport.response(request.url!, status: 200, body: Data(#"""
             {"groups":[
               {
                 "issue":{
@@ -109,13 +107,13 @@ struct IssuesAgentErgonomicsTests {
         }
     }
 
-    private func makeRelatedIssuesHTTP() -> MockHTTPClient {
-        MockHTTPClient { request in
+    private func makeRelatedIssuesHTTP() -> MockHTTPTransport {
+        MockHTTPTransport { request in
             if request.url?.path.hasSuffix("/events") == true {
-                return MockHTTPClient.response(request.url!, status: 200, body: Data(#"{"events":[]}"#.utf8))
+                return MockHTTPTransport.response(request.url!, status: 200, body: Data(#"{"events":[]}"#.utf8))
             }
             #expect(request.url?.path.hasSuffix("/reports/topIssues") == true)
-            return MockHTTPClient.response(request.url!, status: 200, body: Data(#"""
+            return MockHTTPTransport.response(request.url!, status: 200, body: Data(#"""
             {"groups":[
               {
                 "issue":{

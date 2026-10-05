@@ -1,12 +1,3 @@
-//
-//  XcodeCrashLoading.swift
-//  xcrashlytics
-//
-//  Created by FIRAT TAMUR on 8.06.2026.
-//
-
-import XCrashlyticsCore
-
 extension CommandContext {
     /// Loads local Xcode crashes from the given directories. Warnings are
     /// returned, not printed: the command decides where they go.

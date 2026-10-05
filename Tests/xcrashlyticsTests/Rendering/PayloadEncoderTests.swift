@@ -1,6 +1,5 @@
 import Foundation
 import Testing
-@testable import XCrashlyticsCore
 @testable import xcrashlytics
 
 @Suite("payload encoder")

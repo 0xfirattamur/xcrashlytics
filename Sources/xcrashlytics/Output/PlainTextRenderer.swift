@@ -6,26 +6,19 @@
 //
 
 import Foundation
-import XCrashlyticsCore
 
-/// Renders crashes as plain text suitable for terminal output.
-///
-/// Views:
-/// - `renderGroups(_:)` — same-culprit crashes clustered across sources.
-/// - `renderDetail(_:)` — full crash dump for `xcrashlytics show`.
-public struct PlainTextRenderer: Sendable {
+/// Renders crashes as plain text for terminal output.
+struct PlainTextRenderer: Sendable {
     private let dateFormatter: DateFormatter
 
-    public init() {
+    init() {
         let f = DateFormatter()
         f.locale = Locale(identifier: "en_US_POSIX")
         f.dateFormat = "yyyy-MM-dd HH:mm"
         self.dateFormatter = f
     }
 
-    /// One block per group: the culprit, its module, cross-source flag, the
-    /// Firebase impact totals, the local crash count, and member ids.
-    public func renderGroups(_ groups: [CrashGroup]) -> String {
+    func renderGroups(_ groups: [CrashGroup]) -> String {
         if groups.isEmpty { return "No crashes found.\n" }
         var lines: [String] = []
         for group in groups {
@@ -53,8 +46,7 @@ public struct PlainTextRenderer: Sendable {
         return "\(e) events / \(u) users"
     }
 
-    /// Multi-line block: header + frames of the crashed thread.
-    public func renderDetail(
+    func renderDetail(
         _ event: CrashEvent,
         issue: CrashIssue? = nil,
         activity: IssueActivitySummary? = nil

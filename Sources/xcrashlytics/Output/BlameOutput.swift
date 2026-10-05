@@ -1,38 +1,16 @@
-//
-//  BlameOutput.swift
-//  xcrashlytics
-//
-//  Created by FIRAT TAMUR on 8.06.2026.
-//
+struct BlamePayload: Encodable, Sendable {
+    var since: String
+    var issueLimit: Int
+    var eventsPerIssue: Int
+    var concurrency: Int
+    var items: [BlameSummary]
 
-import XCrashlyticsCore
-
-public struct BlamePayload: Encodable, Sendable {
-    public var since: String
-    public var issueLimit: Int
-    public var eventsPerIssue: Int
-    public var concurrency: Int
-    public var items: [BlameSummary]
-
-    public init(
-        since: String,
-        issueLimit: Int,
-        eventsPerIssue: Int,
-        concurrency: Int,
-        items: [BlameSummary]
-    ) {
-        self.since = since
-        self.issueLimit = issueLimit
-        self.eventsPerIssue = eventsPerIssue
-        self.concurrency = concurrency
-        self.items = items
-    }
 }
 
 // MARK: - BlameRenderer
 
-public enum BlameRenderer {
-    public static func text(_ rows: [BlameSummary]) -> String {
+enum BlameRenderer {
+    static func text(_ rows: [BlameSummary]) -> String {
         guard !rows.isEmpty else {
             return "No blamed frames found.\n"
         }

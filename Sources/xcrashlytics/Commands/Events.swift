@@ -7,7 +7,6 @@
 
 import ArgumentParser
 import Foundation
-import XCrashlyticsCore
 
 struct EventsCommand: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
@@ -64,7 +63,7 @@ struct EventsCommand: AsyncParsableCommand {
     func runWithContext(
         _ ctx: CommandContext
     ) async throws -> String {
-        let firebase = try ctx.firebaseClient()
+        let firebase = try ctx.crashlyticsClient()
         let issueIds = try requestedIssueIds()
         let cutoff: Date? = if let since {
             try SinceDuration.cutoffDate(from: since, now: ctx.clock.now())

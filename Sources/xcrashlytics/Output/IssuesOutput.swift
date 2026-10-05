@@ -6,93 +6,51 @@
 //
 
 import Foundation
-import XCrashlyticsCore
 
-public struct IssuesPayload: Encodable, Sendable {
-    public var query: String?
-    public var match: String?
-    public var limit: Int
-    public var searchLimit: Int
-    public var fetchedIssuesCount: Int
-    public var matchedIssuesCount: Int
-    public var hint: String?
-    public var appVersion: String?
-    public var sinceVersion: String?
-    public var file: String?
-    public var symbol: String?
-    public var since: String?
-    public var domain: String?
-    public var userInfoKey: [String]?
-    public var eventMetadataSamples: Int?
-    public var symbolicationHint: String?
-    public var issues: [IssueSummary]
-    public var xcodeCrashes: [XcodeIssueSummary]?
-    public var relatedGroups: [RelatedIssueGroup]?
+struct IssuesPayload: Encodable, Sendable {
+    var query: String?
+    var match: String?
+    var limit: Int
+    var searchLimit: Int
+    var fetchedIssuesCount: Int
+    var matchedIssuesCount: Int
+    var hint: String?
+    var appVersion: String?
+    var sinceVersion: String?
+    var file: String?
+    var symbol: String?
+    var since: String?
+    var domain: String?
+    var userInfoKey: [String]?
+    var eventMetadataSamples: Int?
+    var symbolicationHint: String?
+    var issues: [IssueSummary]
+    var xcodeCrashes: [XcodeIssueSummary]?
+    var relatedGroups: [RelatedIssueGroup]?
 
-    public init(
-        query: String?,
-        match: String?,
-        limit: Int,
-        searchLimit: Int,
-        fetchedIssuesCount: Int,
-        matchedIssuesCount: Int,
-        hint: String?,
-        appVersion: String?,
-        sinceVersion: String?,
-        file: String?,
-        symbol: String?,
-        since: String?,
-        domain: String?,
-        userInfoKey: [String]?,
-        eventMetadataSamples: Int?,
-        symbolicationHint: String?,
-        issues: [IssueSummary],
-        xcodeCrashes: [XcodeIssueSummary]?,
-        relatedGroups: [RelatedIssueGroup]?
-    ) {
-        self.query = query
-        self.match = match
-        self.limit = limit
-        self.searchLimit = searchLimit
-        self.fetchedIssuesCount = fetchedIssuesCount
-        self.matchedIssuesCount = matchedIssuesCount
-        self.hint = hint
-        self.appVersion = appVersion
-        self.sinceVersion = sinceVersion
-        self.file = file
-        self.symbol = symbol
-        self.since = since
-        self.domain = domain
-        self.userInfoKey = userInfoKey
-        self.eventMetadataSamples = eventMetadataSamples
-        self.symbolicationHint = symbolicationHint
-        self.issues = issues
-        self.xcodeCrashes = xcodeCrashes
-        self.relatedGroups = relatedGroups
-    }
 }
 
-public struct IssueSummary: Encodable, Sendable {
-    public var id: String
-    public var firebaseIssueId: String
-    public var title: String?
-    public var subtitle: String?
-    public var exceptionType: String?
-    public var signal: String?
-    public var appVersion: String?
-    public var firstSeenVersion: String?
-    public var lastSeenVersion: String?
-    public var eventsCount: Int?
-    public var impactedUsersCount: Int?
-    public var module: String?
-    public var file: String?
-    public var topAppSymbol: String?
-    public var dailyEvents: [DailyEventCount]?
-    public var dailyEventsSampledCount: Int?
-    public var dailyEventsTruncated: Bool?
-    public var lastSeenAt: String?
+struct IssueSummary: Encodable, Sendable {
+    var id: String
+    var firebaseIssueId: String
+    var title: String?
+    var subtitle: String?
+    var exceptionType: String?
+    var signal: String?
+    var appVersion: String?
+    var firstSeenVersion: String?
+    var lastSeenVersion: String?
+    var eventsCount: Int?
+    var impactedUsersCount: Int?
+    var module: String?
+    var file: String?
+    var topAppSymbol: String?
+    var dailyEvents: [DailyEventCount]?
+    var dailyEventsSampledCount: Int?
+    var dailyEventsTruncated: Bool?
+    var lastSeenAt: String?
 
-    public init(_ issue: CrashIssue, trend: IssueTrend? = nil, lastSeenAt: String? = nil) {
+    init(_ issue: CrashIssue, trend: IssueTrend? = nil, lastSeenAt: String? = nil) {
         let display = DisplaySignature(issue)
         self.id = issue.id
         self.firebaseIssueId = issue.providerId
@@ -118,38 +76,28 @@ public struct IssueSummary: Encodable, Sendable {
 /// Per-day counts for one issue, built from a sample of its newest events.
 /// `truncated` means the sample did not cover every event, so the oldest
 /// sampled day's count is a lower bound.
-public struct IssueTrend: Sendable, Equatable {
-    public var days: [DailyEventCount]
-    public var sampledEvents: Int
-    public var totalEvents: Int?
-    public var truncated: Bool
+struct IssueTrend: Sendable, Equatable {
+    var days: [DailyEventCount]
+    var sampledEvents: Int
+    var totalEvents: Int?
+    var truncated: Bool
 
-    public init(days: [DailyEventCount], sampledEvents: Int, totalEvents: Int?, truncated: Bool) {
-        self.days = days
-        self.sampledEvents = sampledEvents
-        self.totalEvents = totalEvents
-        self.truncated = truncated
-    }
 }
 
-public struct DailyEventCount: Encodable, Sendable, Equatable {
-    public var day: String
-    public var eventsCount: Int
+struct DailyEventCount: Encodable, Sendable, Equatable {
+    var day: String
+    var eventsCount: Int
 
-    public init(day: String, eventsCount: Int) {
-        self.day = day
-        self.eventsCount = eventsCount
-    }
 }
 
-public struct XcodeIssueSummary: Encodable, Sendable {
-    public var id: String
-    public var exceptionType: String
-    public var appVersion: String?
-    public var deviceModel: String?
-    public var topAppSymbol: String?
+struct XcodeIssueSummary: Encodable, Sendable {
+    var id: String
+    var exceptionType: String
+    var appVersion: String?
+    var deviceModel: String?
+    var topAppSymbol: String?
 
-    public init(_ crash: XcodeCrash) {
+    init(_ crash: XcodeCrash) {
         self.id = crash.event.id
         self.exceptionType = crash.event.exception.exceptionType
         self.appVersion = crash.event.bundleVersion
@@ -158,8 +106,8 @@ public struct XcodeIssueSummary: Encodable, Sendable {
     }
 }
 
-public enum IssuesRenderer {
-    public static func text(
+enum IssuesRenderer {
+    static func text(
         issues: [CrashIssue],
         xcodeCrashes: [XcodeCrash],
         hint: String?,

@@ -7,7 +7,6 @@
 
 import ArgumentParser
 import Foundation
-import XCrashlyticsCore
 
 struct OpenCommand: AsyncParsableCommand {
     static let configuration = CommandConfiguration(
@@ -100,7 +99,7 @@ struct OpenCommand: AsyncParsableCommand {
     /// First frame with a source location in the id's Firebase event — the
     /// `FB-…/events/…` event when the id names one, else the issue's newest.
     private func firebaseSourceLocation(ctx: CommandContext) async throws -> (file: String, line: Int?) {
-        let firebase = try ctx.firebaseClient()
+        let firebase = try ctx.crashlyticsClient()
         let eventReference = FirebaseEventRef(id)
         let issueId = eventReference?.issueId ?? FirebaseIdentifiers.issueId(from: id)
         let events = try await firebase.listEvents(issueID: issueId, maxEvents: FirebaseEventSampling.limit)

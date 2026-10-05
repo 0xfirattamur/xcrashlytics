@@ -7,8 +7,6 @@
 
 import Foundation
 import Testing
-@testable import XCrashlyticsCore
-import XCrashlyticsTestSupport
 @testable import xcrashlytics
 
 @Suite("xcrashlytics blame")
@@ -93,10 +91,10 @@ struct BlameCommandTests {
     }
 
     /// Two issues, each blaming a distinct symbol — produces two BlameSummary rows.
-    private func makeMultiSymbolHTTP() -> MockHTTPClient {
-        MockHTTPClient { request in
+    private func makeMultiSymbolHTTP() -> MockHTTPTransport {
+        MockHTTPTransport { request in
             guard let url = request.url else {
-                return MockHTTPClient.response(URL(string: "https://example.com")!, status: 500, body: Data())
+                return MockHTTPTransport.response(URL(string: "https://example.com")!, status: 500, body: Data())
             }
             if url.path.hasSuffix("/reports/topIssues") {
                 let body = #"""
@@ -121,7 +119,7 @@ struct BlameCommandTests {
                   }
                 ]}
                 """#
-                return MockHTTPClient.response(url, status: 200, body: Data(body.utf8))
+                return MockHTTPTransport.response(url, status: 200, body: Data(body.utf8))
             }
             #expect(url.path.hasSuffix("/events") == true)
             if url.query?.contains("filter.issue.id=I1") == true {
@@ -135,7 +133,7 @@ struct BlameCommandTests {
                   ]}]
                 }]}
                 """#
-                return MockHTTPClient.response(url, status: 200, body: Data(body.utf8))
+                return MockHTTPTransport.response(url, status: 200, body: Data(body.utf8))
             }
             // I2 — different symbol so aggregation produces a second distinct row
             let body = #"""
@@ -148,7 +146,7 @@ struct BlameCommandTests {
               ]}]
             }]}
             """#
-            return MockHTTPClient.response(url, status: 200, body: Data(body.utf8))
+            return MockHTTPTransport.response(url, status: 200, body: Data(body.utf8))
         }
     }
 
@@ -158,10 +156,10 @@ struct BlameCommandTests {
         return fs
     }
 
-    private func makeHTTP() -> MockHTTPClient {
-        MockHTTPClient { request in
+    private func makeHTTP() -> MockHTTPTransport {
+        MockHTTPTransport { request in
             guard let url = request.url else {
-                return MockHTTPClient.response(URL(string: "https://example.com")!, status: 500, body: Data())
+                return MockHTTPTransport.response(URL(string: "https://example.com")!, status: 500, body: Data())
             }
             if url.path.hasSuffix("/reports/topIssues") {
                 #expect(url.query?.contains("page_size=2") == true)
@@ -187,7 +185,7 @@ struct BlameCommandTests {
                   }
                 ]}
                 """#
-                return MockHTTPClient.response(url, status: 200, body: Data(body.utf8))
+                return MockHTTPTransport.response(url, status: 200, body: Data(body.utf8))
             }
             #expect(url.path.hasSuffix("/events") == true)
             #expect(url.query?.contains("page_size=2") == true)
@@ -212,7 +210,7 @@ struct BlameCommandTests {
                   }
                 ]}
                 """#
-                return MockHTTPClient.response(url, status: 200, body: Data(body.utf8))
+                return MockHTTPTransport.response(url, status: 200, body: Data(body.utf8))
             }
             let body = #"""
             {"events":[
@@ -224,7 +222,7 @@ struct BlameCommandTests {
               }
             ]}
             """#
-            return MockHTTPClient.response(url, status: 200, body: Data(body.utf8))
+            return MockHTTPTransport.response(url, status: 200, body: Data(body.utf8))
         }
     }
 }

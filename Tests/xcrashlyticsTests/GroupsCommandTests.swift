@@ -7,8 +7,6 @@
 
 import Foundation
 import Testing
-@testable import XCrashlyticsCore
-import XCrashlyticsTestSupport
 @testable import xcrashlytics
 
 @Suite("xcrashlytics groups")
@@ -69,8 +67,8 @@ struct GroupsCommandTests {
         return fs
     }
 
-    private func makeIssuesHTTP() -> MockHTTPClient {
-        MockHTTPClient { request in
+    private func makeIssuesHTTP() -> MockHTTPTransport {
+        MockHTTPTransport { request in
             #expect(request.url?.path.hasSuffix("/reports/topIssues") == true)
             let body = #"""
             {
@@ -96,7 +94,7 @@ struct GroupsCommandTests {
               ]
             }
             """#
-            return MockHTTPClient.response(request.url!, status: 200, body: Data(body.utf8))
+            return MockHTTPTransport.response(request.url!, status: 200, body: Data(body.utf8))
         }
     }
 }

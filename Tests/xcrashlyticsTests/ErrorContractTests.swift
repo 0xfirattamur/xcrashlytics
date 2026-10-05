@@ -1,6 +1,5 @@
 import ArgumentParser
 import Testing
-import XCrashlyticsCore
 @testable import xcrashlytics
 
 @Suite("error contract")

@@ -1,10 +1,3 @@
-//
-//  FileSystem.swift
-//  xcrashlytics
-//
-//  Created by FIRAT TAMUR on 4.06.2026.
-//
-
 import Foundation
 
 /// Minimal file metadata returned by `FileSystem.attributes`.

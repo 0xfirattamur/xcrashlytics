@@ -1,10 +1,3 @@
-//
-//  XcodeCrashScanner.swift
-//  xcrashlytics
-//
-//  Created by FIRAT TAMUR on 4.06.2026.
-//
-
 import Foundation
 
 /// Walks one or more directories looking for crash files.

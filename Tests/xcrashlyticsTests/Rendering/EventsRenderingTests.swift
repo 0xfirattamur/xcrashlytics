@@ -1,10 +1,3 @@
-//
-//  EventsRenderingTests.swift
-//  xcrashlyticsTests
-//
-//  Created by FIRAT TAMUR on 11.06.2026.
-//
-
 import Foundation
 import Testing
 @testable import xcrashlytics

@@ -1,10 +1,3 @@
-//
-//  Config.swift
-//  xcrashlytics
-//
-//  Created by FIRAT TAMUR on 4.06.2026.
-//
-
 import Foundation
 
 /// One Firebase app configuration inside a project-local profile.

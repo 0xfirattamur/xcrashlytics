@@ -1,10 +1,3 @@
-//
-//  CrashSignature.swift
-//  xcrashlytics
-//
-//  Created by FIRAT TAMUR on 4.06.2026.
-//
-
 import Foundation
 
 /// A crash's culprit identity, used to cluster same-root-cause crashes across

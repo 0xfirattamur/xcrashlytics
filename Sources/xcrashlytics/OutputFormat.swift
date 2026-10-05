@@ -1,8 +1,3 @@
-//
-//  OutputFormat.swift
-//  xcrashlytics
-//
-
 import ArgumentParser
 
 enum OutputFormat: String, ExpressibleByArgument, CaseIterable, Sendable {

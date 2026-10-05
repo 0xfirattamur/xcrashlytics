@@ -1,10 +1,3 @@
-//
-//  JSONTestSupport.swift
-//  xcrashlyticsTests
-//
-//  Decodes CLI output so tests assert fields, not text fragments.
-//
-
 import Foundation
 import Testing
 

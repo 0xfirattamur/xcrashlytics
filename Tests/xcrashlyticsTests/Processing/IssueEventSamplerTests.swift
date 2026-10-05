@@ -1,8 +1,3 @@
-//
-//  IssueEventSamplerTests.swift
-//  xcrashlytics
-//
-
 import Foundation
 import Testing
 @testable import xcrashlytics

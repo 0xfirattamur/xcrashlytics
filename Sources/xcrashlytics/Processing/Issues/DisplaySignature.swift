@@ -1,8 +1,3 @@
-//
-//  DisplaySignature.swift
-//  xcrashlytics
-//
-
 import Foundation
 
 /// Module / file / symbol parsed from a Firebase issue title of the form

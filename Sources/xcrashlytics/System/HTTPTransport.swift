@@ -1,10 +1,3 @@
-//
-//  HTTPClient.swift
-//  xcrashlytics
-//
-//  Created by FIRAT TAMUR on 4.06.2026.
-//
-
 import Foundation
 
 /// Abstraction over `URLSession` so tests can swap in `MockHTTPTransport`.

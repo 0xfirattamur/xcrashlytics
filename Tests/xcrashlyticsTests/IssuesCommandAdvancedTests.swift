@@ -129,7 +129,6 @@ extension IssuesCommandTests {
         let ids = env.data["issues"]?.array?.compactMap { $0["id"]?.string } ?? []
         #expect(ids.contains("FB-I1"))
         #expect(!ids.contains("FB-I2"))
-        // The raw user id is a filter input only; it must not leak anywhere in the output.
         #expect(!output.contains("target-user"))
     }
 

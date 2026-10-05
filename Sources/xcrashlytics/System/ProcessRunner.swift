@@ -1,10 +1,3 @@
-//
-//  ProcessRunner.swift
-//  xcrashlytics
-//
-//  Created by FIRAT TAMUR on 4.06.2026.
-//
-
 import Foundation
 
 /// Result of running an external command.

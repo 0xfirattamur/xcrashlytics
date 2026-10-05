@@ -1,10 +1,3 @@
-//
-//  Events.swift
-//  xcrashlytics
-//
-//  Created by FIRAT TAMUR on 5.06.2026.
-//
-
 import ArgumentParser
 import Foundation
 

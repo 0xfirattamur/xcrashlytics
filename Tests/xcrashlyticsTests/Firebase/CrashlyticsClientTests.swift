@@ -1,10 +1,3 @@
-//
-//  FirebaseClientTests.swift
-//  xcrashlyticsTests
-//
-//  Created by FIRAT TAMUR on 4.06.2026.
-//
-
 import Foundation
 import Testing
 @testable import xcrashlytics
@@ -158,7 +151,6 @@ struct CrashlyticsClientTests {
         #expect(frames.count == 2)
         #expect(frames.first?.symbol == "-[VC crash]")
         #expect(frames.first?.binaryName == "MyApp")
-        // Hit the events endpoint, filtered by issue id.
         let req = http.requests.last!
         #expect(req.url?.path.hasSuffix("/events") == true)
         #expect(req.url?.query?.contains("filter.issue.id=I1") == true)
@@ -274,7 +266,7 @@ struct CrashlyticsClientTests {
         }
     }
 
-    // MARK: - Finding 1: appId path-traversal validation
+    // MARK: - App id validation
 
     @Test("init rejects appId with path traversal characters")
     func appIdWithPathTraversalRejected() {
@@ -315,7 +307,7 @@ struct CrashlyticsClientTests {
         }
     }
 
-    // MARK: - Finding 2: empty issue id gets a dedicated message
+    // MARK: - Issue id validation
 
     @Test("empty issue id throws 'must not be empty' from getIssueDetail")
     func emptyIssueIdThrowsEmptyError() async throws {

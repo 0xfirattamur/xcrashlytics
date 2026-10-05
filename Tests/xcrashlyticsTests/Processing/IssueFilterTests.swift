@@ -1,8 +1,3 @@
-//
-//  IssueFilterTests.swift
-//  xcrashlytics
-//
-
 import Testing
 @testable import xcrashlytics
 
@@ -99,15 +94,12 @@ struct IssueFilterTests {
         let issue = makeIssue()
         let event = makeEvent(userId: "user-abc")
 
-        // exact match passes
         let matchFilter = IssueFilter(criteria: .init(userId: "user-abc"))
         #expect(matchFilter.matchesEventMetadata(issue: issue, event: event))
 
-        // different userId fails
         let mismatchFilter = IssueFilter(criteria: .init(userId: "user-xyz"))
         #expect(!mismatchFilter.matchesEventMetadata(issue: issue, event: event))
 
-        // no userId criterion always passes
         let noUserFilter = IssueFilter(criteria: .init())
         #expect(noUserFilter.matchesEventMetadata(issue: issue, event: event))
     }
@@ -123,11 +115,9 @@ struct IssueFilterTests {
         """#
         let event = makeEvent(rawJSON: json)
 
-        // matching domain prefix passes
         let matchFilter = IssueFilter(criteria: .init(domain: "com.apple.CoreData"))
         #expect(matchFilter.matchesEventMetadata(issue: issue, event: event))
 
-        // non-matching domain fails
         let mismatchFilter = IssueFilter(criteria: .init(domain: "com.metrickit"))
         #expect(!mismatchFilter.matchesEventMetadata(issue: issue, event: event))
     }
@@ -148,19 +138,15 @@ struct IssueFilterTests {
         """#
         let event = makeEvent(rawJSON: json)
 
-        // key-only presence check passes
         let keyOnly = IssueFilter(criteria: .init(userInfoKey: ["reason"]))
         #expect(keyOnly.matchesEventMetadata(issue: issue, event: event))
 
-        // key=value exact match passes
         let keyValue = IssueFilter(criteria: .init(userInfoKey: ["reason=memory pressure"]))
         #expect(keyValue.matchesEventMetadata(issue: issue, event: event))
 
-        // wrong value fails
         let wrongValue = IssueFilter(criteria: .init(userInfoKey: ["reason=cpu spike"]))
         #expect(!wrongValue.matchesEventMetadata(issue: issue, event: event))
 
-        // absent key fails
         let absentKey = IssueFilter(criteria: .init(userInfoKey: ["top_frames"]))
         #expect(!absentKey.matchesEventMetadata(issue: issue, event: event))
     }

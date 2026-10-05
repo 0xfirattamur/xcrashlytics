@@ -1,10 +1,3 @@
-//
-//  EventsCommandTests.swift
-//  xcrashlyticsTests
-//
-//  Created by FIRAT TAMUR on 5.06.2026.
-//
-
 import Foundation
 import Testing
 @testable import xcrashlytics
@@ -113,7 +106,6 @@ struct EventsCommandTests {
         let events = try #require(env.data["events"]?.array)
         #expect(events.compactMap { $0["id"]?.string } == ["FB-I1/events/E-target"])
         #expect(events.first?["userIdHash"]?.string == Hashing.sha256Hex("target-user"))
-        // Leak guard: the raw user id must not appear in any field.
         #expect(!output.contains("target-user"))
     }
 
@@ -265,7 +257,6 @@ struct EventsCommandTests {
 
         let env = try Envelope(output)
         #expect(env.data["scannedEvents"]?.int == 20)
-        // Only the matching event survives; non-matching events such as E-1 are dropped.
         let eventIds = env.data["events"]?.array?.compactMap { $0["firebaseEventId"]?.string }
         #expect(eventIds == ["E-MATCH"])
     }

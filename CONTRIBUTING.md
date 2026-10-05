@@ -54,6 +54,11 @@ the narrow contract used by commands and processing. `HTTPTransport` only sends
 HTTP requests, with `URLSessionHTTPTransport` in production and
 `MockHTTPTransport` in tests.
 
+Comments explain contracts, edge cases, and reasons the code cannot show.
+Use `///` for declaration docs and `//` for local rationale. Do not add file
+headers or comments that restate a name, an assertion, or the next line; Git
+records authorship and history.
+
 ## Workflow
 
 - Use [Conventional Commits](https://www.conventionalcommits.org/): `feat:`, `fix:`, `docs:`, `test:`, `refactor:`, `chore:`.

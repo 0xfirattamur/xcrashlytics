@@ -1,10 +1,3 @@
-//
-//  FrameNormalizer.swift
-//  xcrashlytics
-//
-//  Created by FIRAT TAMUR on 4.06.2026.
-//
-
 import Foundation
 
 /// Strips per-build noise from frames so grouping can identify meaningful app
@@ -49,10 +42,9 @@ enum FrameNormalizer {
         meaningful(frames).prefix(topN).compactMap(normalize)
     }
 
-    /// Low-level runtime libraries that carry no app-specific signal — present
-    /// at the top of essentially every crash. Kept deliberately narrow: app
-    /// frameworks Firebase legitimately blames (Foundation, UIKit, libobjc,
-    /// CoreML, vImage, …) are *not* here.
+    /// Runtime libraries that commonly top unrelated crash stacks. App
+    /// frameworks such as Foundation, UIKit and libobjc are excluded because
+    /// they can be the real culprit.
     private static let noiseBinaries: Set<String> = [
         "libsystem_kernel.dylib",
         "libsystem_pthread.dylib",

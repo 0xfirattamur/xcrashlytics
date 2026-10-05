@@ -1,8 +1,3 @@
-//
-//  IssueEventSampler.swift
-//  xcrashlytics
-//
-
 import Foundation
 
 /// One issue's sampled events, tagged with its position in the input list.

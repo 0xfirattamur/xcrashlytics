@@ -1,10 +1,3 @@
-//
-//  IssueActivitySummary.swift
-//  xcrashlytics
-//
-//  Created by FIRAT TAMUR on 11.06.2026.
-//
-
 import Foundation
 
 /// One name's share of a sampled spread (OS versions, device models).

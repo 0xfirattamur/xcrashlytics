@@ -1,8 +1,3 @@
-//
-//  ShowConsoleLinkTests.swift
-//  xcrashlyticsTests
-//
-
 import Foundation
 import Testing
 @testable import xcrashlytics

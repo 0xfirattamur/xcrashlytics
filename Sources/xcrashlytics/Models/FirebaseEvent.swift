@@ -1,8 +1,3 @@
-//
-//  FirebaseEvent.swift
-//  xcrashlytics
-//
-
 import Foundation
 
 /// One Crashlytics event as the rest of the app sees it. Decoding and wire

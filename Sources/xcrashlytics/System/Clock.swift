@@ -1,10 +1,3 @@
-//
-//  Clock.swift
-//  xcrashlytics
-//
-//  Created by FIRAT TAMUR on 4.06.2026.
-//
-
 import Foundation
 
 /// Time abstraction so tests can use a `FixedClock` and avoid wall-clock flakiness.

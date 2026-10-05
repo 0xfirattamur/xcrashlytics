@@ -1,8 +1,3 @@
-//
-//  SymbolicationAdvisor.swift
-//  xcrashlytics
-//
-
 import Foundation
 
 /// Detects local Xcode crashes that probably need dSYMs before their frames

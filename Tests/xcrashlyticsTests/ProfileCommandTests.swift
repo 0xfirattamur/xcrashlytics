@@ -1,10 +1,3 @@
-//
-//  ProfileCommandTests.swift
-//  xcrashlyticsTests
-//
-//  Created by FIRAT TAMUR on 8.06.2026.
-//
-
 import ArgumentParser
 import Foundation
 import Testing
@@ -47,7 +40,6 @@ struct ProfileCommandTests {
             _ = try await cmd.runWithContext(ctx)
         }
 
-        // Active profile is unchanged — nothing was switched.
         let saved = try ConfigFile(fileSystem: fs).load()
         #expect(saved.activeProfile == nil)
     }

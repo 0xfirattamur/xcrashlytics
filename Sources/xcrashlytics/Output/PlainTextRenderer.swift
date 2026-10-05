@@ -1,10 +1,3 @@
-//
-//  PlainTextRenderer.swift
-//  xcrashlytics
-//
-//  Created by FIRAT TAMUR on 4.06.2026.
-//
-
 import Foundation
 
 /// Renders crashes as plain text for terminal output.

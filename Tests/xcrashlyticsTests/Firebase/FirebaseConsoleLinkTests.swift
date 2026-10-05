@@ -1,8 +1,3 @@
-//
-//  FirebaseConsoleLinkTests.swift
-//  xcrashlyticsTests
-//
-
 import Testing
 @testable import xcrashlytics
 

@@ -1,11 +1,3 @@
-//
-//  OutputContractTests.swift
-//  xcrashlyticsTests
-//
-//  Where warnings go and how records are versioned — the parts of the v1
-//  output contract that span commands.
-//
-
 import Foundation
 import Testing
 @testable import xcrashlytics

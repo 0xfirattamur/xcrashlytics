@@ -1,8 +1,3 @@
-//
-//  SymbolicationAdvisorTests.swift
-//  xcrashlytics
-//
-
 import Testing
 @testable import xcrashlytics
 

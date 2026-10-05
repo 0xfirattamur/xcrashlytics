@@ -1,10 +1,3 @@
-//
-//  InitCommandTests.swift
-//  xcrashlyticsTests
-//
-//  Created by FIRAT TAMUR on 4.06.2026.
-//
-
 import ArgumentParser
 import Foundation
 import Testing
@@ -65,7 +58,6 @@ struct InitCommandTests {
             _ = try await cmd.runWithContext(ctx)
         }
 
-        // The gate held: config was never written.
         #expect(fs.fileExists(at: configPath) == false)
     }
 
@@ -154,7 +146,6 @@ struct InitCommandTests {
         _ = try await cmd.runWithContext(ctx)
         let out = console.outputs.joined()
         #expect(out.contains("[WARN] no bundle id — Xcode crash commands need one. Re-run with --bundle-id <BUNDLE_ID>."))
-        // Advisory only — config still written.
         #expect(fs.fileExists(at: configPath))
     }
 
@@ -220,7 +211,6 @@ struct InitCommandTests {
             "--app-id", "1:1234567890:ios:abcdef",
             "--profile", "release",
         ])
-        // Advisory warning → does not throw.
         let output = try await cmd.runWithContext(ctx)
 
         #expect(output.contains("[WARN] firebase token exchange failed"))

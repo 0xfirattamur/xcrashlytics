@@ -1,10 +1,3 @@
-//
-//  MockProcessRunner.swift
-//  xcrashlyticsTests
-//
-//  Created by FIRAT TAMUR on 4.06.2026.
-//
-
 import Foundation
 @testable import xcrashlytics
 

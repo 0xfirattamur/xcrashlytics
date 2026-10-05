@@ -1,19 +1,10 @@
-//
-//  CrashLogParser.swift
-//  xcrashlytics
-//
-//  Created by FIRAT TAMUR on 4.06.2026.
-//
-
 import Foundation
 import CryptoKit
 
-/// Parses Apple's plain-text `.crash` reports into `CrashRecord`.
+/// Parses Apple's plain-text `.crash` reports into `CrashEvent`.
 ///
-/// This is the format Xcode Organizer stores inside `.xccrashpoint` bundles,
-/// so it is the live format this tool ingests. Reports arrive already
-/// symbolicated: frames carry symbol names and `(File.swift:line)` source
-/// locations, no local dSYM work needed.
+/// Xcode Organizer stores this format inside `.xccrashpoint` bundles. Frames
+/// may be symbolicated (`symbol (File.swift:line)`) or raw addresses.
 ///
 /// Layout (simplified):
 /// ```
@@ -172,7 +163,7 @@ struct CrashLogParser: Sendable {
     }
 
     /// Frames of the first "Thread N Crashed:" section. Other thread sections
-    /// are skipped — `CrashRecord` only carries the crashed thread.
+    /// are skipped — `CrashEvent` only carries the crashed thread.
     private func parseCrashedThreadFrames(_ lines: [String], images: [BinaryImage]) -> [Frame] {
         var frames: [Frame] = []
         var inThread = false

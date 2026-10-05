@@ -1,10 +1,3 @@
-//
-//  FirebaseEventCrashMapperTests.swift
-//  xcrashlyticsTests
-//
-//  Created by FIRAT TAMUR on 10.06.2026.
-//
-
 import Foundation
 import Testing
 @testable import xcrashlytics

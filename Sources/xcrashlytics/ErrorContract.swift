@@ -42,9 +42,7 @@ struct CommandFailure: Equatable {
 /// and renders it for text or JSON output. Codes and exit codes are frozen
 /// after release — additions only.
 enum ErrorContract {
-    /// Maps an error to its contract entry by trying each domain group in turn.
-    /// Split into helpers so no single function exceeds the lint thresholds;
-    /// the `??` chain preserves the original first-match ordering.
+    /// Maps an error to its contract entry. The first matching group wins.
     static func failure(for error: Error) -> CommandFailure {
         authFailure(for: error)
             ?? configFailure(for: error)

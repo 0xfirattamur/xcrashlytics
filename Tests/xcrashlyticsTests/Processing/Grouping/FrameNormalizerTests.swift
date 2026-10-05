@@ -1,10 +1,3 @@
-//
-//  FrameNormalizerTests.swift
-//  xcrashlyticsTests
-//
-//  Created by FIRAT TAMUR on 4.06.2026.
-//
-
 import Foundation
 import Testing
 @testable import xcrashlytics

@@ -1,10 +1,3 @@
-//
-//  IssuesOutput.swift
-//  xcrashlytics
-//
-//  Created by FIRAT TAMUR on 8.06.2026.
-//
-
 import Foundation
 
 struct IssuesPayload: Encodable, Sendable {

@@ -1,10 +1,3 @@
-//
-//  CrashRecordErrors.swift
-//  xcrashlytics
-//
-//  Created by FIRAT TAMUR on 4.06.2026.
-//
-
 import Foundation
 
 /// Errors raised while parsing a `.crash` file into a `CrashEvent`.

@@ -1,8 +1,3 @@
-//
-//  OutputFormatTests.swift
-//  xcrashlytics
-//
-
 import ArgumentParser
 import Testing
 @testable import xcrashlytics

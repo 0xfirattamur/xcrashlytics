@@ -1,10 +1,3 @@
-//
-//  CommandContext.swift
-//  xcrashlytics
-//
-//  Created by FIRAT TAMUR on 4.06.2026.
-//
-
 import Foundation
 
 /// Production wiring of every protocol-shaped dependency the CLI needs.

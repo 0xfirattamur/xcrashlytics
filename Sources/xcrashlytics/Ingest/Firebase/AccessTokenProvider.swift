@@ -1,10 +1,3 @@
-//
-//  AccessTokenProvider.swift
-//  xcrashlytics
-//
-//  Created by FIRAT TAMUR on 4.06.2026.
-//
-
 import Foundation
 
 /// Errors raised by an `AccessTokenProvider`.
@@ -47,16 +40,7 @@ protocol AccessTokenProvider: Sendable {
     func forceRefresh() async throws -> String
 }
 
-/// `AccessTokenProvider` that piggybacks on `firebase login`.
-///
-/// Mechanism:
-/// 1. User runs `firebase login` once — Firebase CLI writes a refresh token to
-///    `~/.config/configstore/firebase-tools.json`.
-/// 2. This provider reads that refresh token and exchanges it at Google's
-///    OAuth token endpoint using firebase-tools' built-in `(client_id, client_secret)`.
-/// 3. The returned access token carries firebase-tools' Cloud Platform scope,
-///    which the Firebase Crashlytics API accepts. No per-project API
-///    enablement required.
+/// Exchanges the refresh token stored by `firebase login` for an access token.
 ///
 /// `clientId` and `clientSecret` are the public OAuth credentials bundled with
 /// firebase-tools. The user's refresh token is the secret; it is sent only to

@@ -1,10 +1,3 @@
-//
-//  JSONRenderer.swift
-//  xcrashlytics
-//
-//  Created by FIRAT TAMUR on 4.06.2026.
-//
-
 import Foundation
 
 /// Renders crash data as stable JSON for AI agents and scripts.

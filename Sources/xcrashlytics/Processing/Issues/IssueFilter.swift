@@ -1,8 +1,3 @@
-//
-//  IssueFilter.swift
-//  xcrashlytics
-//
-
 import Foundation
 
 /// Everything the user asked `issues` to narrow by.

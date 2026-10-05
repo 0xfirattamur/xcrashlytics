@@ -1,15 +1,7 @@
-//
-//  FirebaseDTO.swift
-//  xcrashlytics
-//
-//  Created by FIRAT TAMUR on 4.06.2026.
-//
-
 import Foundation
 
-/// Wire-level types that mirror `firebasecrashlytics.googleapis.com/v1alpha`
-/// (the same schema documented at firebase.google.com/docs/reference/crashlytics/rest).
-/// Internal: callers see `CrashIssue` / `FirebaseEvent`, never wire shapes.
+/// Wire types for `firebasecrashlytics.googleapis.com/v1alpha`. Callers use
+/// `CrashIssue` and `FirebaseEvent` instead.
 enum FirebaseDTO {
     // MARK: - topIssues report
 

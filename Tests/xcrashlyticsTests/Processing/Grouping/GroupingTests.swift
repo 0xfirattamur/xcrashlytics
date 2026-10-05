@@ -1,10 +1,3 @@
-//
-//  GroupingTests.swift
-//  xcrashlyticsTests
-//
-//  Created by FIRAT TAMUR on 4.06.2026.
-//
-
 import Foundation
 import Testing
 @testable import xcrashlytics
@@ -61,7 +54,6 @@ struct GroupingTests {
                 firebase("F3", title: "[SmartlookAnalytics] Properties.__deallocating_deinit", events: 350)
             ]
         )
-        // Blur group (2 FB + 1 local) and the Smartlook group.
         let blur = try #require(groups.first { $0.symbol == "blurdetectionservice.classifywithml(_:)" })
         #expect(blur.firebase.count == 2)
         #expect(blur.xcode.count == 1)

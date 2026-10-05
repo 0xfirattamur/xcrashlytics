@@ -1,10 +1,3 @@
-//
-//  BinaryImage.swift
-//  xcrashlytics
-//
-//  Created by FIRAT TAMUR on 4.06.2026.
-//
-
 import Foundation
 
 /// A binary loaded into the crashed process — the app itself or any framework.

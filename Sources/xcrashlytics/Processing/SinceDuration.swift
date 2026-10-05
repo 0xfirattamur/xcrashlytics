@@ -1,10 +1,3 @@
-//
-//  SinceDuration.swift
-//  xcrashlytics
-//
-//  Created by FIRAT TAMUR on 8.06.2026.
-//
-
 import Foundation
 
 enum SinceDurationError: Error, Equatable, LocalizedError, Sendable {

@@ -1,10 +1,3 @@
-//
-//  FirebaseError.swift
-//  xcrashlytics
-//
-//  Created by FIRAT TAMUR on 4.06.2026.
-//
-
 import Foundation
 
 /// Errors raised by `CrashlyticsClient`.

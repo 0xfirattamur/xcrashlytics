@@ -13,13 +13,13 @@ xcrashlytics blame --since 7d --top 20 --format json       # hot files/symbols a
 
 Narrowing by user: `xcrashlytics issues --user-id USER_ID --events-per-issue 10 --format json`, then `xcrashlytics events FB-ISSUE_ID --user-id USER_ID --format json`.
 
-A user-pasted console link works as an id: `xcrashlytics show '<https://console.firebase.google.com/…/issues/…>' --format json`. It resolves against the profile whose bundle id matches the link.
+A user-pasted console link works as an id: `xcrashlytics show '<https://console.firebase.google.com/…/issues/…>' --format json`. It resolves against the profile whose bundle id matches the link. A console `sessionEventKey` also works as the event part: `FB-ISSUE_ID/events/<sessionEventKey>`.
 
 Setup: `xcrashlytics init --scan` discovers every app in the repo. If it reports no active profile, run `xcrashlytics use <profile>`.
 
 ## Local Xcode crashes (iOS)
 
-`issues --xcode` and `groups --xcode` add crash reports the Xcode Organizer has already downloaded to `~/Library/Developer/Xcode/Products/<bundle-id>/Crashes/` — read from disk only, no Apple connection. Their ids are `XC-<id>` and work with `show` and `open`. Requirements: the active profile must carry a bundle id (`init --bundle-id`), and the Organizer must have been opened at least once so reports exist on disk. `--crash-directory <path>` (repeatable) scans explicit directories instead and needs no bundle id.
+`issues --xcode` and `groups --xcode` add crash reports the Xcode Organizer has already downloaded to `~/Library/Developer/Xcode/Products/<bundle-id>/Crashes/` — read from disk only, no Apple connection. App-extension profiles also scan the containing app's directory (`com.example.app.widget` → `com.example.app`), where Xcode files extension reports. Their ids are `XC-<id>` and work with `show` and `open`. Requirements: the active profile must carry a bundle id (`init --bundle-id`), and the Organizer must have been opened at least once so reports exist on disk. `--crash-directory <path>` (repeatable, also on `show` and `open`) scans explicit directories instead and needs no bundle id.
 
 ## Output contract
 

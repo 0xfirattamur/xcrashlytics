@@ -19,15 +19,9 @@ enum EventsRenderer {
             group.events.map { event -> String in
                 let id = FirebaseIdentifiers.canonicalEventId(event, issueId: group.issueId)
                 let frame = FirebaseEventFrames.topFrameDescription(for: event, options: frameOptions) ?? "no frames"
-                let segments = [
-                    id,
-                    event.eventTime ?? "unknown time",
-                    appVersion(for: event),
-                    runtimeSummary(for: event),
-                    memorySummary(for: event),
-                    frame,
-                ]
-                return segments.compactMap { $0 }.joined(separator: "   ")
+                return (summarySegments(for: event, id: id) + [memorySummary(for: event), frame])
+                    .compactMap { $0 }
+                    .joined(separator: "   ")
             }
         }
         guard !rows.isEmpty else {
@@ -55,7 +49,8 @@ enum EventsRenderer {
                     let symbol = frame.symbol ?? "?"
                     return "  \(marker) \(index) \(location) \(symbol)"
                 }
-                return ([eventId] + rendered).joined(separator: "\n")
+                let header = summarySegments(for: event, id: eventId).compactMap { $0 }.joined(separator: "   ")
+                return ([header] + rendered).joined(separator: "\n")
             }
         }
         guard !rows.isEmpty else {
@@ -103,6 +98,10 @@ enum EventsRenderer {
     }
 
     // MARK: - Private helpers
+
+    private static func summarySegments(for event: FirebaseEvent, id: String) -> [String?] {
+        [id, event.eventTime ?? "unknown time", appVersion(for: event), runtimeSummary(for: event)]
+    }
 
     private static func appVersion(for event: FirebaseEvent) -> String? {
         switch (event.displayVersion, event.buildVersion) {

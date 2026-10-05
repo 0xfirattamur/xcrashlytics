@@ -214,10 +214,7 @@ struct IssuesCommand: AsyncParsableCommand {
         overrideDirectories: [String]?
     ) throws -> (crashes: [XcodeCrash], warnings: [CLIWarning]) {
         guard xcode else { return ([], []) }
-        let directories =
-            try overrideDirectories
-            ?? (crashDirectories.isEmpty ? ctx.xcodeCrashDirectories() : crashDirectories)
-        return ctx.loadXcodeCrashes(directories: directories)
+        return try ctx.loadXcodeCrashes(directories: overrideDirectories ?? crashDirectories)
     }
 
 }

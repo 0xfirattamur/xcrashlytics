@@ -32,6 +32,11 @@ struct ShowCommand: AsyncParsableCommand {
     @Flag(name: .long, help: "Firebase only: prefer frames from Firebase's crashed thread.")
     var crashingThreadOnly: Bool = false
 
+    @Option(
+        name: .customLong("crash-directory"),
+        help: "XC- ids: Xcode crash directory to scan instead of the profile's Organizer directories. Repeatable.")
+    var crashDirectories: [String] = []
+
     func validate() throws {
         guard format != .ndjson else {
             throw ValidationError("--format ndjson is not supported by this command.")
@@ -65,6 +70,8 @@ struct ShowCommand: AsyncParsableCommand {
         var event: CrashEvent
         var issue: CrashIssue?
         var activity: IssueActivitySummary?
+        /// The selected Firebase event, when one was resolved.
+        var firebaseEvent: FirebaseEvent?
         var warnings: [CLIWarning] = []
     }
 
@@ -73,7 +80,7 @@ struct ShowCommand: AsyncParsableCommand {
             return try await consoleLink(ctx: ctx)
         }
         if id.hasPrefix("XC-") {
-            let load = ctx.loadXcodeCrashes(directories: try ctx.xcodeCrashDirectories())
+            let load = try ctx.loadXcodeCrashes(directories: crashDirectories)
             guard let match = load.crashes.first(where: { $0.event.id == id }) else {
                 throw ValidationError("no crash found with id '\(id)'.")
             }
@@ -81,7 +88,13 @@ struct ShowCommand: AsyncParsableCommand {
         }
         let firebase = try ctx.crashlyticsClient()
         if let ref = FirebaseEventRef(id) {
-            return Detail(event: try await firebaseEvent(ref, firebase: firebase))
+            var (detail, events) = try await firebaseIssue(ref.issueId, firebase: firebase)
+            guard let event = events.first(where: ref.matches) else {
+                throw ValidationError(
+                    "no Firebase event '\(ref.eventId)' among the newest \(FirebaseEventSampling.limit) events of FB-\(ref.issueId).")
+            }
+            select(event, issueId: ref.issueId, in: &detail)
+            return detail
         }
         if id.hasPrefix("FB-") {
             return try await firebaseIssue(FirebaseIdentifiers.issueId(from: id), firebase: firebase).detail
@@ -101,33 +114,26 @@ struct ShowCommand: AsyncParsableCommand {
         }
         let firebase = try ctx.crashlyticsClient(appId: appId)
         var (detail, events) = try await firebaseIssue(link.issueId, firebase: firebase)
-        let candidates = link.candidateEventIds
-        guard !candidates.isEmpty else { return detail }
-        guard let match = events.first(where: { $0.eventId.map(candidates.contains) == true }) else {
+        guard link.sessionEventKey != nil else { return detail }
+        guard let match = events.first(where: { $0.eventId.map(link.candidateEventIds.contains) == true }) else {
             detail.warnings.append(CLIWarning(
                 code: "EVENT_NOT_RESOLVED",
                 message: "the link's event is not among the newest \(FirebaseEventSampling.limit) events; showing the issue."))
             return detail
         }
-        detail.event = FirebaseEventCrashMapper.crashEvent(
-            from: match,
-            canonicalId: FirebaseIdentifiers.canonicalEventId(match, issueId: link.issueId),
-            frameOptions: frameOptions)
+        select(match, issueId: link.issueId, in: &detail)
         return detail
     }
 
-    private func firebaseEvent(
-        _ ref: FirebaseEventRef,
-        firebase: CrashlyticsAPI
-    ) async throws -> CrashEvent {
-        let events = try await firebase.listEvents(issueID: ref.issueId, maxEvents: FirebaseEventSampling.limit)
-        guard let dto = events.first(where: { event in
-            let eventId = event.eventId
-            return eventId == ref.eventId
-        }) else {
-            throw ValidationError("no Firebase event found with id '\(id)'.")
-        }
-        return FirebaseEventCrashMapper.crashEvent(from: dto, canonicalId: id, frameOptions: frameOptions)
+    /// Shows one sampled event instead of the issue overview. Issue aggregates
+    /// stay, and the issue's exception fills in when the event has none.
+    private func select(_ event: FirebaseEvent, issueId: String, in detail: inout Detail) {
+        detail.event = FirebaseEventCrashMapper.crashEvent(
+            from: event,
+            canonicalId: FirebaseIdentifiers.canonicalEventId(event, issueId: issueId),
+            fallbackException: detail.issue?.exception,
+            frameOptions: frameOptions)
+        detail.firebaseEvent = event
     }
 
     /// Issue aggregates plus the newest event's stack; also returns the
@@ -154,9 +160,11 @@ struct ShowCommand: AsyncParsableCommand {
     private func render(_ detail: Detail) throws -> String {
         if format == .json {
             return try JSONRenderer().renderDetail(
-                detail.event, issue: detail.issue, activity: detail.activity, warnings: detail.warnings)
+                detail.event, issue: detail.issue, activity: detail.activity,
+                firebaseEvent: detail.firebaseEvent, warnings: detail.warnings)
         } else {
-            return PlainTextRenderer().renderDetail(detail.event, issue: detail.issue, activity: detail.activity)
+            return PlainTextRenderer().renderDetail(
+                detail.event, issue: detail.issue, activity: detail.activity, firebaseEvent: detail.firebaseEvent)
         }
     }
 }

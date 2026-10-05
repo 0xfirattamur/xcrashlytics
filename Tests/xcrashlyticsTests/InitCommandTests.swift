@@ -39,6 +39,14 @@ struct InitCommandTests {
         )
     }
 
+    private func seedOrganizerCrash(_ fs: InMemoryFileSystem) throws {
+        let home = NSString(string: "~").expandingTildeInPath
+        let fixture = Bundle.module.url(forResource: "sample-symbolicated.crash", withExtension: nil, subdirectory: "Fixtures")!
+        fs.seed(
+            "\(home)/Library/Developer/Xcode/Products/com.example.app/Crashes/Points/a.xccrashpoint/Logs/one.crash",
+            text: try String(contentsOf: fixture, encoding: .utf8))
+    }
+
     @Test("fails the checks and writes nothing when firebase CLI is missing")
     func gatesWriteOnFailedChecks() async throws {
         let fs = InMemoryFileSystem()
@@ -65,10 +73,7 @@ struct InitCommandTests {
     func writesConfigWhenReady() async throws {
         let fs = InMemoryFileSystem()
         let console = RecordingConsole()
-        let home = NSString(string: "~").expandingTildeInPath
-        fs.seed(
-            "\(home)/Library/Developer/Xcode/Products/com.example.app/Crashes/Points/a.xccrashpoint/Logs/one.crash",
-            text: "stub")
+        try seedOrganizerCrash(fs)
         let ctx = loggedInContext(fs: fs, console: console)
 
         let cmd = try InitCommand.parse([
@@ -169,10 +174,7 @@ struct InitCommandTests {
     func noWarnWhenCrashesExist() async throws {
         let fs = InMemoryFileSystem()
         let console = RecordingConsole()
-        let home = NSString(string: "~").expandingTildeInPath
-        fs.seed(
-            "\(home)/Library/Developer/Xcode/Products/com.example.app/Crashes/Points/a.xccrashpoint/Logs/one.crash",
-            text: "stub")
+        try seedOrganizerCrash(fs)
         let ctx = loggedInContext(fs: fs, console: console)
         let cmd = try InitCommand.parse([
             "--app-id", "1:1234567890:ios:abcdef",

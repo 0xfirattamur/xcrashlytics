@@ -197,7 +197,10 @@ xcrashlytics issues "blur detection" --xcode --format json
 > crashes are on disk, and set the profile's bundle id with
 > `init --bundle-id` — every Xcode crash command (`issues --xcode`, `groups --xcode`,
 > `show XC-…`, `open XC-…`) refuses to run without one, unless you pass an explicit
-> `--crash-directory`.
+> `--crash-directory`. App extensions are covered: Xcode stores their reports
+> under the containing app (`com.example.app.widget` → `com.example.app`), so
+> that directory is scanned too and only reports with the extension's bundle id
+> are kept.
 
 JSON output is suitable for scripts and agent calls:
 
@@ -341,9 +344,9 @@ xcrashlytics show XC-AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE
 xcrashlytics show 'https://console.firebase.google.com/project/my-app/crashlytics/app/ios:com.example.app/issues/3aed…?sessionEventKey=…' --format json
 ```
 
-Firebase issue ids include issue detail plus latest event frames when available. Firebase event ids show that event's frames. Xcode ids read the Organizer's local `.crash` reports.
+Firebase issue ids include issue detail plus latest event frames when available. Firebase event ids show that event's frames and metadata under the same names `events` uses (`appBuild`, `processState`, memory and storage bytes, …), plus the issue's aggregates; when the event carries no exception type, the issue's is used. The event part may be the API event id or a `sessionEventKey` copied from the console. Xcode ids read the Organizer's local `.crash` reports; `--crash-directory <path>` (repeatable) scans explicit directories instead of the profile's.
 
-Console links carry the app's bundle id, not its Firebase app id, so `show` queries the profile whose `bundleId` matches the link — not necessarily the active one — and refuses links for apps it has no profile for. A `sessionEventKey` in the link selects that event when it is among the newest 100; otherwise the issue is shown with an `EVENT_NOT_RESOLVED` warning. Only `https://console.firebase.google.com` links are accepted.
+Console links carry the app's bundle id, not its Firebase app id, so `show` queries the profile whose `bundleId` matches the link — not necessarily the active one — and refuses links for apps it has no profile for. A `sessionEventKey` in the link selects that event when it is among the newest 100 — the key's suffix after the last `_` is tried as the event id; otherwise the issue is shown with an `EVENT_NOT_RESOLVED` warning. Only `https://console.firebase.google.com` links are accepted.
 
 For Firebase ids, the same frame filters as `events` trim the displayed frames: `--app-frames-only`, `--no-system-frames`, `--crashing-thread-only`.
 
@@ -411,7 +414,7 @@ xcrashlytics open FB-I1/events/E1
 xcrashlytics open XC-AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE
 ```
 
-Both id kinds open the crashing source line in Xcode via `xed`. Crash frames carry file names only, so run from the app's repo root — the file is resolved inside the current directory, and ambiguous or missing files are an error rather than a guess. Xcode ids fall back to opening the raw report when no source location is available.
+Both id kinds open the crashing source line in Xcode via `xed`. Crash frames carry file names only, so run from the app's repo root — the file is resolved inside the current directory, and ambiguous or missing files are an error rather than a guess. Xcode ids fall back to opening the raw report when no source location is available, and accept `--crash-directory` like `show`.
 
 ## Platform Notes
 
@@ -464,7 +467,7 @@ Each entry under `profiles` holds:
 | Key | Meaning |
 | --- | --- |
 | `appId` | Firebase app id for that environment/platform. |
-| `bundleId` | App bundle id. Scopes Xcode Organizer crash scanning to `~/Library/Developer/Xcode/Products/<bundleId>`. iOS-only; optional. |
+| `bundleId` | App bundle id. Scopes Xcode Organizer crash scanning to `~/Library/Developer/Xcode/Products/<bundleId>`, plus the containing app's directory for app extensions. iOS-only; optional. |
 | `sourcePath` | Optional path the profile was discovered from, e.g. `Staging/GoogleService-Info.plist` or `app/google-services.json`. |
 
 > [!TIP]

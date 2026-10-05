@@ -34,11 +34,17 @@ struct XcodeCrashLoader: Sendable {
         self.parser = CrashLogParser(fs: fs)
     }
 
-    /// The Xcode Organizer download directory for `bundleId`, scanned
-    /// recursively for reports inside `Crashes/Points/*.xccrashpoint`.
+    /// Organizer download directories for `bundleId`, scanned recursively for
+    /// reports inside `Crashes/Points/*.xccrashpoint`: its own directory, then
+    /// each containing app's (`com.example.app.widget` → `com.example.app`).
+    /// Two-component prefixes are organizations, not apps, and are skipped.
     static func standardDirectories(bundleId: String) -> [String] {
         let home = NSString(string: "~").expandingTildeInPath
-        return ["\(home)/Library/Developer/Xcode/Products/\(bundleId)"]
+        let parts = bundleId.split(separator: ".")
+        guard !parts.isEmpty else { return [] }
+        return stride(from: parts.count, through: min(parts.count, 3), by: -1).map { count in
+            "\(home)/Library/Developer/Xcode/Products/\(parts.prefix(count).joined(separator: "."))"
+        }
     }
 
     /// Parses every scanned file. Unreadable directories and unparsable files

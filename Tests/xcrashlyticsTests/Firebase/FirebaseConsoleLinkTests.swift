@@ -18,6 +18,7 @@ struct FirebaseConsoleLinkTests {
         #expect(parsed.canonicalIssueId == "FB-5ed6ac4e0f861660066a2f99181a0405")
         #expect(parsed.candidateEventIds == [
             "ca5e0601db004a358cbbed734042db17_1662682800563319436",
+            "1662682800563319436",
             "ca5e0601db004a358cbbed734042db17",
         ])
     }

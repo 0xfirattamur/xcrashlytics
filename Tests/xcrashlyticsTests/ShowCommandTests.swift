@@ -171,24 +171,9 @@ struct ShowCommandTests {
         #expect(!frames.contains { $0["binaryName"]?.string == "libsystem_kernel.dylib" })
     }
 
-    @Test("FB event id shows that event's frames")
+    @Test("FB event id shows that event with its build and the issue's exception")
     func firebaseEventShowIncludesFrames() async throws {
         let fs = try makeConfig()
-        let http = MockHTTPTransport { request in
-            #expect(request.url?.path.hasSuffix("/events") == true)
-            #expect(request.url?.query?.contains("filter.issue.id=I1") == true)
-            return MockHTTPTransport.response(request.url!, status: 200, body: Data(#"""
-            {"events":[{
-              "eventId":"E1",
-              "eventTime":"2026-06-05T12:09:45Z",
-              "version":{"displayVersion":"6.16.0","buildVersion":"937"},
-              "device":{"model":"iPhone 17 Pro Max"},
-              "threads":[{"crashed":true,"frames":[
-                {"symbol":"BlurDetectionService.classifyWithML(_:)","library":"Core","file":"BlurDetectionService.swift","line":"42","blamed":true}
-              ]}]
-            }]}
-            """#.utf8))
-        }
         let ctx = CommandContext(
             fileSystem: fs,
             processRunner: MockProcessRunner(),
@@ -196,14 +181,53 @@ struct ShowCommandTests {
         )
         let cmd = try ShowCommand.parse(["FB-I1/events/E1", "--format", "json"])
 
-        let output = try await cmd.runWithContext(
-            ctx.withFirebaseHTTP(http)
-        )
+        let output = try await cmd.runWithContext(ctx.withFirebaseHTTP(singleEventHTTP()))
 
         let data = try Envelope(output).data
         #expect(data["id"]?.string == "FB-I1/events/E1")
         #expect(data["deviceModel"]?.string == "iPhone 17 Pro Max")
+        #expect(data["bundleVersion"]?.string == "6.16.0")
+        #expect(data["appBuild"]?.string == "937")
+        #expect(data["memoryFreeBytes"]?.int == 1_048_576)
+        #expect(data["exception"]?["exceptionType"]?.string == "EXC_BAD_ACCESS")
         #expect(data["frames"]?[0]?["symbol"]?.string == "BlurDetectionService.classifyWithML(_:)")
+    }
+
+    @Test("a pasted console sessionEventKey resolves to the API event id")
+    func firebaseEventShowAcceptsSessionEventKey() async throws {
+        let fs = try makeConfig()
+        let ctx = CommandContext(
+            fileSystem: fs,
+            processRunner: MockProcessRunner(),
+            clock: FixedClock()
+        )
+        let cmd = try ShowCommand.parse(["FB-I1/events/ca5e0601db004a358cbbed734042db17_E1", "--format", "json"])
+
+        let output = try await cmd.runWithContext(ctx.withFirebaseHTTP(singleEventHTTP()))
+
+        #expect(try Envelope(output).data["id"]?.string == "FB-I1/events/E1")
+    }
+
+    private func singleEventHTTP() -> MockHTTPTransport {
+        MockHTTPTransport { request in
+            if request.url?.path.hasSuffix("/issues/I1") == true {
+                return MockHTTPTransport.response(request.url!, status: 200, body: Data(
+                    #"{"id":"I1","title":"Blur crash","errorType":"EXC_BAD_ACCESS"}"#.utf8))
+            }
+            #expect(request.url?.query?.contains("filter.issue.id=I1") == true)
+            return MockHTTPTransport.response(request.url!, status: 200, body: Data(#"""
+            {"events":[{
+              "eventId":"E1",
+              "eventTime":"2026-06-05T12:09:45Z",
+              "version":{"displayVersion":"6.16.0","buildVersion":"937"},
+              "device":{"model":"iPhone 17 Pro Max"},
+              "memory":{"free":"1048576"},
+              "threads":[{"crashed":true,"frames":[
+                {"symbol":"BlurDetectionService.classifyWithML(_:)","library":"Core","file":"BlurDetectionService.swift","line":"42","blamed":true}
+              ]}]
+            }]}
+            """#.utf8))
+        }
     }
 
     private func makeConfig() throws -> InMemoryFileSystem {

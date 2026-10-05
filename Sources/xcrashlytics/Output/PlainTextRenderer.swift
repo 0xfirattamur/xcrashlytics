@@ -42,13 +42,17 @@ struct PlainTextRenderer: Sendable {
     func renderDetail(
         _ event: CrashEvent,
         issue: CrashIssue? = nil,
-        activity: IssueActivitySummary? = nil
+        activity: IssueActivitySummary? = nil,
+        firebaseEvent: FirebaseEvent? = nil
     ) -> String {
         var out: [String] = []
         out.append("ID:        \(event.id)")
         out.append("Source:    \(event.source.rawValue)")
         if let bundle = event.bundleId { out.append("Bundle:    \(bundle)") }
-        if let version = event.bundleVersion { out.append("Version:   \(version)") }
+        if let version = event.bundleVersion {
+            let build = firebaseEvent?.buildVersion.map { " (\($0))" } ?? ""
+            out.append("Version:   \(version)\(build)")
+        }
         if let os = event.osVersion { out.append("OS:        \(os)") }
         if let model = event.deviceModel { out.append("Device:    \(model)") }
         if let ts = event.timestamp {

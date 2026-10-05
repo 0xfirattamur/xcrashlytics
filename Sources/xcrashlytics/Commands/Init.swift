@@ -211,10 +211,7 @@ struct InitCommand: AsyncParsableCommand {
         guard let bundleId else {
             return .warn("no bundle id — Xcode crash commands need one. Re-run with --bundle-id <BUNDLE_ID>.")
         }
-        let crashes = XcodeCrashLoader.standardDirectories(bundleId: bundleId).flatMap {
-            (try? ctx.fileSystem.enumerate(at: $0, matchingExtensions: ["crash"])) ?? []
-        }
-        guard !crashes.isEmpty else {
+        guard !ctx.loadOrganizerCrashes(bundleId: bundleId).crashes.isEmpty else {
             return .warn("no Organizer crashes for \(bundleId) yet — open Xcode Organizer once to download.")
         }
         return .ok

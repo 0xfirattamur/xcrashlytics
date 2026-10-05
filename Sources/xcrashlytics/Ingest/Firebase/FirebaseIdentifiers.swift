@@ -13,6 +13,16 @@ enum FirebaseIdentifiers {
         let firebaseEventId = event.eventId ?? "unknown"
         return "\(canonicalIssueId(issueId))/events/\(firebaseEventId)"
     }
+
+    /// Event ids a console `sessionEventKey` may stand for. The key's relation
+    /// to the API event id is undocumented; observed keys carry the event id
+    /// after the last `_`. That suffix, the part before the first `_`, and the
+    /// whole key are tried.
+    static func candidateEventIds(forKey key: String) -> [String] {
+        let parts = key.split(separator: "_").map(String.init)
+        var seen = Set<String>()
+        return ([key] + [parts.last, parts.first].compactMap { $0 }).filter { seen.insert($0).inserted }
+    }
 }
 
 struct FirebaseEventRef: Sendable, Equatable {
@@ -26,6 +36,12 @@ struct FirebaseEventRef: Sendable, Equatable {
         self.issueId = String(id[id.index(id.startIndex, offsetBy: 3)..<range.lowerBound])
         self.eventId = String(id[range.upperBound...])
         guard !issueId.isEmpty, !eventId.isEmpty else { return nil }
+    }
+
+    /// True when `event` is the referenced event. The event part may be a
+    /// pasted console `sessionEventKey` rather than the API event id.
+    func matches(_ event: FirebaseEvent) -> Bool {
+        event.eventId.map(FirebaseIdentifiers.candidateEventIds(forKey: eventId).contains) == true
     }
 }
 
@@ -81,13 +97,9 @@ struct FirebaseConsoleLink: Sendable, Equatable {
     /// Canonical `FB-<issue>` id.
     var canonicalIssueId: String { FirebaseIdentifiers.canonicalIssueId(issueId) }
 
-    /// Event ids this link's `sessionEventKey` may correspond to. The console
-    /// key's relation to the API event id is undocumented, so both the whole
-    /// key and its part before `_` are tried.
+    /// Event ids this link's `sessionEventKey` may correspond to.
     var candidateEventIds: [String] {
-        guard let key = sessionEventKey else { return [] }
-        let prefix = key.split(separator: "_").first.map(String.init)
-        return [key] + (prefix.map { $0 == key ? [] : [$0] } ?? [])
+        sessionEventKey.map(FirebaseIdentifiers.candidateEventIds(forKey:)) ?? []
     }
 }
 

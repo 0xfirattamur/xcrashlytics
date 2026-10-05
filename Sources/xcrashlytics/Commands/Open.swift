@@ -18,6 +18,11 @@ struct OpenCommand: AsyncParsableCommand {
     @Argument(help: "Crash id (XC-<uuid> or FB-<id>).")
     var id: String
 
+    @Option(
+        name: .customLong("crash-directory"),
+        help: "XC- ids: Xcode crash directory to scan instead of the profile's Organizer directories. Repeatable.")
+    var crashDirectories: [String] = []
+
     func validate() throws {
         guard id.hasPrefix("FB-") || id.hasPrefix("XC-") else {
             throw ValidationError("id must start with FB- or XC-; got '\(id)'.")
@@ -97,7 +102,7 @@ struct OpenCommand: AsyncParsableCommand {
         let issueId = eventReference?.issueId ?? FirebaseIdentifiers.issueId(from: id)
         let events = try await firebase.listEvents(issueID: issueId, maxEvents: FirebaseEventSampling.limit)
         let event: FirebaseEvent? = if let eventReference {
-            events.first { FirebaseIdentifiers.canonicalEventId($0, issueId: eventReference.issueId) == id }
+            events.first(where: eventReference.matches)
         } else {
             events.first
         }
@@ -111,7 +116,7 @@ struct OpenCommand: AsyncParsableCommand {
     }
 
     private func xcodeCrash(ctx: CommandContext) throws -> XcodeCrash {
-        let load = ctx.loadXcodeCrashes(directories: try ctx.xcodeCrashDirectories())
+        let load = try ctx.loadXcodeCrashes(directories: crashDirectories)
         ctx.report(load.warnings, format: .text)
         guard let match = load.crashes.first(where: { $0.event.id == id }) else {
             throw ValidationError("no crash found with id '\(id)'.")

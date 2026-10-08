@@ -27,7 +27,7 @@ jobs:
     outputs:
       prerelease: ${{ steps.kind.outputs.prerelease }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
 
       - name: Validate tag and classify release
         id: kind
@@ -92,7 +92,7 @@ jobs:
     if: needs.release.outputs.prerelease == 'false'
     runs-on: macos-15
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           ref: main
 

@@ -1,0 +1,10 @@
+=== stdout ===
+[WARN] no bundle id — Xcode crash commands need one. Re-run with --bundle-id <BUNDLE_ID>.
+Setup OK — warnings above are advisory.
+.xcrashlytics.json written. It holds app ids only, no secrets — commit it so the team shares the setup.
+Active profile: app.
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+POST https://www.googleapis.com/oauth2/v3/token

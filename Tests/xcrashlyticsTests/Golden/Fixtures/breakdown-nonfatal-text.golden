@@ -1,0 +1,13 @@
+=== stdout ===
+Events by app version of FB-I2, 2026-06-08 → 2026-06-15: 17 events in 2 groups.
+Versions with events: 6.15.0 (900) … 6.16.0 (937).
+
+NAME          EVENTS   SHARE  USERS  VERSION USERS  USERS HIT
+6.16.0 (937)      12  70.59%      7            900      0.78%
+6.15.0 (900)       5  29.41%      3            600      0.50%
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I2&page_size=100
+POST https://www.googleapis.com/oauth2/v3/token

@@ -1,0 +1,13 @@
+=== stdout ===
+{
+  "error" : {
+    "code" : "CONFIG_MISSING",
+    "hint" : "Run: xcrashlytics init --app-id <GOOGLE_APP_ID> --profile app --bundle-id <BUNDLE_ID>",
+    "message" : "profile 'app' has no bundle id."
+  },
+  "schemaVersion" : 1
+}
+=== stderr ===
+=== exit ===
+4
+=== requests ===

@@ -1,0 +1,31 @@
+=== stdout ===
+All checks passed.
+.xcrashlytics.json written. It holds app ids only, no secrets — commit it so the team shares the setup.
+Active profile: app.
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+POST https://www.googleapis.com/oauth2/v3/token
+=== file <CWD>/.xcrashlytics.json ===
+{
+  "activeProfile" : "app",
+  "profiles" : {
+    "app" : {
+      "appId" : "1:1234567890:ios:cccc3333dddd4444",
+      "appLibraries" : [
+        "KeyboardCore"
+      ],
+      "bundleId" : "com.example.app"
+    },
+    "widget" : {
+      "appId" : "1:1234567890:ios:cccc3333dddd4444",
+      "appLibraries" : [
+        "KeyboardCore"
+      ],
+      "bundleId" : "com.example.app.widget",
+      "extensionOf" : "app",
+      "sourcePath" : "Widget/GoogleService-Info.plist"
+    }
+  }
+}

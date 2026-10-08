@@ -1,0 +1,10 @@
+=== stdout ===
+{"dimension":"os","eventsCount":20,"eventsShare":50,"impactedUsersCount":7,"kind":"breakdownRow","name":"iOS 17.5.1","os":"iOS","osVersion":"17.5.1","schemaVersion":1}
+{"dimension":"os","eventsCount":14,"eventsShare":35,"impactedUsersCount":5,"kind":"breakdownRow","name":"iOS 17.4","os":"iOS","osVersion":"17.4","schemaVersion":1}
+{"dimension":"os","eventsCount":6,"eventsShare":15,"impactedUsersCount":3,"kind":"breakdownRow","name":"iOS 16.7.8","os":"iOS","osVersion":"16.7.8","schemaVersion":1}
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topOperatingSystems?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I1&page_size=100
+POST https://www.googleapis.com/oauth2/v3/token

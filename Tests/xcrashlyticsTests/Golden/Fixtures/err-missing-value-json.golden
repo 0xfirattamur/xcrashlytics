@@ -1,0 +1,13 @@
+=== stdout ===
+{
+  "error" : {
+    "code" : "BAD_INPUT",
+    "hint" : "Run: xcrashlytics --help",
+    "message" : "Missing value for '--limit <limit>'"
+  },
+  "schemaVersion" : 1
+}
+=== stderr ===
+=== exit ===
+5
+=== requests ===

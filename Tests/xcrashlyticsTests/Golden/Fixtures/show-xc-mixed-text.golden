@@ -1,0 +1,22 @@
+=== stdout ===
+ID:        XC-AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE
+Source:    xcode
+Bundle:    com.example.ExampleApp
+Version:   1 (1.0)
+OS:        iPhone OS 17.0 (21A329)
+Device:    iPhone14,2
+Time:      2026-05-01 12:34 UTC
+Exception: EXC_BAD_ACCESS (SIGSEGV)
+Subtype:   KERN_INVALID_ADDRESS at 0x0000000000000000
+
+Thread 0 (crashed):
+  0  ExampleApp                        0x0000000100001000  -[ExampleViewController crashNow] (ExampleViewController.swift:42)
+  1  ExampleApp                        0x0000000100002000  0x100000000
+  2  UIKit                             0x0000000186003000  UIApplicationMain
+=== stderr ===
+warning: XCODE_PARSE_FAILED: failed to parse /crashes-mixed/ips-corrupt.ips: the .ips body after the header line is not valid JSON (/crashes-mixed/ips-corrupt.ips)
+warning: XCODE_UNSUPPORTED_REPORT: skipped /crashes-mixed/ips-hang.ips: bug_type 298 is not a crash report (no exception or threads); only crash reports are supported (/crashes-mixed/ips-hang.ips)
+warning: XCODE_PARSE_FAILED: failed to parse /crashes-mixed/malformed.crash: missing Exception Type; this does not look like a crash report (/crashes-mixed/malformed.crash)
+=== exit ===
+0
+=== requests ===

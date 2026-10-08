@@ -1,0 +1,6 @@
+=== stdout ===
+{"error":{"code":"BAD_INPUT","hint":"Run: xcrashlytics --help","message":"The value 'ndjson' is invalid for '--format <format>'. Please provide one of 'markdown' and 'json'."},"schemaVersion":1}
+=== stderr ===
+=== exit ===
+5
+=== requests ===

@@ -1,0 +1,6 @@
+=== stdout ===
+=== stderr ===
+error: --app-library must not be empty.
+=== exit ===
+5
+=== requests ===

@@ -1,0 +1,379 @@
+=== stdout ===
+{
+  "data" : {
+    "groups" : [
+      {
+        "crossSource" : false,
+        "firebase" : [
+          {
+            "consoleURL" : "https://console.firebase.google.com/project/golden/crashlytics/app/ios:com.example.app/issues/I1",
+            "errorType" : "FATAL",
+            "eventsCount" : 42,
+            "exceptionType" : "FATAL",
+            "firstSeenVersion" : "6.14.2",
+            "id" : "FB-I1",
+            "impactedUsersCount" : 12,
+            "lastSeenVersion" : "6.16.0",
+            "providerId" : "I1",
+            "signal" : "SIGABRT",
+            "source" : "firebase",
+            "state" : "OPEN",
+            "subtitle" : "Fatal error: Array index out of range",
+            "title" : "[ExampleApp] BlurService.swift - BlurService.classify(_:)"
+          },
+          {
+            "consoleURL" : "https://console.firebase.google.com/project/golden/crashlytics/app/ios:com.example.app/issues/I5",
+            "errorType" : "FATAL",
+            "eventsCount" : 3,
+            "exceptionType" : "FATAL",
+            "firstSeenVersion" : "6.16.0",
+            "id" : "FB-I5",
+            "impactedUsersCount" : 2,
+            "lastSeenVersion" : "6.16.0",
+            "providerId" : "I5",
+            "signal" : "SIGABRT",
+            "source" : "firebase",
+            "state" : "OPEN",
+            "subtitle" : "Fatal error: Unexpectedly found nil",
+            "title" : "[ExampleApp] BlurService.swift - BlurService.classify(_:)"
+          }
+        ],
+        "module" : "ExampleApp",
+        "symbol" : "blurservice.classify(_:)",
+        "totalEvents" : 45,
+        "totalUsers" : 14,
+        "xcode" : [
+
+        ]
+      },
+      {
+        "crossSource" : false,
+        "firebase" : [
+          {
+            "consoleURL" : "https://console.firebase.google.com/project/golden/crashlytics/app/ios:com.example.app/issues/I2",
+            "errorType" : "NON_FATAL",
+            "eventsCount" : 17,
+            "exceptionType" : "NON_FATAL",
+            "firstSeenVersion" : "6.15.0",
+            "id" : "FB-I2",
+            "impactedUsersCount" : 9,
+            "lastSeenVersion" : "6.16.0",
+            "providerId" : "I2",
+            "source" : "firebase",
+            "state" : "OPEN",
+            "subtitle" : "Domain: com.example.NetworkError",
+            "title" : "[Core] FIRCLSNonFatalError.m - -[FIRCLSNonFatalError initWithError:userInfo:rolloutsInfoJSON:]"
+          }
+        ],
+        "symbol" : "firebase:FB-I2",
+        "totalEvents" : 17,
+        "totalUsers" : 9,
+        "xcode" : [
+
+        ]
+      },
+      {
+        "crossSource" : false,
+        "firebase" : [
+          {
+            "consoleURL" : "https://console.firebase.google.com/project/golden/crashlytics/app/ios:com.example.app/issues/I3",
+            "errorType" : "EXC_BAD_ACCESS",
+            "eventsCount" : 9,
+            "exceptionType" : "EXC_BAD_ACCESS",
+            "firstSeenVersion" : "6.15.0",
+            "id" : "FB-I3",
+            "impactedUsersCount" : 4,
+            "lastSeenVersion" : "6.15.0",
+            "providerId" : "I3",
+            "signal" : "SIGSEGV",
+            "source" : "firebase",
+            "state" : "OPEN",
+            "subtitle" : "EXC_BAD_ACCESS",
+            "title" : "[ExampleApp] MapRenderer.swift - MapRenderer.draw(_:)"
+          }
+        ],
+        "module" : "ExampleApp",
+        "symbol" : "maprenderer.draw(_:)",
+        "totalEvents" : 9,
+        "totalUsers" : 4,
+        "xcode" : [
+
+        ]
+      },
+      {
+        "crossSource" : false,
+        "firebase" : [
+          {
+            "consoleURL" : "https://console.firebase.google.com/project/golden/crashlytics/app/ios:com.example.app/issues/I4",
+            "errorType" : "FATAL",
+            "eventsCount" : 6,
+            "exceptionType" : "FATAL",
+            "firstSeenVersion" : "6.16.0",
+            "id" : "FB-I4",
+            "impactedUsersCount" : 3,
+            "lastSeenVersion" : "6.16.0",
+            "providerId" : "I4",
+            "signal" : "SIGSEGV",
+            "source" : "firebase",
+            "state" : "OPEN",
+            "subtitle" : "KERN_INVALID_ADDRESS",
+            "title" : "[KeyboardCore] objectdestroyTm"
+          }
+        ],
+        "module" : "KeyboardCore",
+        "symbol" : "objectdestroytm",
+        "totalEvents" : 6,
+        "totalUsers" : 3,
+        "xcode" : [
+
+        ]
+      },
+      {
+        "crossSource" : false,
+        "firebase" : [
+
+        ],
+        "module" : "ExampleApp",
+        "symbol" : "-[exampleviewcontroller crashnow]",
+        "totalEvents" : 0,
+        "totalUsers" : 0,
+        "xcode" : [
+          {
+            "event" : {
+              "binaryImages" : [
+                {
+                  "arch" : "arm64",
+                  "loadAddress" : 4294967296,
+                  "name" : "ExampleApp",
+                  "path" : "/private/var/containers/Bundle/Application/AAA/ExampleApp.app/ExampleApp",
+                  "uuid" : "11111111-1111-1111-1111-111111111111"
+                },
+                {
+                  "arch" : "arm64",
+                  "loadAddress" : 6543114240,
+                  "name" : "UIKit",
+                  "path" : "/System/Library/Frameworks/UIKit.framework/UIKit",
+                  "uuid" : "22222222-2222-2222-2222-222222222222"
+                }
+              ],
+              "bundleId" : "com.example.app.widget",
+              "bundleVersion" : "1 (1.0)",
+              "crashedThreadIndex" : 0,
+              "deviceModel" : "iPhone14,2",
+              "exception" : {
+                "exceptionType" : "EXC_BAD_ACCESS",
+                "signal" : "SIGSEGV",
+                "subtype" : "KERN_INVALID_ADDRESS at 0x0000000000000000"
+              },
+              "frames" : [
+                {
+                  "address" : 4294971392,
+                  "binaryName" : "ExampleApp",
+                  "imageUUID" : "11111111-1111-1111-1111-111111111111",
+                  "index" : 0,
+                  "isSymbolicated" : true,
+                  "symbol" : "-[ExampleViewController crashNow]"
+                },
+                {
+                  "address" : 4294975488,
+                  "binaryName" : "ExampleApp",
+                  "imageUUID" : "11111111-1111-1111-1111-111111111111",
+                  "index" : 1,
+                  "isSymbolicated" : false,
+                  "symbol" : "0x100000000"
+                },
+                {
+                  "address" : 6543126528,
+                  "binaryName" : "UIKit",
+                  "imageUUID" : "22222222-2222-2222-2222-222222222222",
+                  "index" : 2,
+                  "isSymbolicated" : true,
+                  "symbol" : "UIApplicationMain"
+                }
+              ],
+              "id" : "XC-77777777-BBBB-CCCC-DDDD-EEEEEEEEEEEE",
+              "osVersion" : "iPhone OS 17.0 (21A329)",
+              "providerId" : "77777777-BBBB-CCCC-DDDD-EEEEEEEEEEEE",
+              "rawPath" : "<HOME>/Library/Developer/Xcode/Products/com.example.app/Crashes/Points/A.xccrashpoint/Logs/widget.crash",
+              "source" : "xcode",
+              "timestamp" : "2026-05-01T12:34:55Z"
+            },
+            "fileMtime" : "2026-05-31T20:26:40Z",
+            "filePath" : "<HOME>/Library/Developer/Xcode/Products/com.example.app/Crashes/Points/A.xccrashpoint/Logs/widget.crash",
+            "fileSize" : 1282
+          },
+          {
+            "event" : {
+              "binaryImages" : [
+                {
+                  "arch" : "arm64",
+                  "loadAddress" : 4294967296,
+                  "name" : "ExampleApp",
+                  "path" : "/private/var/containers/Bundle/Application/AAA/ExampleApp.app/ExampleApp",
+                  "uuid" : "11111111-1111-1111-1111-111111111111"
+                },
+                {
+                  "arch" : "arm64",
+                  "loadAddress" : 6543114240,
+                  "name" : "UIKit",
+                  "path" : "/System/Library/Frameworks/UIKit.framework/UIKit",
+                  "uuid" : "22222222-2222-2222-2222-222222222222"
+                }
+              ],
+              "bundleId" : "com.example.ExampleApp",
+              "bundleVersion" : "1 (1.0)",
+              "crashedThreadIndex" : 0,
+              "deviceModel" : "iPhone14,2",
+              "exception" : {
+                "exceptionType" : "EXC_BAD_ACCESS",
+                "signal" : "SIGSEGV",
+                "subtype" : "KERN_INVALID_ADDRESS at 0x0000000000000000"
+              },
+              "frames" : [
+                {
+                  "address" : 4294971392,
+                  "binaryName" : "ExampleApp",
+                  "imageUUID" : "11111111-1111-1111-1111-111111111111",
+                  "index" : 0,
+                  "isSymbolicated" : true,
+                  "symbol" : "-[ExampleViewController crashNow]"
+                },
+                {
+                  "address" : 4294975488,
+                  "binaryName" : "ExampleApp",
+                  "imageUUID" : "11111111-1111-1111-1111-111111111111",
+                  "index" : 1,
+                  "isSymbolicated" : false,
+                  "symbol" : "0x100000000"
+                },
+                {
+                  "address" : 6543126528,
+                  "binaryName" : "UIKit",
+                  "imageUUID" : "22222222-2222-2222-2222-222222222222",
+                  "index" : 2,
+                  "isSymbolicated" : true,
+                  "symbol" : "UIApplicationMain"
+                }
+              ],
+              "id" : "XC-AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE",
+              "osVersion" : "iPhone OS 17.0 (21A329)",
+              "providerId" : "AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE",
+              "rawPath" : "<HOME>/Library/Developer/Xcode/Products/com.example.app/Crashes/Points/A.xccrashpoint/Logs/sample.crash",
+              "source" : "xcode",
+              "timestamp" : "2026-05-01T12:34:55Z"
+            },
+            "fileMtime" : "2026-05-29T20:26:40Z",
+            "filePath" : "<HOME>/Library/Developer/Xcode/Products/com.example.app/Crashes/Points/A.xccrashpoint/Logs/sample.crash",
+            "fileSize" : 1282
+          }
+        ]
+      },
+      {
+        "crossSource" : false,
+        "firebase" : [
+
+        ],
+        "module" : "ExampleApp",
+        "symbol" : "exampleviewcontroller.crashnow()",
+        "totalEvents" : 0,
+        "totalUsers" : 0,
+        "xcode" : [
+          {
+            "event" : {
+              "binaryImages" : [
+                {
+                  "arch" : "arm64",
+                  "loadAddress" : 4294967296,
+                  "name" : "ExampleApp",
+                  "path" : "/private/var/containers/Bundle/Application/AAA/ExampleApp.app/ExampleApp",
+                  "uuid" : "11111111-1111-1111-1111-111111111111"
+                },
+                {
+                  "arch" : "arm64e",
+                  "loadAddress" : 6442450944,
+                  "name" : "UIKitCore",
+                  "path" : "/System/Library/Frameworks/UIKit.framework/UIKit",
+                  "uuid" : "22222222-2222-2222-2222-222222222222"
+                },
+                {
+                  "arch" : "arm64e",
+                  "loadAddress" : 8589934592,
+                  "name" : "libsystem_kernel.dylib",
+                  "path" : "/usr/lib/system/libsystem_kernel.dylib",
+                  "uuid" : "33333333-3333-3333-3333-333333333333"
+                }
+              ],
+              "bundleId" : "com.example.ExampleApp",
+              "bundleVersion" : "1.0 (42)",
+              "crashedThreadIndex" : 1,
+              "deviceModel" : "iPhone14,2",
+              "exception" : {
+                "exceptionType" : "EXC_BAD_ACCESS",
+                "signal" : "SIGSEGV",
+                "subtype" : "KERN_INVALID_ADDRESS at 0x0000000000000000"
+              },
+              "frames" : [
+                {
+                  "address" : 8589937500,
+                  "binaryName" : "libsystem_kernel.dylib",
+                  "imageUUID" : "33333333-3333-3333-3333-333333333333",
+                  "index" : 0,
+                  "isSymbolicated" : true,
+                  "symbol" : "__pthread_kill"
+                },
+                {
+                  "address" : 4294971392,
+                  "binaryName" : "ExampleApp",
+                  "file" : "ExampleViewController.swift",
+                  "imageUUID" : "11111111-1111-1111-1111-111111111111",
+                  "index" : 1,
+                  "isSymbolicated" : true,
+                  "line" : 42,
+                  "symbol" : "ExampleViewController.crashNow()"
+                },
+                {
+                  "address" : 4294975488,
+                  "binaryName" : "ExampleApp",
+                  "imageUUID" : "11111111-1111-1111-1111-111111111111",
+                  "index" : 2,
+                  "isSymbolicated" : false
+                },
+                {
+                  "address" : 6442451456,
+                  "binaryName" : "UIKitCore",
+                  "imageUUID" : "22222222-2222-2222-2222-222222222222",
+                  "index" : 3,
+                  "isSymbolicated" : true,
+                  "symbol" : "UIApplicationMain"
+                }
+              ],
+              "id" : "XC-0A0A0A0A-1111-2222-3333-444444444444",
+              "osVersion" : "iOS 17.0 (21A329)",
+              "providerId" : "0A0A0A0A-1111-2222-3333-444444444444",
+              "rawPath" : "<HOME>/Library/Developer/Xcode/Products/com.example.app/Crashes/Points/A.xccrashpoint/Logs/ips-crash.ips",
+              "source" : "xcode",
+              "timestamp" : "2026-05-01T12:34:55Z"
+            },
+            "fileMtime" : "2026-05-30T20:26:40Z",
+            "filePath" : "<HOME>/Library/Developer/Xcode/Products/com.example.app/Crashes/Points/A.xccrashpoint/Logs/ips-crash.ips",
+            "fileSize" : 2230
+          }
+        ]
+      }
+    ],
+    "window" : {
+      "since" : "2026-06-08T12:00:00Z",
+      "until" : "2026-06-15T12:00:00Z"
+    }
+  },
+  "schemaVersion" : 1,
+  "warnings" : [
+
+  ]
+}
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100
+POST https://www.googleapis.com/oauth2/v3/token

@@ -1,0 +1,28 @@
+=== stdout ===
+OVERVIEW: Show related Firebase issues and optional Xcode crashes.
+
+USAGE: xcrashlytics groups [--format <format>] [--firebase-limit <firebase-limit>] [<issue>] [--limit <limit>] [--xcode] [--crash-directory <crash-directory> ...] [--since <since>]
+
+ARGUMENTS:
+  <issue>                 Optional Firebase issue id, for example FB-ISSUE_ID.
+
+OPTIONS:
+  --format <format>       Output format: text (default) or json. (values: text,
+                          json, ndjson; default: text)
+  --firebase-limit <firebase-limit>
+                          Maximum number of Firebase issues to fetch. (default:
+                          100)
+  --limit <limit>         Limit to N groups.
+  --xcode                 Include local crash reports downloaded by the Xcode
+                          Organizer.
+  --crash-directory <crash-directory>
+                          Xcode crash directory to scan. Repeatable.
+  --since <since>         Firebase window for event and user totals, e.g. 7d
+                          (default), 30d, 90d, or all (90d).
+  --version               Show the version.
+  -h, --help              Show help information.
+
+=== stderr ===
+=== exit ===
+0
+=== requests ===

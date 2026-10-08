@@ -1,0 +1,25 @@
+=== stdout ===
+ID:        FB-I3
+Source:    firebase
+Version:   6.15.0
+Exception: EXC_BAD_ACCESS (SIGSEGV)
+Subtype:   EXC_BAD_ACCESS
+Versions:  first seen 6.15.0 · last seen 6.15.0
+Range:     6.15.0 (900) … 6.15.0 (900) (lowest/highest version with events, 90d)
+Sampled:   newest 1 events, 2026-06-13 → 2026-06-13, 1 users
+OS:        iOS 17.4 ×1
+Devices:   iPhone14,5 ×1
+Libraries: ExampleApp ×1 (100%)
+
+Thread 0 (crashed):
+  0  ExampleApp                        0x0000000000001388  MapRenderer.draw(_:) (MapRenderer.swift:301)
+  1  QuartzCore                        0x0000000000000258  CA::Layer::display()
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I3&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/issues/I3
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I3&page_size=100
+POST https://www.googleapis.com/oauth2/v3/token
+POST https://www.googleapis.com/oauth2/v3/token

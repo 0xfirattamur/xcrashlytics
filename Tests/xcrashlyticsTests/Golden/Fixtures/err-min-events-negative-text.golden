@@ -1,0 +1,9 @@
+=== stdout ===
+=== stderr ===
+Error: Missing value for '--min-events <min-events>'
+Help:  --min-events <min-events>  Only include issues with at least N events.
+Usage: xcrashlytics issues [<options>] [<query>]
+  See 'xcrashlytics issues --help' for more information.
+=== exit ===
+64
+=== requests ===

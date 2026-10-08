@@ -1,0 +1,121 @@
+=== stdout ===
+{
+  "data" : {
+    "events" : [
+      {
+        "appBuild" : "937",
+        "appVersion" : "6.16.0",
+        "crashInfo" : [
+          "BlurService.swift:77: Fatal error: Array index out of range (user [redacted])",
+          "second entry"
+        ],
+        "crashMessage" : "BlurService.swift:77: Fatal error: Array index out of range (user [redacted])",
+        "crashedThread" : {
+          "crashAddress" : "0",
+          "queue" : "com.apple.main-thread",
+          "signal" : "SIGABRT",
+          "signalCode" : "0x0",
+          "title" : "Crashed: com.apple.main-thread"
+        },
+        "customKeys" : {
+          "feature_flag" : "dark_mode",
+          "nserror-domain" : "com.example.BlurError"
+        },
+        "deviceModel" : "iPhone15,2",
+        "deviceOrientation" : "PORTRAIT",
+        "eventTime" : "2026-06-14T09:30:00Z",
+        "exception" : {
+          "message" : "-[NSNull length]: unrecognized selector sent to instance 0x1 (user [redacted])",
+          "type" : "NSInvalidArgumentException"
+        },
+        "firebaseEventId" : "E1",
+        "frames" : [
+          {
+            "binaryName" : "libobjc.A.dylib",
+            "index" : 0,
+            "isBlamed" : false,
+            "symbol" : "objc_exception_throw"
+          },
+          {
+            "binaryName" : "CoreFoundation",
+            "index" : 1,
+            "isBlamed" : false,
+            "symbol" : "<redacted>"
+          },
+          {
+            "binaryName" : "KeyboardCore",
+            "file" : "BlurKernel.swift",
+            "firebaseSymbol" : "objectdestroyTm",
+            "index" : 2,
+            "isBlamed" : false,
+            "line" : 112,
+            "symbol" : "BlurKernel.run()",
+            "symbolicated" : "dsym"
+          },
+          {
+            "binaryName" : "ExampleApp",
+            "file" : "BlurService.swift",
+            "index" : 3,
+            "isBlamed" : true,
+            "line" : 77,
+            "symbol" : "BlurService.classify(_:)"
+          },
+          {
+            "binaryName" : "ExampleApp",
+            "file" : "ExampleViewController.swift",
+            "index" : 4,
+            "isBlamed" : false,
+            "line" : 42,
+            "symbol" : "ExampleViewController.viewDidLoad()"
+          },
+          {
+            "binaryName" : "UIKitCore",
+            "index" : 5,
+            "isBlamed" : false,
+            "symbol" : "UIApplicationMain"
+          }
+        ],
+        "id" : "FB-I1/events/E1",
+        "isJailbroken" : false,
+        "issueId" : "FB-I1",
+        "logs" : [
+          {
+            "message" : "opened camera for [redacted]",
+            "time" : "2026-06-14T09:29:58Z"
+          },
+          {
+            "message" : "classify start",
+            "time" : "2026-06-14T09:29:59Z"
+          }
+        ],
+        "memoryFreeBytes" : 120000000,
+        "memoryUsedBytes" : 3400000000,
+        "osOrientation" : "PORTRAIT",
+        "osVersion" : "17.5.1",
+        "processState" : "FOREGROUND",
+        "storageFreeBytes" : 52000000000,
+        "storageUsedBytes" : 76000000000,
+        "userIdHash" : "14e0fbbd1214db43c3b8f438b55db0437bf9b23f0ec82b53d73a40245a4daee7"
+      }
+    ]
+  },
+  "schemaVersion" : 1,
+  "warnings" : [
+    {
+      "code" : "DSYM_FAILED",
+      "message" : "no dSYM bundle with a DWARF binary found under /empty-dsyms.",
+      "path" : "/empty-dsyms"
+    },
+    {
+      "code" : "DSYM_UNVERIFIED",
+      "message" : "KeyboardCore was symbolicated with a dSYM (UUID B0B2532E-E644-3C37-BC05-42B715648E19); Crashlytics events carry no binary image UUIDs, so this dSYM cannot be matched to the build that crashed. Treat the symbols as correct only if the dSYM comes from the same build as the event.",
+      "path" : "/dsyms/KeyboardCore.framework.dSYM"
+    }
+  ]
+}
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I1&page_size=1
+POST https://www.googleapis.com/oauth2/v3/token

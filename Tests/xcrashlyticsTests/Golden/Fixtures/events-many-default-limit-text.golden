@@ -1,0 +1,17 @@
+=== stdout ===
+FB-IMANY/events/M1   2026-06-13T11:00:00Z   6.16.0 (937)   iPhone15,2 / iOS 17.5.1   many()
+FB-IMANY/events/M2   2026-06-13T11:00:00Z   6.16.0 (937)   iPhone15,2 / iOS 17.5.1   many()
+FB-IMANY/events/M3   2026-06-13T11:00:00Z   6.16.0 (937)   iPhone15,2 / iOS 17.5.1   many()
+FB-IMANY/events/M4   2026-06-13T11:00:00Z   6.16.0 (937)   iPhone15,2 / iOS 17.5.1   many()
+FB-IMANY/events/M5   2026-06-13T11:00:00Z   6.16.0 (937)   iPhone15,2 / iOS 17.5.1   many()
+FB-IMANY/events/M6   2026-06-13T11:00:00Z   6.16.0 (937)   iPhone15,2 / iOS 17.5.1   many()
+FB-IMANY/events/M7   2026-06-13T11:00:00Z   6.16.0 (937)   iPhone15,2 / iOS 17.5.1   many()
+FB-IMANY/events/M8   2026-06-13T11:00:00Z   6.16.0 (937)   iPhone15,2 / iOS 17.5.1   many()
+FB-IMANY/events/M9   2026-06-13T11:00:00Z   6.16.0 (937)   iPhone15,2 / iOS 17.5.1   many()
+FB-IMANY/events/M10   2026-06-13T11:00:00Z   6.16.0 (937)   iPhone15,2 / iOS 17.5.1   many()
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=IMANY&page_size=10
+POST https://www.googleapis.com/oauth2/v3/token

@@ -1,0 +1,133 @@
+=== stdout ===
+{
+  "data" : {
+    "activity" : {
+      "deviceSpread" : [
+        {
+          "count" : 1,
+          "name" : "iPhone14,5"
+        },
+        {
+          "count" : 1,
+          "name" : "iPhone15,2"
+        }
+      ],
+      "distinctUsers" : 2,
+      "firstEventAt" : "2026-06-12T08:00:00Z",
+      "lastEventAt" : "2026-06-14T09:30:00Z",
+      "osSpread" : [
+        {
+          "count" : 1,
+          "name" : "iOS 17.4"
+        },
+        {
+          "count" : 1,
+          "name" : "iOS 17.5.1"
+        }
+      ],
+      "sampledEvents" : 2,
+      "versionSpread" : [
+        {
+          "count" : 1,
+          "name" : "6.15.0"
+        },
+        {
+          "count" : 1,
+          "name" : "6.16.0"
+        }
+      ]
+    },
+    "appBuild" : "900",
+    "binaryImages" : [
+
+    ],
+    "blameLibraries" : [
+      {
+        "events" : 1,
+        "library" : "ExampleApp",
+        "owner" : "DEVELOPER",
+        "share" : 0.5
+      }
+    ],
+    "bundleId" : "com.example.app",
+    "bundleVersion" : "6.15.0",
+    "crashMessage" : "CALayerInvalidGeometry: CALayer bounds contains NaN",
+    "crashedThread" : {
+      "signal" : "SIGABRT",
+      "title" : "Crashed: com.apple.main-thread"
+    },
+    "crashedThreadIndex" : 0,
+    "customKeys" : {
+
+    },
+    "deviceModel" : "iPhone14,5",
+    "dominantLibraries" : [
+      {
+        "events" : 2,
+        "library" : "ExampleApp",
+        "owner" : "DEVELOPER",
+        "share" : 1
+      },
+      {
+        "events" : 1,
+        "library" : "KeyboardCore",
+        "owner" : "THIRD_PARTY",
+        "share" : 0.5
+      }
+    ],
+    "errorType" : "FATAL",
+    "exception" : {
+      "exceptionType" : "CALayerInvalidGeometry",
+      "message" : "CALayer bounds contains NaN",
+      "type" : "CALayerInvalidGeometry"
+    },
+    "firstSeenVersion" : "6.14.2",
+    "frames" : [
+      {
+        "address" : 4200,
+        "binaryName" : "ExampleApp",
+        "file" : "BlurService.swift",
+        "index" : 0,
+        "isSymbolicated" : true,
+        "line" : 80,
+        "symbol" : "BlurService.classify(_:)"
+      },
+      {
+        "address" : 900,
+        "binaryName" : "UIKitCore",
+        "index" : 1,
+        "isSymbolicated" : true,
+        "symbol" : "UIApplicationMain"
+      }
+    ],
+    "id" : "FB-I1/events/E2",
+    "lastSeenVersion" : "6.16.0",
+    "logs" : [
+
+    ],
+    "osVersion" : "17.4",
+    "processState" : "BACKGROUND",
+    "providerId" : "E2",
+    "source" : "firebase",
+    "state" : "OPEN",
+    "timestamp" : "2026-06-12T08:00:00Z",
+    "userIdHash" : "c7ba10f03d2b9621156734ade53cc313360551f56063f4be4e1f077e4dc3dfc3",
+    "versionRange" : {
+      "max" : "6.16.0 (937)",
+      "min" : "6.15.0 (900)"
+    }
+  },
+  "schemaVersion" : 1,
+  "warnings" : [
+
+  ]
+}
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I1&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/issues/I1
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I1&page_size=100
+POST https://www.googleapis.com/oauth2/v3/token
+POST https://www.googleapis.com/oauth2/v3/token

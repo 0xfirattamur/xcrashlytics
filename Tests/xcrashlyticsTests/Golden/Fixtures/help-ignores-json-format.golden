@@ -1,0 +1,67 @@
+=== stdout ===
+OVERVIEW: List Firebase Crashlytics issues.
+
+Results follow Firebase topIssues impact order, counted over --since (default
+7d, at most 90d).
+Bare issues fetches --limit issues. Queries and filters fetch a wider search
+window by default,
+then show the first --limit matches. --crash-directory implies --xcode; without
+a configured
+Firebase app, --xcode lists local crashes only.
+
+USAGE: xcrashlytics issues [<options>] [<query>]
+
+ARGUMENTS:
+  <query>                 Optional title/subtitle/module/file/symbol query.
+
+OPTIONS:
+  --format <format>       Output format: text (default), json, or ndjson.
+                          (values: text, json, ndjson; default: text)
+  --limit <limit>         Limit displayed issues (and, separately, displayed
+                          Xcode crashes). (default: 20)
+  --search-limit <search-limit>
+                          Number of Firebase issues to fetch before filtering
+                          (at most 2000).
+  --all                   Search up to 2000 Firebase issues before filtering.
+  --match <match>         Case-insensitive substring filter for
+                          title/subtitle/module/file/symbol.
+  --type <type>           Filter by Firebase error type, for example FATAL,
+                          NON_FATAL, EXC_BAD_ACCESS.
+  --min-events <min-events>
+                          Only include issues with at least N events.
+  --app-version <app-version>
+                          Only count events of this exact app version (6.16.0,
+                          or 6.16.0 (937) for one build); issues and counts
+                          cover only it.
+  --since-version <since-version>
+                          Only count events of app versions greater than or
+                          equal to this one; issues and counts cover only them.
+  --file <file>           Only include issues whose parsed top file exactly
+                          matches this value.
+  --symbol <symbol>       Only include issues whose parsed top symbol exactly
+                          matches this value.
+  --since <since>         Report window for event and user counts: 24h, 7d,
+                          30m, 2w, or all (90d). Default 7d, at most 90d.
+  --by-day                Include exact per-day event counts for displayed
+                          issues (UTC days, from the report).
+  --events-per-issue <events-per-issue>
+                          Events to scan per issue for --user-id (default 50).
+  --user-id <user-id>     Only include issues with a sampled event for this
+                          exact Firebase user id.
+  --domain <domain>       Only include issues whose latest event metadata
+                          contains this NSError/domain string.
+  --user-info-key <user-info-key>
+                          Filter latest event userInfo by key or key=value.
+                          Repeatable: --user-info-key a --user-info-key b.
+  --xcode                 Include local crash reports downloaded by the Xcode
+                          Organizer.
+  --crash-directory <crash-directory>
+                          Xcode crash directory to scan; implies --xcode.
+                          Repeatable.
+  --version               Show the version.
+  -h, --help              Show help information.
+
+=== stderr ===
+=== exit ===
+0
+=== requests ===

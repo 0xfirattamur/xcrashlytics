@@ -1,0 +1,18 @@
+=== stdout ===
+{
+  "data" : {
+    "events" : [
+
+    ]
+  },
+  "schemaVersion" : 1,
+  "warnings" : [
+
+  ]
+}
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=ZZ-1&page_size=10
+POST https://www.googleapis.com/oauth2/v3/token

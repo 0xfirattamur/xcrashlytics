@@ -24,6 +24,7 @@ let package = Package(
             name: "xcrashlyticsTests",
             dependencies: ["xcrashlytics"],
             path: "Tests/xcrashlyticsTests",
+            exclude: ["Golden/Fixtures"],
             resources: [.copy("Fixtures")]
         ),
     ]

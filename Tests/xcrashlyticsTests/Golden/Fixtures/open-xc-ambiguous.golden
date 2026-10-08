@@ -1,0 +1,8 @@
+=== stdout ===
+Opened raw report at /crashes/sample-symbolicated.crash ('ExampleViewController.swift' is ambiguous under <CWD>:
+  <CWD>/Other/ExampleViewController.swift
+  <CWD>/Sources/ExampleViewController.swift).
+=== stderr ===
+=== exit ===
+0
+=== requests ===

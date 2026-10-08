@@ -1,0 +1,46 @@
+=== stdout ===
+OVERVIEW: Export one crash as a shareable report: what it is, how much it
+hurts, where it happens.
+
+Takes the same ids as `show`. Writes Markdown (default) or JSON to stdout,
+or to --output. Firebase issues include their event and user totals over
+--since (default 7d, at most 90d, the Crashlytics limit). User ids are
+never included.
+
+Examples:
+  xcrashlytics export FB-3aedb610eee1a41872d991ca62ce8566 | pbcopy
+  xcrashlytics export FB-3aedb610eee1a41872d991ca62ce8566 --since 30d --output
+crash.md
+  xcrashlytics export FB-3aedb610eee1a41872d991ca62ce8566/events/E1 --format
+json
+  xcrashlytics export XC-AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE --app-frames-only
+
+USAGE: xcrashlytics export <id> [--format <format>] [--since <since>] [--output <output>] [--app-frames-only] [--no-system-frames] [--crashing-thread-only] [--crash-directory <crash-directory> ...]
+
+ARGUMENTS:
+  <id>                    Crash id (XC-<uuid>, FB-<id>, FB-<id>/events/<event>)
+                          or a Firebase console issue link.
+
+OPTIONS:
+  --format <format>       Report format: markdown (default) or json. (values:
+                          markdown, json; default: markdown)
+  --since <since>         Firebase issues: window for event and user totals,
+                          e.g. 7d, 30d, 90d, or all (90d). (default: 7d)
+  --output <output>       Write the report to this file instead of stdout.
+  --app-frames-only       Firebase only: only include frames that look
+                          app-owned.
+  --no-system-frames      Firebase only: drop redacted, deduplicated, and known
+                          system/SDK frames.
+  --crashing-thread-only  Firebase only: only include frames of Firebase's
+                          crashed thread (warns NO_CRASHED_THREAD when there is
+                          none).
+  --crash-directory <crash-directory>
+                          XC- ids: Xcode crash directory to scan instead of the
+                          profile's Organizer directories. Repeatable.
+  --version               Show the version.
+  -h, --help              Show help information.
+
+=== stderr ===
+=== exit ===
+0
+=== requests ===

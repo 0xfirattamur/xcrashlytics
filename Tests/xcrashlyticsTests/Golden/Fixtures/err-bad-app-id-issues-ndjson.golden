@@ -1,0 +1,6 @@
+=== stdout ===
+{"error":{"code":"CONFIG_INVALID","hint":"Copy GOOGLE_APP_ID from GoogleService-Info.plist, then run xcrashlytics init.","message":"app id 'not-an-app-id' is not a Firebase app id (expected 1:<project-number>:<platform>:<hash>)."},"schemaVersion":1}
+=== stderr ===
+=== exit ===
+4
+=== requests ===

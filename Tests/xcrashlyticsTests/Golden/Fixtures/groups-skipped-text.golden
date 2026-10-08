@@ -1,0 +1,7 @@
+=== stdout ===
+=== stderr ===
+error: no appId configured.
+hint: Run: xcrashlytics init --app-id <GOOGLE_APP_ID>, or: xcrashlytics use <profile>
+=== exit ===
+4
+=== requests ===

@@ -1,0 +1,12 @@
+=== stdout ===
+{
+  "error" : {
+    "code" : "BAD_INPUT",
+    "message" : "--app-version 'latest' is not a version; use dotted numbers such as 6.16.0 or 6.16.0-beta.1."
+  },
+  "schemaVersion" : 1
+}
+=== stderr ===
+=== exit ===
+5
+=== requests ===

@@ -1,0 +1,27 @@
+=== stdout ===
+ID:        FB-I2
+Source:    firebase
+Version:   6.16.0
+Exception: NON_FATAL
+Subtype:   Domain: com.example.NetworkError
+Versions:  first seen 6.15.0 · last seen 6.16.0
+Range:     6.15.0 (900) … 6.16.0 (937) (lowest/highest version with events, 90d)
+Sampled:   newest 1 events, 2026-06-14 → 2026-06-14, 1 users
+OS:        iOS 17.5.1 ×1
+Devices:   iPhone15,2 ×1
+Libraries: ExampleApp ×1 (100%)
+
+Thread 0 (crashed):
+  0  Core                              0x0000000000000064  -[FIRCLSNonFatalError initWithError:userInfo:rolloutsInfoJSON:] (FIRCLSNonFatalError.m:33)
+  1  Core                              0x00000000000000c8  -[FIRCrashlytics recordError:userInfo:] (FIRCrashlytics.m:435)
+  2  ExampleApp                        0x000000000000012c  NetworkClient.recordFailure(error:) (NetworkClient.swift:186)
+  3  UIKitCore                         0x0000000000000384  UIApplicationMain
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I2&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/issues/I2
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I2&page_size=100
+POST https://www.googleapis.com/oauth2/v3/token
+POST https://www.googleapis.com/oauth2/v3/token

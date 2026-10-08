@@ -1,0 +1,9 @@
+=== stdout ===
+=== stderr ===
+Error: The value 'color' is invalid for '--by <by>'. Please provide one of 'version', 'os' or 'device'.
+Help:  --by <by>  What to split by: version, os, or device.
+Usage: xcrashlytics breakdown [<issue>] --by <by> [--since <since>] [--limit <limit>] [--format <format>]
+  See 'xcrashlytics breakdown --help' for more information.
+=== exit ===
+64
+=== requests ===

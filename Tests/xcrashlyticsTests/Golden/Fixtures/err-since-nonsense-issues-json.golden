@@ -1,0 +1,12 @@
+=== stdout ===
+{
+  "error" : {
+    "code" : "BAD_INPUT",
+    "message" : "invalid --since 'soon' — use a positive number with a unit of m, h, d or w (for example 30m, 24h, 7d, 2w), or all."
+  },
+  "schemaVersion" : 1
+}
+=== stderr ===
+=== exit ===
+5
+=== requests ===

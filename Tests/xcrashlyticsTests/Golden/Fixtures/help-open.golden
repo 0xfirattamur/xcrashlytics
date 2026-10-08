@@ -1,0 +1,27 @@
+=== stdout ===
+OVERVIEW: Open a crash's source location in Xcode via xed.
+
+Examples:
+  xcrashlytics open FB-3aedb610eee1a41872d991ca62ce8566
+  xcrashlytics open FB-3aedb610eee1a41872d991ca62ce8566/events/E1
+  xcrashlytics open XC-AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE
+
+Crash frames carry file names only, so the file is resolved inside the current
+directory — run from the app's repo root.
+
+USAGE: xcrashlytics open <id> [--crash-directory <crash-directory> ...]
+
+ARGUMENTS:
+  <id>                    Crash id (XC-<uuid> or FB-<id>).
+
+OPTIONS:
+  --crash-directory <crash-directory>
+                          XC- ids: Xcode crash directory to scan instead of the
+                          profile's Organizer directories. Repeatable.
+  --version               Show the version.
+  -h, --help              Show help information.
+
+=== stderr ===
+=== exit ===
+0
+=== requests ===

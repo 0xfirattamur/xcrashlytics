@@ -1,0 +1,74 @@
+=== stdout ===
+{
+  "data" : {
+    "crash" : {
+      "file" : "ExampleViewController.swift",
+      "module" : "ExampleApp",
+      "signal" : "SIGSEGV",
+      "subtype" : "KERN_INVALID_ADDRESS at 0x0000000000000000",
+      "symbol" : "-[ExampleViewController crashNow]",
+      "topSourceFrame" : {
+        "address" : 4294971392,
+        "binaryName" : "ExampleApp",
+        "file" : "ExampleViewController.swift",
+        "imageUUID" : "11111111-1111-1111-1111-111111111111",
+        "index" : 0,
+        "isSymbolicated" : true,
+        "line" : 42,
+        "symbol" : "-[ExampleViewController crashNow]"
+      },
+      "type" : "EXC_BAD_ACCESS"
+    },
+    "exportedAt" : "2026-06-15T12:00:00Z",
+    "frames" : [
+      {
+        "address" : 4294971392,
+        "binaryName" : "ExampleApp",
+        "file" : "ExampleViewController.swift",
+        "imageUUID" : "11111111-1111-1111-1111-111111111111",
+        "index" : 0,
+        "isSymbolicated" : true,
+        "line" : 42,
+        "symbol" : "-[ExampleViewController crashNow]"
+      },
+      {
+        "address" : 4294975488,
+        "binaryName" : "ExampleApp",
+        "imageUUID" : "11111111-1111-1111-1111-111111111111",
+        "index" : 1,
+        "isSymbolicated" : false,
+        "symbol" : "0x100000000"
+      },
+      {
+        "address" : 6543126528,
+        "binaryName" : "UIKit",
+        "imageUUID" : "22222222-2222-2222-2222-222222222222",
+        "index" : 2,
+        "isSymbolicated" : true,
+        "symbol" : "UIApplicationMain"
+      }
+    ],
+    "id" : "XC-AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE",
+    "occurrence" : {
+      "appVersion" : "1 (1.0)",
+      "bundleId" : "com.example.ExampleApp",
+      "deviceModel" : "iPhone14,2",
+      "osVersion" : "iPhone OS 17.0 (21A329)",
+      "time" : "2026-05-01T12:34:55Z"
+    },
+    "source" : "xcode",
+    "title" : "EXC_BAD_ACCESS",
+    "toolVersion" : "0.2.0"
+  },
+  "schemaVersion" : 1,
+  "warnings" : [
+    {
+      "code" : "FRAME_FILTER_IGNORED",
+      "message" : "--app-frames-only, --no-system-frames and --crashing-thread-only apply to Firebase crashes only; XC-AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE is shown with all its frames."
+    }
+  ]
+}
+=== stderr ===
+=== exit ===
+0
+=== requests ===

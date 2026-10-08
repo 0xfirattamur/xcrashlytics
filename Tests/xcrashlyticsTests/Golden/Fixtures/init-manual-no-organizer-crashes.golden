@@ -1,0 +1,20 @@
+=== stdout ===
+[WARN] no Organizer crashes for com.example.other yet — open Xcode Organizer once to download.
+Setup OK — warnings above are advisory.
+.xcrashlytics.json written. It holds app ids only, no secrets — commit it so the team shares the setup.
+Active profile: release.
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+POST https://www.googleapis.com/oauth2/v3/token
+=== file <CWD>/.xcrashlytics.json ===
+{
+  "activeProfile" : "release",
+  "profiles" : {
+    "release" : {
+      "appId" : "1:1234567890:ios:aaaa1111bbbb2222",
+      "bundleId" : "com.example.other"
+    }
+  }
+}

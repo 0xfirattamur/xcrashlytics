@@ -1,0 +1,9 @@
+=== stdout ===
+=== stderr ===
+Error: Missing expected argument '<profile>'
+Help:  <profile>  Profile name, for example debug, staging, prerelease, or release.
+Usage: xcrashlytics use <profile>
+  See 'xcrashlytics use --help' for more information.
+=== exit ===
+64
+=== requests ===

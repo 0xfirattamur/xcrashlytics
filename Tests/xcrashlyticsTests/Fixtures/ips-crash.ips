@@ -1,0 +1,46 @@
+{"app_name":"ExampleApp","timestamp":"2026-05-01 12:34:55.00 +0000","app_version":"1.0","bug_type":"309","os_version":"iPhone OS 17.0 (21A329)","incident_id":"0A0A0A0A-1111-2222-3333-444444444444","bundleID":"com.example.ExampleApp"}
+{
+  "incident" : "0A0A0A0A-1111-2222-3333-444444444444",
+  "modelCode" : "iPhone14,2",
+  "captureTime" : "2026-05-01 12:34:55.1234 +0000",
+  "procName" : "ExampleApp",
+  "bundleInfo" : {
+    "CFBundleIdentifier" : "com.example.ExampleApp",
+    "CFBundleShortVersionString" : "1.0",
+    "CFBundleVersion" : "42"
+  },
+  "osVersion" : {
+    "train" : "iOS 17.0",
+    "build" : "21A329"
+  },
+  "exception" : {
+    "type" : "EXC_BAD_ACCESS",
+    "signal" : "SIGSEGV",
+    "subtype" : "KERN_INVALID_ADDRESS at 0x0000000000000000"
+  },
+  "faultingThread" : 1,
+  "threads" : [
+    {
+      "id" : 100,
+      "queue" : "com.apple.main-thread",
+      "frames" : [
+        { "imageOffset" : 2908, "symbol" : "mach_msg2_trap", "symbolLocation" : 8, "imageIndex" : 2 }
+      ]
+    },
+    {
+      "triggered" : true,
+      "id" : 101,
+      "frames" : [
+        { "imageOffset" : 2908, "symbol" : "__pthread_kill", "symbolLocation" : 8, "imageIndex" : 2 },
+        { "imageOffset" : 4096, "symbol" : "ExampleViewController.crashNow()", "symbolLocation" : 24, "sourceFile" : "ExampleViewController.swift", "sourceLine" : 42, "imageIndex" : 0 },
+        { "imageOffset" : 8192, "imageIndex" : 0 },
+        { "imageOffset" : 512, "symbol" : "UIApplicationMain", "symbolLocation" : 1, "imageIndex" : 1 }
+      ]
+    }
+  ],
+  "usedImages" : [
+    { "source" : "P", "arch" : "arm64", "base" : 4294967296, "size" : 1048576, "uuid" : "11111111-1111-1111-1111-111111111111", "path" : "/private/var/containers/Bundle/Application/AAA/ExampleApp.app/ExampleApp", "name" : "ExampleApp" },
+    { "source" : "P", "arch" : "arm64e", "base" : 6442450944, "size" : 2097152, "uuid" : "22222222-2222-2222-2222-222222222222", "path" : "/System/Library/Frameworks/UIKit.framework/UIKit", "name" : "UIKitCore" },
+    { "source" : "P", "arch" : "arm64e", "base" : 8589934592, "size" : 262144, "uuid" : "33333333-3333-3333-3333-333333333333", "path" : "/usr/lib/system/libsystem_kernel.dylib", "name" : "libsystem_kernel.dylib" }
+  ]
+}

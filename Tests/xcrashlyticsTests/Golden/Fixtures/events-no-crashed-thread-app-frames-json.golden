@@ -1,0 +1,41 @@
+=== stdout ===
+{
+  "data" : {
+    "events" : [
+      {
+        "blamedFrame" : {
+          "binaryName" : "ExampleApp",
+          "file" : "MapRenderer.swift",
+          "index" : 0,
+          "isBlamed" : false,
+          "line" : 301,
+          "symbol" : "MapRenderer.draw(_:)"
+        },
+        "eventTime" : "2026-06-13T07:15:00Z",
+        "firebaseEventId" : "E4",
+        "frames" : [
+          {
+            "binaryName" : "ExampleApp",
+            "file" : "MapRenderer.swift",
+            "index" : 0,
+            "isBlamed" : false,
+            "line" : 301,
+            "symbol" : "MapRenderer.draw(_:)"
+          }
+        ],
+        "id" : "FB-I3/events/E4",
+        "issueId" : "FB-I3"
+      }
+    ]
+  },
+  "schemaVersion" : 1,
+  "warnings" : [
+
+  ]
+}
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I3&page_size=10
+POST https://www.googleapis.com/oauth2/v3/token

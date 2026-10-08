@@ -53,7 +53,6 @@ enum JSON: Decodable, Equatable {
     var double: Double? { if case .number(let v) = self { return v }; return nil }
     var array: [JSON]? { if case .array(let v) = self { return v }; return nil }
     var object: [String: JSON]? { if case .object(let v) = self { return v }; return nil }
-    var isNull: Bool { self == .null }
 }
 
 /// A parsed success envelope. Parsing asserts the v1 contract shape.

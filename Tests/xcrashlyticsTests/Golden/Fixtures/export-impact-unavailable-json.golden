@@ -1,0 +1,139 @@
+=== stdout ===
+{
+  "data" : {
+    "breakdown" : {
+      "devices" : [
+        {
+          "dimension" : "device",
+          "eventsCount" : 24,
+          "eventsShare" : 60,
+          "impactedUsersCount" : 8,
+          "manufacturer" : "Apple",
+          "marketingName" : "iPhone 14 Pro",
+          "model" : "iPhone15,2",
+          "name" : "iPhone 14 Pro (iPhone15,2)"
+        },
+        {
+          "dimension" : "device",
+          "eventsCount" : 12,
+          "eventsShare" : 30,
+          "impactedUsersCount" : 6,
+          "manufacturer" : "Apple",
+          "marketingName" : "iPhone 13",
+          "model" : "iPhone14,5",
+          "name" : "iPhone 13 (iPhone14,5)"
+        },
+        {
+          "dimension" : "device",
+          "eventsCount" : 4,
+          "eventsShare" : 10,
+          "impactedUsersCount" : 2,
+          "manufacturer" : "Apple",
+          "marketingName" : "iPad Air",
+          "model" : "iPad13,1",
+          "name" : "iPad Air (iPad13,1)"
+        }
+      ],
+      "operatingSystems" : [
+        {
+          "dimension" : "os",
+          "eventsCount" : 20,
+          "eventsShare" : 50,
+          "impactedUsersCount" : 7,
+          "name" : "iOS 17.5.1",
+          "os" : "iOS",
+          "osVersion" : "17.5.1"
+        },
+        {
+          "dimension" : "os",
+          "eventsCount" : 14,
+          "eventsShare" : 35,
+          "impactedUsersCount" : 5,
+          "name" : "iOS 17.4",
+          "os" : "iOS",
+          "osVersion" : "17.4"
+        },
+        {
+          "dimension" : "os",
+          "eventsCount" : 6,
+          "eventsShare" : 15,
+          "impactedUsersCount" : 3,
+          "name" : "iOS 16.7.8",
+          "os" : "iOS",
+          "osVersion" : "16.7.8"
+        }
+      ],
+      "versions" : [
+
+      ],
+      "window" : {
+        "since" : "2026-06-08T12:00:00Z",
+        "until" : "2026-06-15T12:00:00Z"
+      }
+    },
+    "consoleURL" : "https://console.firebase.google.com/project/golden/crashlytics/app/ios:com.example.app/issues/IDEEP",
+    "crash" : {
+      "file" : "Legacy.swift",
+      "module" : "ExampleApp",
+      "signal" : "SIGABRT",
+      "subtype" : "Fatal error",
+      "symbol" : "Legacy.run()",
+      "type" : "FATAL"
+    },
+    "dailyEvents" : [
+
+    ],
+    "exportedAt" : "2026-06-15T12:00:00Z",
+    "firstSeenVersion" : "6.10.0",
+    "frames" : [
+
+    ],
+    "id" : "FB-IDEEP",
+    "lastSeenVersion" : "6.10.0",
+    "occurrence" : {
+      "appVersion" : "6.10.0"
+    },
+    "source" : "firebase",
+    "title" : "[ExampleApp] Legacy.swift - Legacy.run()",
+    "toolVersion" : "0.2.0"
+  },
+  "schemaVersion" : 1,
+  "warnings" : [
+    {
+      "code" : "IMPACT_UNAVAILABLE",
+      "message" : "FB-IDEEP is not among the top 2000 issues of the window; event and user totals are omitted."
+    }
+  ]
+}
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=IDEEP&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/issues/IDEEP
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topAppleDevices?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=IDEEP&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100&page_token=p10
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100&page_token=p11
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100&page_token=p12
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100&page_token=p13
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100&page_token=p14
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100&page_token=p15
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100&page_token=p16
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100&page_token=p17
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100&page_token=p18
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100&page_token=p19
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100&page_token=p2
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100&page_token=p20
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100&page_token=p3
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100&page_token=p4
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100&page_token=p5
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100&page_token=p6
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100&page_token=p7
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100&page_token=p8
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100&page_token=p9
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topOperatingSystems?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=IDEEP&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=IDEEP&granularity=TIME_GRANULARITY_DAY&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=IDEEP&page_size=100
+POST https://www.googleapis.com/oauth2/v3/token
+POST https://www.googleapis.com/oauth2/v3/token

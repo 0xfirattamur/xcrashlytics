@@ -1,0 +1,8 @@
+=== stdout ===
+=== stderr ===
+Error: Unexpected argument 'bogus'
+Usage: xcrashlytics <subcommand>
+  See 'xcrashlytics --help' for more information.
+=== exit ===
+64
+=== requests ===

@@ -1,0 +1,9 @@
+=== stdout ===
+=== stderr ===
+Error: Missing value for '--limit <limit>'
+Help:  --limit <limit>  Limit displayed issues (and, separately, displayed Xcode crashes).
+Usage: xcrashlytics issues [<options>] [<query>]
+  See 'xcrashlytics issues --help' for more information.
+=== exit ===
+64
+=== requests ===

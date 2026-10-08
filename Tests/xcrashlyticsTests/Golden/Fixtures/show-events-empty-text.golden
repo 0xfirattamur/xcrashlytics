@@ -1,0 +1,18 @@
+=== stdout ===
+ID:        FB-IDEEP
+Source:    firebase
+Version:   6.10.0
+Exception: FATAL (SIGABRT)
+Subtype:   Fatal error
+Versions:  first seen 6.10.0 · last seen 6.10.0
+
+Thread 0 (crashed):
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=IDEEP&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/issues/IDEEP
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=IDEEP&page_size=100
+POST https://www.googleapis.com/oauth2/v3/token
+POST https://www.googleapis.com/oauth2/v3/token

@@ -1,0 +1,78 @@
+=== stdout ===
+{
+  "data" : {
+    "crash" : {
+      "file" : "ExampleViewController.swift",
+      "module" : "ExampleApp",
+      "signal" : "SIGSEGV",
+      "subtype" : "KERN_INVALID_ADDRESS at 0x0000000000000000",
+      "symbol" : "ExampleViewController.crashNow()",
+      "topSourceFrame" : {
+        "address" : 4294971392,
+        "binaryName" : "ExampleApp",
+        "file" : "ExampleViewController.swift",
+        "imageUUID" : "11111111-1111-1111-1111-111111111111",
+        "index" : 1,
+        "isSymbolicated" : true,
+        "line" : 42,
+        "symbol" : "ExampleViewController.crashNow()"
+      },
+      "type" : "EXC_BAD_ACCESS"
+    },
+    "exportedAt" : "2026-06-15T12:00:00Z",
+    "frames" : [
+      {
+        "address" : 8589937500,
+        "binaryName" : "libsystem_kernel.dylib",
+        "imageUUID" : "33333333-3333-3333-3333-333333333333",
+        "index" : 0,
+        "isSymbolicated" : true,
+        "symbol" : "__pthread_kill"
+      },
+      {
+        "address" : 4294971392,
+        "binaryName" : "ExampleApp",
+        "file" : "ExampleViewController.swift",
+        "imageUUID" : "11111111-1111-1111-1111-111111111111",
+        "index" : 1,
+        "isSymbolicated" : true,
+        "line" : 42,
+        "symbol" : "ExampleViewController.crashNow()"
+      },
+      {
+        "address" : 4294975488,
+        "binaryName" : "ExampleApp",
+        "imageUUID" : "11111111-1111-1111-1111-111111111111",
+        "index" : 2,
+        "isSymbolicated" : false
+      },
+      {
+        "address" : 6442451456,
+        "binaryName" : "UIKitCore",
+        "imageUUID" : "22222222-2222-2222-2222-222222222222",
+        "index" : 3,
+        "isSymbolicated" : true,
+        "symbol" : "UIApplicationMain"
+      }
+    ],
+    "id" : "XC-0A0A0A0A-1111-2222-3333-444444444444",
+    "occurrence" : {
+      "appVersion" : "1.0 (42)",
+      "bundleId" : "com.example.ExampleApp",
+      "deviceModel" : "iPhone14,2",
+      "osVersion" : "iOS 17.0 (21A329)",
+      "time" : "2026-05-01T12:34:55Z"
+    },
+    "source" : "xcode",
+    "title" : "EXC_BAD_ACCESS",
+    "toolVersion" : "0.2.0"
+  },
+  "schemaVersion" : 1,
+  "warnings" : [
+
+  ]
+}
+=== stderr ===
+=== exit ===
+0
+=== requests ===

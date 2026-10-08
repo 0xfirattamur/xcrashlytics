@@ -1,0 +1,6 @@
+=== stdout ===
+=== stderr ===
+error: --scan discovers app ids, profiles, and bundle ids; drop --app-id/--profile/--bundle-id.
+=== exit ===
+5
+=== requests ===

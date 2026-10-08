@@ -1,0 +1,12 @@
+=== stdout ===
+{
+  "error" : {
+    "code" : "BAD_INPUT",
+    "message" : "issue id 'I1/events/E2' contains unsupported characters."
+  },
+  "schemaVersion" : 1
+}
+=== stderr ===
+=== exit ===
+5
+=== requests ===

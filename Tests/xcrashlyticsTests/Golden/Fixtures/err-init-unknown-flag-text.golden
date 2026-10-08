@@ -1,0 +1,8 @@
+=== stdout ===
+=== stderr ===
+Error: Unknown option '--bogus'
+Usage: xcrashlytics init [--scan] [--app-id <app-id>] [--profile <profile>] [--bundle-id <bundle-id>] [--app-library <app-library> ...]
+  See 'xcrashlytics init --help' for more information.
+=== exit ===
+64
+=== requests ===

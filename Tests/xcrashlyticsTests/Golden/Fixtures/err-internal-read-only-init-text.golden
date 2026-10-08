@@ -1,0 +1,7 @@
+=== stdout ===
+=== stderr ===
+error: injected file system fault
+=== exit ===
+1
+=== requests ===
+POST https://www.googleapis.com/oauth2/v3/token

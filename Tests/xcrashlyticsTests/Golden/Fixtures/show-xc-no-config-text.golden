@@ -1,0 +1,7 @@
+=== stdout ===
+=== stderr ===
+error: no bundle id configured.
+hint: Run: xcrashlytics init --app-id <GOOGLE_APP_ID> --profile <profile> --bundle-id <BUNDLE_ID>
+=== exit ===
+4
+=== requests ===

@@ -1,0 +1,21 @@
+=== stdout ===
+FB-I1   FATAL   first seen 6.14.2 · last seen 6.16.0   [ExampleApp] BlurService.swift - BlurService.classify(_:)   42 events / 12 users   last event 2026-06-14
+FB-I2   NON_FATAL   first seen 6.15.0 · last seen 6.16.0   [Core] FIRCLSNonFatalError.m - -[FIRCLSNonFatalError initWithError:userInfo:rolloutsInfoJSON:]   17 events / 9 users   last event 2026-06-14
+FB-I3   EXC_BAD_ACCESS   first seen 6.15.0 · last seen 6.15.0   [ExampleApp] MapRenderer.swift - MapRenderer.draw(_:)   9 events / 4 users   last event 2026-06-13
+FB-I4   FATAL   first seen 6.16.0 · last seen 6.16.0   [KeyboardCore] objectdestroyTm   6 events / 3 users   last event 2026-06-13
+FB-I5   FATAL   first seen 6.16.0 · last seen 6.16.0   [ExampleApp] BlurService.swift - BlurService.classify(_:)   3 events / 2 users   last event 2026-06-10
+XC-AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE   1 (1.0)   EXC_BAD_ACCESS
+=== stderr ===
+warning: XCODE_PARSE_FAILED: failed to parse /crashes-mixed/ips-corrupt.ips: the .ips body after the header line is not valid JSON (/crashes-mixed/ips-corrupt.ips)
+warning: XCODE_UNSUPPORTED_REPORT: skipped /crashes-mixed/ips-hang.ips: bug_type 298 is not a crash report (no exception or threads); only crash reports are supported (/crashes-mixed/ips-hang.ips)
+warning: XCODE_PARSE_FAILED: failed to parse /crashes-mixed/malformed.crash: missing Exception Type; this does not look like a crash report (/crashes-mixed/malformed.crash)
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I1&page_size=1
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I2&page_size=1
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I3&page_size=1
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I4&page_size=1
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I5&page_size=1
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=20
+POST https://www.googleapis.com/oauth2/v3/token

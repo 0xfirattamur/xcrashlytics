@@ -1,0 +1,7 @@
+=== stdout ===
+{"error":{"code":"AUTH_EXPIRED","hint":"Run: firebase login --reauth","message":"Stored refresh token is invalid (Token has been expired or revoked.)."},"schemaVersion":1}
+=== stderr ===
+=== exit ===
+2
+=== requests ===
+POST https://www.googleapis.com/oauth2/v3/token

@@ -1,0 +1,68 @@
+=== stdout ===
+{
+  "data" : {
+    "dimension" : "version",
+    "eventsCount" : 81,
+    "groupCount" : 3,
+    "items" : [
+      {
+        "buildVersion" : "937",
+        "crashFreeUsersPercentage" : 99.25,
+        "dimension" : "version",
+        "displayVersion" : "6.16.0",
+        "eventsCount" : 45,
+        "eventsShare" : 55.55555555555556,
+        "impactedUsersCount" : 15,
+        "name" : "6.16.0 (937)",
+        "sessionsCount" : 2700,
+        "totalSessionsCount" : 2700,
+        "versionUsersCount" : 900
+      },
+      {
+        "buildVersion" : "900",
+        "crashFreeUsersPercentage" : 99.25,
+        "dimension" : "version",
+        "displayVersion" : "6.15.0",
+        "eventsCount" : 30,
+        "eventsShare" : 37.03703703703704,
+        "impactedUsersCount" : 10,
+        "name" : "6.15.0 (900)",
+        "sessionsCount" : 1800,
+        "totalSessionsCount" : 1800,
+        "versionUsersCount" : 600
+      },
+      {
+        "buildVersion" : "880",
+        "crashFreeUsersPercentage" : 99.25,
+        "dimension" : "version",
+        "displayVersion" : "6.14.2",
+        "eventsCount" : 6,
+        "eventsShare" : 7.407407407407407,
+        "impactedUsersCount" : 2,
+        "name" : "6.14.2 (880)",
+        "sessionsCount" : 360,
+        "totalSessionsCount" : 360,
+        "versionUsersCount" : 120
+      }
+    ],
+    "since" : "7d",
+    "versionRange" : {
+      "max" : "6.16.0 (937)",
+      "min" : "6.14.2 (880)"
+    },
+    "window" : {
+      "since" : "2026-06-08T12:00:00Z",
+      "until" : "2026-06-15T12:00:00Z"
+    }
+  },
+  "schemaVersion" : 1,
+  "warnings" : [
+
+  ]
+}
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:cccc3333dddd4444/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100
+POST https://www.googleapis.com/oauth2/v3/token

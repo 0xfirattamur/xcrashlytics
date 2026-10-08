@@ -1,0 +1,14 @@
+=== stdout ===
+Found 2 Firebase app(s):
+  app   ios   1:1234567890:ios:aaaa1111bbbb2222   com.example.app   (App/GoogleService-Info.plist)
+  widget   ios   1:1234567890:ios:cccc3333dddd4444   com.example.app.widget   (Widget/GoogleService-Info.plist)   extension of app
+First-party libraries: Imaging, KeyboardCore (frames count as app frames)
+[FAIL] firebase CLI is not installed. Install it, then run `firebase login`:
+          npm install -g firebase-tools   # or: brew install firebase-cli
+          firebase login
+Some checks failed. Fix the above, then re-run `xcrashlytics init`.
+=== stderr ===
+=== exit ===
+1
+=== requests ===
+POST https://www.googleapis.com/oauth2/v3/token

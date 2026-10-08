@@ -1,0 +1,12 @@
+=== stdout ===
+{
+  "error" : {
+    "code" : "BAD_INPUT",
+    "message" : "--user-id must not be empty."
+  },
+  "schemaVersion" : 1
+}
+=== stderr ===
+=== exit ===
+5
+=== requests ===

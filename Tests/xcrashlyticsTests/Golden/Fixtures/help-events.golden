@@ -1,0 +1,42 @@
+=== stdout ===
+OVERVIEW: List Firebase Crashlytics events for one or more issues.
+
+Memory and storage fields appear only when Firebase includes them for an event.
+Frame filter flags imply --frames-only for compact agent input.
+
+USAGE: xcrashlytics events [<options>] [<issue-id>]
+
+ARGUMENTS:
+  <issue-id>              Canonical issue id, for example FB-ISSUE_ID.
+                          Comma-separated ids are accepted.
+
+OPTIONS:
+  --issues <issues>       Comma-separated issue ids, for example FB-a,FB-b.
+  --format <format>       Output format: text (default), json, or ndjson.
+                          (values: text, json, ndjson; default: text)
+  --limit <limit>         Limit to N events per issue (default 10). Not
+                          combinable with --latest.
+  --user-id <user-id>     Only include events for this exact Firebase user id.
+  --since <since>         Only include events since 7d, 24h, 30m, 2w, or all
+                          (default: the newest events of the last 90d, the
+                          maximum).
+  --latest                Fetch only the latest event.
+  --frames-only           Only emit frame data for each event.
+  --app-frames-only       Only emit frames that look app-owned.
+  --no-system-frames      Drop redacted, deduplicated, and known system/SDK
+                          frames.
+  --crashing-thread-only  Only emit frames of Firebase's crashed thread; warns
+                          NO_CRASHED_THREAD when an event has none.
+  --breadcrumbs           Include each event's breadcrumbs (Analytics events
+                          before the crash); large, user ids redacted. Ignored
+                          with frame-only output.
+  --dsym <dsym>           A .dSYM bundle, or a directory searched recursively
+                          for them, to symbolicate frames of its library (xcrun
+                          atos). Repeatable.
+  --version               Show the version.
+  -h, --help              Show help information.
+
+=== stderr ===
+=== exit ===
+0
+=== requests ===

@@ -1,0 +1,7 @@
+=== stdout ===
+=== stderr ===
+error: app id 'not-an-app-id' is not a Firebase app id (expected 1:<project-number>:<platform>:<hash>).
+hint: Copy GOOGLE_APP_ID from GoogleService-Info.plist, then run xcrashlytics init.
+=== exit ===
+4
+=== requests ===

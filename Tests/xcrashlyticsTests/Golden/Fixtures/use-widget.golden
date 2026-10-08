@@ -1,0 +1,29 @@
+=== stdout ===
+Using profile widget (1:1234567890:ios:cccc3333dddd4444).
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+=== file <CWD>/.xcrashlytics.json ===
+{
+  "activeProfile" : "widget",
+  "profiles" : {
+    "app" : {
+      "appId" : "1:1234567890:ios:aaaa1111bbbb2222",
+      "appLibraries" : [
+        "KeyboardCore"
+      ],
+      "bundleId" : "com.example.app",
+      "sourcePath" : "App/GoogleService-Info.plist"
+    },
+    "widget" : {
+      "appId" : "1:1234567890:ios:cccc3333dddd4444",
+      "appLibraries" : [
+        "KeyboardCore"
+      ],
+      "bundleId" : "com.example.app.widget",
+      "extensionOf" : "app",
+      "sourcePath" : "Widget/GoogleService-Info.plist"
+    }
+  }
+}

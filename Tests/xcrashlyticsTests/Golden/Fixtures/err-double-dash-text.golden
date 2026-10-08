@@ -1,0 +1,8 @@
+=== stdout ===
+=== stderr ===
+Error: 2 unexpected arguments: 'json', '--bogus'
+Usage: xcrashlytics issues [<options>] [<query>]
+  See 'xcrashlytics issues --help' for more information.
+=== exit ===
+64
+=== requests ===

@@ -1,0 +1,9 @@
+=== stdout ===
+=== stderr ===
+Error: Missing expected argument '<id>'
+Help:  <id>  Crash id (XC-<uuid> or FB-<id>).
+Usage: xcrashlytics open <id> [--crash-directory <crash-directory> ...]
+  See 'xcrashlytics open --help' for more information.
+=== exit ===
+64
+=== requests ===

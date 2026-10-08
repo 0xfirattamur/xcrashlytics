@@ -1,0 +1,93 @@
+=== stdout ===
+{
+  "data" : {
+    "events" : [
+      {
+        "appBuild" : "937",
+        "appVersion" : "6.16.0",
+        "crashedThread" : {
+          "signal" : "SIGSEGV",
+          "title" : "Crashed: com.apple.main-thread"
+        },
+        "customKeys" : {
+
+        },
+        "deviceModel" : "iPhone15,2",
+        "eventTime" : "2026-06-13T11:00:00Z",
+        "firebaseEventId" : "M1",
+        "frames" : [
+          {
+            "binaryName" : "ExampleApp",
+            "file" : "Many.swift",
+            "index" : 0,
+            "isBlamed" : true,
+            "line" : 12,
+            "symbol" : "many()"
+          },
+          {
+            "binaryName" : "UIKitCore",
+            "index" : 1,
+            "isBlamed" : false,
+            "symbol" : "UIApplicationMain"
+          }
+        ],
+        "id" : "FB-IMANY/events/M1",
+        "issueId" : "FB-IMANY",
+        "logs" : [
+
+        ],
+        "osVersion" : "17.5.1",
+        "userIdHash" : "c7ba10f03d2b9621156734ade53cc313360551f56063f4be4e1f077e4dc3dfc3"
+      },
+      {
+        "appBuild" : "937",
+        "appVersion" : "6.16.0",
+        "crashedThread" : {
+          "signal" : "SIGSEGV",
+          "title" : "Crashed: com.apple.main-thread"
+        },
+        "customKeys" : {
+
+        },
+        "deviceModel" : "iPhone15,2",
+        "eventTime" : "2026-06-13T11:00:00Z",
+        "firebaseEventId" : "M2",
+        "frames" : [
+          {
+            "binaryName" : "ExampleApp",
+            "file" : "Many.swift",
+            "index" : 0,
+            "isBlamed" : true,
+            "line" : 12,
+            "symbol" : "many()"
+          },
+          {
+            "binaryName" : "UIKitCore",
+            "index" : 1,
+            "isBlamed" : false,
+            "symbol" : "UIApplicationMain"
+          }
+        ],
+        "id" : "FB-IMANY/events/M2",
+        "issueId" : "FB-IMANY",
+        "logs" : [
+
+        ],
+        "osVersion" : "17.5.1",
+        "userIdHash" : "c7ba10f03d2b9621156734ade53cc313360551f56063f4be4e1f077e4dc3dfc3"
+      }
+    ],
+    "scanDepth" : 50,
+    "scannedEvents" : 50
+  },
+  "schemaVersion" : 1,
+  "warnings" : [
+
+  ]
+}
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=IMANY&page_size=50
+POST https://www.googleapis.com/oauth2/v3/token

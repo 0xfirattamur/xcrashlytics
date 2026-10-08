@@ -1,0 +1,9 @@
+=== stdout ===
+No Firebase issues found.
+Hint: --app-version 9.9.9 matched none of the versions with events in this window: 6.16.0 (937), 6.15.0 (900), 6.14.2 (880), 6.13.0 (850). Widen the window with --since or pick one of these.
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100
+POST https://www.googleapis.com/oauth2/v3/token

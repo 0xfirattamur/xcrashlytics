@@ -1,0 +1,44 @@
+=== stdout ===
+OVERVIEW: Write .xcrashlytics.json in the current directory and verify the
+Firebase setup.
+
+Examples:
+  xcrashlytics init --scan
+  xcrashlytics init --app-id 1:1234567890:ios:abcdef --profile release
+--bundle-id com.example.app
+  xcrashlytics init --app-id 1:1234567890:ios:abcdef --profile release
+--app-library KeyboardCore
+
+--scan finds every GoogleService-Info.plist and google-services.json
+under the current directory (skipping build outputs and vendored
+copies) and writes one profile per app, bundle id included. An app
+whose bundle id extends another's (com.x.app.widget) is named by the
+suffix and records `extensionOf`; the app itself is named `app`. It
+also records the repo's framework and static-library targets as
+`appLibraries`: Firebase labels them third-party, but their frames
+count as app frames (--app-frames-only). Re-scanning keeps the names
+of profiles the config already has.
+
+USAGE: xcrashlytics init [--scan] [--app-id <app-id>] [--profile <profile>] [--bundle-id <bundle-id>] [--app-library <app-library> ...]
+
+OPTIONS:
+  --scan                  Discover app ids, profiles, and bundle ids from
+                          Firebase config files in this directory.
+  --app-id <app-id>       Firebase app id, any platform (GOOGLE_APP_ID from
+                          GoogleService-Info.plist / google-services.json).
+  --profile <profile>     Named environment profile to create and activate, for
+                          example staging or release.
+  --bundle-id <bundle-id> App bundle id — scopes Xcode Organizer crash scanning
+                          to ~/Library/Developer/Xcode/Products/<bundle-id>.
+  --app-library <app-library>
+                          First-party framework or library (e.g. KeyboardCore)
+                          whose frames count as app frames although Firebase
+                          labels them third-party. Repeatable; --scan adds the
+                          repo's framework targets automatically.
+  --version               Show the version.
+  -h, --help              Show help information.
+
+=== stderr ===
+=== exit ===
+0
+=== requests ===

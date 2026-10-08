@@ -1,0 +1,6 @@
+=== stdout ===
+{"error":{"code":"BAD_INPUT","message":"--format ndjson is not supported by this command."},"schemaVersion":1}
+=== stderr ===
+=== exit ===
+5
+=== requests ===

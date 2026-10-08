@@ -1,0 +1,193 @@
+=== stdout ===
+{
+  "data" : {
+    "breakdown" : {
+      "devices" : [
+        {
+          "dimension" : "device",
+          "eventsCount" : 24,
+          "eventsShare" : 60,
+          "impactedUsersCount" : 8,
+          "manufacturer" : "Apple",
+          "marketingName" : "iPhone 14 Pro",
+          "model" : "iPhone15,2",
+          "name" : "iPhone 14 Pro (iPhone15,2)"
+        },
+        {
+          "dimension" : "device",
+          "eventsCount" : 12,
+          "eventsShare" : 30,
+          "impactedUsersCount" : 6,
+          "manufacturer" : "Apple",
+          "marketingName" : "iPhone 13",
+          "model" : "iPhone14,5",
+          "name" : "iPhone 13 (iPhone14,5)"
+        },
+        {
+          "dimension" : "device",
+          "eventsCount" : 4,
+          "eventsShare" : 10,
+          "impactedUsersCount" : 2,
+          "manufacturer" : "Apple",
+          "marketingName" : "iPad Air",
+          "model" : "iPad13,1",
+          "name" : "iPad Air (iPad13,1)"
+        }
+      ],
+      "operatingSystems" : [
+        {
+          "dimension" : "os",
+          "eventsCount" : 20,
+          "eventsShare" : 50,
+          "impactedUsersCount" : 7,
+          "name" : "iOS 17.5.1",
+          "os" : "iOS",
+          "osVersion" : "17.5.1"
+        },
+        {
+          "dimension" : "os",
+          "eventsCount" : 14,
+          "eventsShare" : 35,
+          "impactedUsersCount" : 5,
+          "name" : "iOS 17.4",
+          "os" : "iOS",
+          "osVersion" : "17.4"
+        },
+        {
+          "dimension" : "os",
+          "eventsCount" : 6,
+          "eventsShare" : 15,
+          "impactedUsersCount" : 3,
+          "name" : "iOS 16.7.8",
+          "os" : "iOS",
+          "osVersion" : "16.7.8"
+        }
+      ],
+      "versions" : [
+        {
+          "buildVersion" : "900",
+          "dimension" : "version",
+          "displayVersion" : "6.15.0",
+          "eventsCount" : 9,
+          "eventsShare" : 100,
+          "impactedUsersCount" : 4,
+          "impactedUsersPercentage" : 0.6666666666666666,
+          "name" : "6.15.0 (900)",
+          "versionUsersCount" : 600
+        }
+      ],
+      "window" : {
+        "since" : "2026-06-08T12:00:00Z",
+        "until" : "2026-06-15T12:00:00Z"
+      }
+    },
+    "consoleURL" : "https://console.firebase.google.com/project/golden/crashlytics/app/ios:com.example.app/issues/I3",
+    "crash" : {
+      "file" : "MapRenderer.swift",
+      "module" : "ExampleApp",
+      "signal" : "SIGSEGV",
+      "subtype" : "EXC_BAD_ACCESS",
+      "symbol" : "MapRenderer.draw(_:)",
+      "topSourceFrame" : {
+        "address" : 5000,
+        "binaryName" : "ExampleApp",
+        "file" : "MapRenderer.swift",
+        "index" : 0,
+        "isSymbolicated" : true,
+        "line" : 301,
+        "symbol" : "MapRenderer.draw(_:)"
+      },
+      "type" : "EXC_BAD_ACCESS"
+    },
+    "dailyEvents" : [
+
+    ],
+    "exportedAt" : "2026-06-15T12:00:00Z",
+    "firstSeenVersion" : "6.15.0",
+    "frames" : [
+      {
+        "address" : 5000,
+        "binaryName" : "ExampleApp",
+        "file" : "MapRenderer.swift",
+        "index" : 0,
+        "isSymbolicated" : true,
+        "line" : 301,
+        "symbol" : "MapRenderer.draw(_:)"
+      },
+      {
+        "address" : 600,
+        "binaryName" : "QuartzCore",
+        "index" : 1,
+        "isSymbolicated" : true,
+        "symbol" : "CA::Layer::display()"
+      }
+    ],
+    "id" : "FB-I3",
+    "impact" : {
+      "appUsersCount" : 900,
+      "eventsCount" : 9,
+      "impactedUsersCount" : 4,
+      "impactedUsersPercentage" : 0.4444444444444444,
+      "since" : "2026-06-08T12:00:00Z",
+      "until" : "2026-06-15T12:00:00Z"
+    },
+    "lastSeenVersion" : "6.15.0",
+    "occurrence" : {
+      "appBuild" : "937",
+      "appVersion" : "6.16.0",
+      "bundleId" : "com.example.app",
+      "deviceModel" : "iPhone14,5",
+      "id" : "FB-I3/events/E4",
+      "osVersion" : "17.4",
+      "time" : "2026-06-13T07:15:00Z"
+    },
+    "sample" : {
+      "deviceSpread" : [
+        {
+          "count" : 1,
+          "name" : "iPhone14,5"
+        }
+      ],
+      "distinctUsers" : 1,
+      "firstEventAt" : "2026-06-13T07:15:00Z",
+      "lastEventAt" : "2026-06-13T07:15:00Z",
+      "osSpread" : [
+        {
+          "count" : 1,
+          "name" : "iOS 17.4"
+        }
+      ],
+      "sampledEvents" : 1,
+      "versionSpread" : [
+        {
+          "count" : 1,
+          "name" : "6.16.0"
+        }
+      ]
+    },
+    "source" : "firebase",
+    "title" : "[ExampleApp] MapRenderer.swift - MapRenderer.draw(_:)",
+    "toolVersion" : "0.2.0",
+    "versionRange" : {
+      "max" : "6.15.0 (900)",
+      "min" : "6.15.0 (900)"
+    }
+  },
+  "schemaVersion" : 1,
+  "warnings" : [
+
+  ]
+}
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I3&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/issues/I3
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topAppleDevices?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I3&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topOperatingSystems?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I3&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I3&granularity=TIME_GRANULARITY_DAY&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I3&page_size=100
+POST https://www.googleapis.com/oauth2/v3/token
+POST https://www.googleapis.com/oauth2/v3/token

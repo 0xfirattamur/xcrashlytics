@@ -1,0 +1,6 @@
+=== stdout ===
+=== stderr ===
+error: issue id 'I1/events/E2' contains unsupported characters.
+=== exit ===
+5
+=== requests ===

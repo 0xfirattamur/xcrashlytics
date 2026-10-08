@@ -1,0 +1,7 @@
+=== stdout ===
+=== stderr ===
+error: firebase CLI is not authenticated.
+hint: Run: firebase login
+=== exit ===
+2
+=== requests ===

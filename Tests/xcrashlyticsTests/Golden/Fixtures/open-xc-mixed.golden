@@ -1,0 +1,9 @@
+=== stdout ===
+Opened <CWD>/Sources/ExampleViewController.swift:42 in Xcode.
+=== stderr ===
+warning: XCODE_PARSE_FAILED: failed to parse /crashes-mixed/ips-corrupt.ips: the .ips body after the header line is not valid JSON (/crashes-mixed/ips-corrupt.ips)
+warning: XCODE_UNSUPPORTED_REPORT: skipped /crashes-mixed/ips-hang.ips: bug_type 298 is not a crash report (no exception or threads); only crash reports are supported (/crashes-mixed/ips-hang.ips)
+warning: XCODE_PARSE_FAILED: failed to parse /crashes-mixed/malformed.crash: missing Exception Type; this does not look like a crash report (/crashes-mixed/malformed.crash)
+=== exit ===
+0
+=== requests ===

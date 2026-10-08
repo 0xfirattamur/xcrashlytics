@@ -1,0 +1,12 @@
+=== stdout ===
+{
+  "error" : {
+    "code" : "BAD_INPUT",
+    "message" : "issue must be FB-<id>, FB-<id>/events/<event>, or a Firebase console link; got 'XC-AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE'."
+  },
+  "schemaVersion" : 1
+}
+=== stderr ===
+=== exit ===
+5
+=== requests ===

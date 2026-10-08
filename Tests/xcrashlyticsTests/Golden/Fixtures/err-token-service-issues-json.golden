@@ -1,0 +1,14 @@
+=== stdout ===
+{
+  "error" : {
+    "code" : "API_ERROR",
+    "hint" : "Usually transient; retry.",
+    "message" : "Google's token service failed: status 500: backend_error"
+  },
+  "schemaVersion" : 1
+}
+=== stderr ===
+=== exit ===
+6
+=== requests ===
+POST https://www.googleapis.com/oauth2/v3/token

@@ -17,8 +17,7 @@ Closes #
 
 ## Test plan
 
-- [ ] `swift test` passes locally
-- [ ] `swift-format lint --recursive --strict Sources/ Tests/` passes
+- [ ] `make ci` passes locally (SwiftLint strict, `swift test`, release build)
 - [ ] Manual smoke test: `swift run xcrashlytics <command>` against fixtures
 - [ ] New tests added for new behavior
 

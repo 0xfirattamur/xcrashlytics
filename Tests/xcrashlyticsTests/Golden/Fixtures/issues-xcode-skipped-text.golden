@@ -1,0 +1,8 @@
+=== stdout ===
+XC-0A0A0A0A-1111-2222-3333-444444444444   1.0 (42)   EXC_BAD_ACCESS
+XC-AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE   1 (1.0)   EXC_BAD_ACCESS
+=== stderr ===
+warning: FIREBASE_SKIPPED: no Firebase appId is configured; showing local Xcode crashes only.
+=== exit ===
+0
+=== requests ===

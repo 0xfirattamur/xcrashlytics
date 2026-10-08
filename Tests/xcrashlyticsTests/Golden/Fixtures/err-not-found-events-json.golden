@@ -1,0 +1,15 @@
+=== stdout ===
+{
+  "error" : {
+    "code" : "NOT_FOUND",
+    "hint" : "Check the id, or list ids with: xcrashlytics issues --format json",
+    "message" : "events for issue I404 were not found; the issue or the app does not exist."
+  },
+  "schemaVersion" : 1
+}
+=== stderr ===
+=== exit ===
+5
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I404&page_size=10
+POST https://www.googleapis.com/oauth2/v3/token

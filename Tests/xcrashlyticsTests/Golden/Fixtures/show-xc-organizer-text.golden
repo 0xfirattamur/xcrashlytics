@@ -1,0 +1,19 @@
+=== stdout ===
+ID:        XC-AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE
+Source:    xcode
+Bundle:    com.example.ExampleApp
+Version:   1 (1.0)
+OS:        iPhone OS 17.0 (21A329)
+Device:    iPhone14,2
+Time:      2026-05-01 12:34 UTC
+Exception: EXC_BAD_ACCESS (SIGSEGV)
+Subtype:   KERN_INVALID_ADDRESS at 0x0000000000000000
+
+Thread 0 (crashed):
+  0  ExampleApp                        0x0000000100001000  -[ExampleViewController crashNow]
+  1  ExampleApp                        0x0000000100002000  0x100000000
+  2  UIKit                             0x0000000186003000  UIApplicationMain
+=== stderr ===
+=== exit ===
+0
+=== requests ===

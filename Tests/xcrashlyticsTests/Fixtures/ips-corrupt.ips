@@ -1,0 +1,4 @@
+{"app_name":"ExampleApp","bug_type":"309","incident_id":"0C0C0C0C-1111-2222-3333-444444444444"}
+{
+  "incident" : "0C0C0C0C-1111-2222-3333-444444444444",
+  "exception" : { "type" : "EXC_CRA

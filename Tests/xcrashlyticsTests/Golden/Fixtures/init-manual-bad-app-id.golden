@@ -1,0 +1,9 @@
+=== stdout ===
+[FAIL] appId=not-an-app-id has wrong format. Expected '1:<number>:<platform>:<hash>'.
+[WARN] no bundle id — Xcode crash commands need one. Re-run with --bundle-id <BUNDLE_ID>.
+Some checks failed. Fix the above, then re-run `xcrashlytics init`.
+=== stderr ===
+=== exit ===
+1
+=== requests ===
+POST https://www.googleapis.com/oauth2/v3/token

@@ -1,0 +1,20 @@
+Incident Identifier: 99999999-2222-3333-4444-555555555555
+Hardware Model:      iPhone14,2
+Identifier:          com.example.myapp
+Version:             1 (1.0)
+OS Version:          iPhone OS 17.0 (21A329)
+Date/Time:           2026-05-01 12:34:55.000 +0000
+
+Exception Type:  EXC_BAD_ACCESS (SIGSEGV)
+Triggered by Thread:  0
+
+Thread 0 Crashed:
+0   libsystem_kernel.dylib         0x00000001e1234000 __pthread_kill + 8 (:-1)
+1   MyApp                          0x0000000102f74a68 0x102f70000 + 19048
+2   MyApp                          0x0000000102f74b00 0x102f70000 + 19200
+3   UIKit                          0x0000000186003000 UIApplicationMain + 1 (:-1)
+
+Binary Images:
+0x102f70000 - 0x102f7ffff MyApp arm64  <aaaaaaaabbbbccccddddeeeeeeeeeeee> /private/var/containers/Bundle/Application/AAA/MyApp.app/MyApp
+0x186000000 - 0x1861fffff UIKit arm64  <22222222222222222222222222222222> /System/Library/Frameworks/UIKit.framework/UIKit
+0x1e1230000 - 0x1e125ffff libsystem_kernel.dylib arm64  <33333333333333333333333333333333> /usr/lib/system/libsystem_kernel.dylib

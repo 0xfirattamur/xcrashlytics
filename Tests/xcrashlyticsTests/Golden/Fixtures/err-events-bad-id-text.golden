@@ -1,0 +1,6 @@
+=== stdout ===
+=== stderr ===
+error: issue id 'not an id' contains unsupported characters.
+=== exit ===
+5
+=== requests ===

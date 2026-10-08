@@ -1,0 +1,10 @@
+=== stdout ===
+[FAIL] firebase CLI is not installed. Install it, then run `firebase login`:
+          npm install -g firebase-tools   # or: brew install firebase-cli
+          firebase login
+[WARN] no bundle id — Xcode crash commands need one. Re-run with --bundle-id <BUNDLE_ID>.
+Some checks failed. Fix the above, then re-run `xcrashlytics init`.
+=== stderr ===
+=== exit ===
+1
+=== requests ===

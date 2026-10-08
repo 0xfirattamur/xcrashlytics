@@ -1,0 +1,15 @@
+=== stdout ===
+FB-I1/events/E1   2026-06-14T09:30:00Z   6.16.0 (937)   iPhone15,2 / iOS 17.5.1
+    crash: BlurService.swift:77: Fatal error: Array index out of range (user [redacted])
+    0 KeyboardCore objectdestroyTm
+  * 1 BlurService.swift:77 BlurService.classify(_:)
+    2 ExampleViewController.swift:42 ExampleViewController.viewDidLoad()
+FB-I1/events/E2   2026-06-12T08:00:00Z   6.15.0 (900)   iPhone14,5 / iOS 17.4
+    crash: CALayerInvalidGeometry: CALayer bounds contains NaN
+  * 0 BlurService.swift:80 BlurService.classify(_:)
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I1&page_size=10
+POST https://www.googleapis.com/oauth2/v3/token

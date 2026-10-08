@@ -1,0 +1,32 @@
+=== stdout ===
+ID:        FB-I1
+Source:    firebase
+Version:   6.16.0
+Exception: FATAL (SIGABRT)
+Subtype:   Fatal error: Array index out of range
+Crash:     BlurService.swift:77: Fatal error: Array index out of range (user [redacted])
+Versions:  first seen 6.14.2 · last seen 6.16.0
+Range:     6.15.0 (900) … 6.16.0 (937) (lowest/highest version with events, 90d)
+Sampled:   newest 2 events, 2026-06-12 → 2026-06-14, 2 users
+OS:        iOS 17.4 ×1, iOS 17.5.1 ×1
+Devices:   iPhone14,5 ×1, iPhone15,2 ×1
+Libraries: ExampleApp ×2 (100%), KeyboardCore ×1 (50%)
+Blamed in: ExampleApp ×1 (50%)
+
+Thread 0 (crashed):
+  0  libobjc.A.dylib                   0x0000000000001900  objc_exception_throw
+  1  CoreFoundation                    0x00000000000978e0  <redacted>
+  2  KeyboardCore                      0x00000000001fed74  objectdestroyTm
+  3  ExampleApp                        0x0000000000001000  BlurService.classify(_:) (BlurService.swift:77)
+  4  ExampleApp                        0x0000000000002000  ExampleViewController.viewDidLoad() (ExampleViewController.swift:42)
+  5  UIKitCore                         0x0000000000000384  UIApplicationMain
+=== stderr ===
+warning: EVENT_NOT_RESOLVED: the link's event is not among the newest 100 events; showing the issue.
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I1&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/issues/I1
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I1&page_size=100
+POST https://www.googleapis.com/oauth2/v3/token
+POST https://www.googleapis.com/oauth2/v3/token

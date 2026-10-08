@@ -1,0 +1,13 @@
+=== stdout ===
+{
+  "error" : {
+    "code" : "AUTH_REQUIRED",
+    "hint" : "Run: firebase login",
+    "message" : "firebase CLI is not authenticated."
+  },
+  "schemaVersion" : 1
+}
+=== stderr ===
+=== exit ===
+2
+=== requests ===

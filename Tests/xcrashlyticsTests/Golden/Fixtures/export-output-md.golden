@@ -1,0 +1,70 @@
+=== stdout ===
+Exported FB-I1 to /tmp/golden/crash.md.
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I1&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/issues/I1
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topAppleDevices?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I1&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topOperatingSystems?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I1&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I1&granularity=TIME_GRANULARITY_DAY&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I1&page_size=100
+POST https://www.googleapis.com/oauth2/v3/token
+POST https://www.googleapis.com/oauth2/v3/token
+=== file /tmp/golden/crash.md ===
+# [ExampleApp] BlurService.swift - BlurService.classify(_:)
+
+**What:** `FATAL` (SIGABRT) in `BlurService.classify(_:)` — `BlurService.swift:77` — "BlurService.swift:77: Fatal error: Array index out of range (user [redacted])"  
+**Impact (last 7 days, 2026-06-08 → 2026-06-15):** 42 events · 12 users (1.33% of 900)  
+**Trend (events per day, UTC):** 2026-06-10: 3 · 2026-06-11: 6 · 2026-06-12: 9 · 2026-06-13: 12 · 2026-06-14: 8 · 2026-06-15: 4  
+**Versions:** first seen 6.14.2 · last seen 6.16.0 (versions of the first and the latest event, not a range)  
+**Version range:** 6.15.0 (900) … 6.16.0 (937) (lowest and highest app version with events in the window)  
+
+## Details
+
+| Field | Value |
+| --- | --- |
+| ID | `FB-I1` |
+| Firebase console | [Open issue](https://console.firebase.google.com/project/golden/crashlytics/app/ios:com.example.app/issues/I1) |
+| Source | firebase |
+| Type | `FATAL` (SIGABRT) |
+| Subtype | Fatal error: Array index out of range |
+| Crash message | BlurService.swift:77: Fatal error: Array index out of range (user [redacted]) |
+| Module | ExampleApp |
+| Top source frame | `BlurService.swift:77` BlurService.classify(_:) |
+
+## Where it happens
+
+Exact counts from the Crashlytics reports over the export window (2026-06-08 → 2026-06-15), top 5 by events.
+
+- App versions: 6.16.0 (937) 30 events (71.4%) · 9 users (1.00% of 900); 6.15.0 (900) 12 events (28.6%) · 6 users (1.00% of 600)
+- OS: iOS 17.5.1 20 events (50.0%) · 7 users; iOS 17.4 14 events (35.0%) · 5 users; iOS 16.7.8 6 events (15.0%) · 3 users
+- Devices: iPhone 14 Pro (iPhone15,2) 24 events (60.0%) · 8 users; iPhone 13 (iPhone14,5) 12 events (30.0%) · 6 users; iPad Air (iPad13,1) 4 events (10.0%) · 2 users
+
+## Latest occurrence
+
+| Field | Value |
+| --- | --- |
+| Event | `FB-I1/events/E1` |
+| Time | 2026-06-14 09:30 UTC |
+| App version | 6.16.0 (937) |
+| OS | 17.5.1 |
+| Device | iPhone15,2 |
+| Bundle | com.example.app |
+| Process state | FOREGROUND |
+
+## Stack trace
+
+```text
+  0  libobjc.A.dylib                   0x0000000000001900  objc_exception_throw
+  1  CoreFoundation                    0x00000000000978e0  <redacted>
+  2  KeyboardCore                      0x00000000001fed74  objectdestroyTm
+  3  ExampleApp                        0x0000000000001000  BlurService.classify(_:) (BlurService.swift:77)
+  4  ExampleApp                        0x0000000000002000  ExampleViewController.viewDidLoad() (ExampleViewController.swift:42)
+  5  UIKitCore                         0x0000000000000384  UIApplicationMain
+```
+
+---
+_Exported with xcrashlytics 0.2.0 on 2026-06-15 12:00 UTC._

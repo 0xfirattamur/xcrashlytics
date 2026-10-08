@@ -1,0 +1,9 @@
+=== stdout ===
+{"buildVersion":"937","dimension":"version","displayVersion":"6.16.0","eventsCount":30,"eventsShare":71.42857142857143,"impactedUsersCount":9,"impactedUsersPercentage":1,"kind":"breakdownRow","name":"6.16.0 (937)","schemaVersion":1,"versionUsersCount":900}
+{"buildVersion":"900","dimension":"version","displayVersion":"6.15.0","eventsCount":12,"eventsShare":28.571428571428573,"impactedUsersCount":6,"impactedUsersPercentage":1,"kind":"breakdownRow","name":"6.15.0 (900)","schemaVersion":1,"versionUsersCount":600}
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I1&page_size=100
+POST https://www.googleapis.com/oauth2/v3/token

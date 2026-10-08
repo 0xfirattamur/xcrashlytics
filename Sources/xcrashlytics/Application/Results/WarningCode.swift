@@ -1,0 +1,21 @@
+/// Raw values are part of the frozen JSON contract.
+enum WarningCode: String, Sendable, CaseIterable {
+    case breakdownUnavailable = "BREAKDOWN_UNAVAILABLE"
+    case dsymFailed = "DSYM_FAILED"
+    case dsymUnverified = "DSYM_UNVERIFIED"
+    case eventNotResolved = "EVENT_NOT_RESOLVED"
+    case firebaseSkipped = "FIREBASE_SKIPPED"
+    case frameFilterIgnored = "FRAME_FILTER_IGNORED"
+    case impactUnavailable = "IMPACT_UNAVAILABLE"
+    case issueNotInWindow = "ISSUE_NOT_IN_WINDOW"
+    case lastSeenUnavailable = "LAST_SEEN_UNAVAILABLE"
+    case noCrashedThread = "NO_CRASHED_THREAD"
+    case scanTruncated = "SCAN_TRUNCATED"
+    case searchLimitCapped = "SEARCH_LIMIT_CAPPED"
+    case searchTruncated = "SEARCH_TRUNCATED"
+    case xcodeExcludedByFilter = "XCODE_EXCLUDED_BY_FILTER"
+    case xcodeNoThreadFrames = "XCODE_NO_THREAD_FRAMES"
+    case xcodeParseFailed = "XCODE_PARSE_FAILED"
+    case xcodeScanFailed = "XCODE_SCAN_FAILED"
+    case xcodeUnsupportedReport = "XCODE_UNSUPPORTED_REPORT"
+}

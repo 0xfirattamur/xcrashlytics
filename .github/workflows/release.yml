@@ -2,11 +2,11 @@ name: Release
 
 on:
   push:
-    tags: ['v*']
+    tags: ['v[0-9]+.[0-9]+.[0-9]+', 'v[0-9]+.[0-9]+.[0-9]+-*']
   workflow_dispatch:
     inputs:
       tag:
-        description: 'Release tag to create and publish (e.g. v0.1.0)'
+        description: 'Release tag to create and publish (vMAJOR.MINOR.PATCH, optionally -suffix for a prerelease)'
         required: true
         type: string
 
@@ -24,8 +24,25 @@ env:
 jobs:
   release:
     runs-on: macos-15
+    outputs:
+      prerelease: ${{ steps.kind.outputs.prerelease }}
     steps:
       - uses: actions/checkout@v4
+
+      - name: Validate tag and classify release
+        id: kind
+        run: |
+          if [[ "$REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "prerelease=false" >> "$GITHUB_OUTPUT"
+          elif [[ "$REF_NAME" =~ ^v[0-9]+\.[0-9]+\.[0-9]+-[0-9A-Za-z.-]+$ ]]; then
+            echo "prerelease=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "::error::tag '$REF_NAME' must look like v1.2.3 or v1.2.3-rc.1"
+            exit 1
+          fi
+
+      - name: Test
+        run: make test
 
       - name: Build universal binary
         run: |
@@ -34,7 +51,11 @@ jobs:
           mkdir -p dist
           cp "$BINPATH/xcrashlytics" dist/xcrashlytics
           strip dist/xcrashlytics
-          lipo dist/xcrashlytics -verify_arch arm64 x86_64
+          # strip invalidates the linker signature; re-sign every slice ad-hoc.
+          codesign -s - -f dist/xcrashlytics
+          codesign --verify --verbose dist/xcrashlytics
+          # One arch per call: newer lipo rejects several archs in one -verify_arch.
+          for arch in arm64 x86_64; do lipo dist/xcrashlytics -verify_arch "$arch"; done
 
       - name: Check version matches tag
         run: |
@@ -54,15 +75,21 @@ jobs:
       - name: Create GitHub release
         env:
           GH_TOKEN: ${{ github.token }}
+          PRERELEASE: ${{ steps.kind.outputs.prerelease }}
         run: |
+          FLAGS=()
+          if [ "$PRERELEASE" = "true" ]; then FLAGS+=(--prerelease); fi
           gh release create "$REF_NAME" \
             dist/*.tar.gz dist/*.sha256 \
             --target "$GITHUB_SHA" \
             --title "$REF_NAME" \
-            --generate-notes
+            --generate-notes \
+            ${FLAGS[@]+"${FLAGS[@]}"}
 
+  # Stable releases only: a prerelease must never become the Homebrew version.
   formula:
     needs: release
+    if: needs.release.outputs.prerelease == 'false'
     runs-on: macos-15
     steps:
       - uses: actions/checkout@v4
@@ -88,8 +115,13 @@ jobs:
           git config user.email "github-actions[bot]@users.noreply.github.com"
           if git diff --quiet -- Formula/xcrashlytics.rb; then
             echo "Formula already up to date."
-          else
-            git add Formula/xcrashlytics.rb
-            git commit -m "chore: update Homebrew formula for ${REF_NAME}"
-            git push origin main
+            exit 0
+          fi
+          git add Formula/xcrashlytics.rb
+          git commit -m "chore: update Homebrew formula for ${REF_NAME}"
+          if ! git push origin main; then
+            VERSION="${REF_NAME#v}"
+            SHA="$(grep -E '^  sha256 ' Formula/xcrashlytics.rb | sed -E 's/.*"(.*)"/\1/')"
+            echo "::error title=Homebrew formula not updated::The release ${REF_NAME} is published, but pushing the formula to main failed (branch protection?). Set version \"${VERSION}\" and sha256 \"${SHA}\" in Formula/xcrashlytics.rb by hand."
+            exit 1
           fi

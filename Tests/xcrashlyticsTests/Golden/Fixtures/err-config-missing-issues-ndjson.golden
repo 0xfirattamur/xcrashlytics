@@ -1,0 +1,6 @@
+=== stdout ===
+{"error":{"code":"CONFIG_MISSING","hint":"Run: xcrashlytics init --app-id <GOOGLE_APP_ID>, or: xcrashlytics use <profile>","message":"no appId configured."},"schemaVersion":1}
+=== stderr ===
+=== exit ===
+4
+=== requests ===

@@ -1,0 +1,10 @@
+=== stdout ===
+=== stderr ===
+error: 'BlurService.swift' is ambiguous under <CWD>:
+  <CWD>/Other/BlurService.swift
+  <CWD>/Sources/BlurService.swift
+=== exit ===
+5
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I1&page_size=100
+POST https://www.googleapis.com/oauth2/v3/token

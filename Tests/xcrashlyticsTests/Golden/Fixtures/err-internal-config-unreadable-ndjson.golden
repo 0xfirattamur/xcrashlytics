@@ -1,0 +1,6 @@
+=== stdout ===
+{"error":{"code":"INTERNAL","message":"injected file system fault"},"schemaVersion":1}
+=== stderr ===
+=== exit ===
+1
+=== requests ===

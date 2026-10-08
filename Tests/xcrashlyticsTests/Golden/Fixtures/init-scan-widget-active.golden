@@ -1,0 +1,38 @@
+=== stdout ===
+Found 2 Firebase app(s):
+  app   ios   1:1234567890:ios:aaaa1111bbbb2222   com.example.app   (App/GoogleService-Info.plist)
+  widget   ios   1:1234567890:ios:cccc3333dddd4444   com.example.app.widget   (Widget/GoogleService-Info.plist)   extension of app
+First-party libraries: Imaging, KeyboardCore (frames count as app frames)
+All checks passed.
+.xcrashlytics.json written. It holds app ids only, no secrets — commit it so the team shares the setup.
+Active profile: widget.
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+POST https://www.googleapis.com/oauth2/v3/token
+=== file <CWD>/.xcrashlytics.json ===
+{
+  "activeProfile" : "widget",
+  "profiles" : {
+    "app" : {
+      "appId" : "1:1234567890:ios:aaaa1111bbbb2222",
+      "appLibraries" : [
+        "Imaging",
+        "KeyboardCore"
+      ],
+      "bundleId" : "com.example.app",
+      "sourcePath" : "App/GoogleService-Info.plist"
+    },
+    "widget" : {
+      "appId" : "1:1234567890:ios:cccc3333dddd4444",
+      "appLibraries" : [
+        "Imaging",
+        "KeyboardCore"
+      ],
+      "bundleId" : "com.example.app.widget",
+      "extensionOf" : "app",
+      "sourcePath" : "Widget/GoogleService-Info.plist"
+    }
+  }
+}

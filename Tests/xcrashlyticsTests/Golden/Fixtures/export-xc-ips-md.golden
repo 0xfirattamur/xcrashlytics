@@ -1,0 +1,41 @@
+=== stdout ===
+# EXC_BAD_ACCESS
+
+**What:** `EXC_BAD_ACCESS` (SIGSEGV) in `ExampleViewController.crashNow()` — `ExampleViewController.swift:42`  
+
+## Details
+
+| Field | Value |
+| --- | --- |
+| ID | `XC-0A0A0A0A-1111-2222-3333-444444444444` |
+| Source | xcode |
+| Type | `EXC_BAD_ACCESS` (SIGSEGV) |
+| Subtype | KERN_INVALID_ADDRESS at 0x0000000000000000 |
+| Module | ExampleApp |
+| Top source frame | `ExampleViewController.swift:42` ExampleViewController.crashNow() |
+
+## Occurrence
+
+| Field | Value |
+| --- | --- |
+| Time | 2026-05-01 12:34 UTC |
+| App version | 1.0 (42) |
+| OS | iOS 17.0 (21A329) |
+| Device | iPhone14,2 |
+| Bundle | com.example.ExampleApp |
+
+## Stack trace
+
+```text
+  0  libsystem_kernel.dylib            0x0000000200000b5c  __pthread_kill
+  1  ExampleApp                        0x0000000100001000  ExampleViewController.crashNow() (ExampleViewController.swift:42)
+  2  ExampleApp                        0x0000000100002000  <no symbol>
+  3  UIKitCore                         0x0000000180000200  UIApplicationMain
+```
+
+---
+_Exported with xcrashlytics 0.2.0 on 2026-06-15 12:00 UTC._
+=== stderr ===
+=== exit ===
+0
+=== requests ===

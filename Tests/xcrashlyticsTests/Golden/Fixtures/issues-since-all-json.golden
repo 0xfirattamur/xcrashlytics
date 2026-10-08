@@ -1,0 +1,131 @@
+=== stdout ===
+{
+  "data" : {
+    "fetchedIssuesCount" : 5,
+    "issues" : [
+      {
+        "appVersion" : "6.16.0",
+        "errorType" : "FATAL",
+        "eventsCount" : 42,
+        "exceptionType" : "FATAL",
+        "file" : "BlurService.swift",
+        "firebaseIssueId" : "I1",
+        "firstSeenVersion" : "6.14.2",
+        "id" : "FB-I1",
+        "impactedUsersCount" : 12,
+        "lastSeenAt" : "2026-06-14T09:30:00Z",
+        "lastSeenVersion" : "6.16.0",
+        "module" : "ExampleApp",
+        "signal" : "SIGABRT",
+        "source" : "firebase",
+        "subtitle" : "Fatal error: Array index out of range",
+        "title" : "[ExampleApp] BlurService.swift - BlurService.classify(_:)",
+        "topAppSymbol" : "BlurService.classify(_:)"
+      },
+      {
+        "appVersion" : "6.16.0",
+        "errorType" : "NON_FATAL",
+        "eventsCount" : 17,
+        "exceptionType" : "NON_FATAL",
+        "firebaseIssueId" : "I2",
+        "firstSeenVersion" : "6.15.0",
+        "id" : "FB-I2",
+        "impactedUsersCount" : 9,
+        "lastSeenAt" : "2026-06-14T10:00:00Z",
+        "lastSeenVersion" : "6.16.0",
+        "module" : "Core",
+        "source" : "firebase",
+        "subtitle" : "Domain: com.example.NetworkError",
+        "title" : "[Core] FIRCLSNonFatalError.m - -[FIRCLSNonFatalError initWithError:userInfo:rolloutsInfoJSON:]"
+      },
+      {
+        "appVersion" : "6.15.0",
+        "errorType" : "EXC_BAD_ACCESS",
+        "eventsCount" : 9,
+        "exceptionType" : "EXC_BAD_ACCESS",
+        "file" : "MapRenderer.swift",
+        "firebaseIssueId" : "I3",
+        "firstSeenVersion" : "6.15.0",
+        "id" : "FB-I3",
+        "impactedUsersCount" : 4,
+        "lastSeenAt" : "2026-06-13T07:15:00Z",
+        "lastSeenVersion" : "6.15.0",
+        "module" : "ExampleApp",
+        "signal" : "SIGSEGV",
+        "source" : "firebase",
+        "subtitle" : "EXC_BAD_ACCESS",
+        "title" : "[ExampleApp] MapRenderer.swift - MapRenderer.draw(_:)",
+        "topAppSymbol" : "MapRenderer.draw(_:)"
+      },
+      {
+        "appVersion" : "6.16.0",
+        "errorType" : "FATAL",
+        "eventsCount" : 6,
+        "exceptionType" : "FATAL",
+        "firebaseIssueId" : "I4",
+        "firstSeenVersion" : "6.16.0",
+        "id" : "FB-I4",
+        "impactedUsersCount" : 3,
+        "lastSeenAt" : "2026-06-13T11:00:00Z",
+        "lastSeenVersion" : "6.16.0",
+        "module" : "KeyboardCore",
+        "signal" : "SIGSEGV",
+        "source" : "firebase",
+        "subtitle" : "KERN_INVALID_ADDRESS",
+        "title" : "[KeyboardCore] objectdestroyTm",
+        "topAppSymbol" : "objectdestroyTm"
+      },
+      {
+        "appVersion" : "6.16.0",
+        "errorType" : "FATAL",
+        "eventsCount" : 3,
+        "exceptionType" : "FATAL",
+        "file" : "BlurService.swift",
+        "firebaseIssueId" : "I5",
+        "firstSeenVersion" : "6.16.0",
+        "id" : "FB-I5",
+        "impactedUsersCount" : 2,
+        "lastSeenAt" : "2026-06-10T11:00:00Z",
+        "lastSeenVersion" : "6.16.0",
+        "module" : "ExampleApp",
+        "signal" : "SIGABRT",
+        "source" : "firebase",
+        "subtitle" : "Fatal error: Unexpectedly found nil",
+        "title" : "[ExampleApp] BlurService.swift - BlurService.classify(_:)",
+        "topAppSymbol" : "BlurService.classify(_:)"
+      }
+    ],
+    "limit" : 20,
+    "matchedIssuesCount" : 5,
+    "relatedGroups" : [
+      {
+        "issueIds" : [
+          "FB-I1",
+          "FB-I5"
+        ],
+        "reason" : "same crash signature"
+      }
+    ],
+    "searchLimit" : 20,
+    "since" : "all",
+    "window" : {
+      "since" : "2026-03-17T12:00:00Z",
+      "until" : "2026-06-15T12:00:00Z"
+    }
+  },
+  "schemaVersion" : 1,
+  "warnings" : [
+
+  ]
+}
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I1&page_size=1
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I2&page_size=1
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I3&page_size=1
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I4&page_size=1
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I5&page_size=1
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&page_size=20
+POST https://www.googleapis.com/oauth2/v3/token

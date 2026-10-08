@@ -1,0 +1,147 @@
+=== stdout ===
+{
+  "data" : {
+    "groups" : [
+      {
+        "crossSource" : false,
+        "firebase" : [
+          {
+            "consoleURL" : "https://console.firebase.google.com/project/golden/crashlytics/app/ios:com.example.app/issues/I1",
+            "errorType" : "FATAL",
+            "eventsCount" : 42,
+            "exceptionType" : "FATAL",
+            "firstSeenVersion" : "6.14.2",
+            "id" : "FB-I1",
+            "impactedUsersCount" : 12,
+            "lastSeenVersion" : "6.16.0",
+            "providerId" : "I1",
+            "signal" : "SIGABRT",
+            "source" : "firebase",
+            "state" : "OPEN",
+            "subtitle" : "Fatal error: Array index out of range",
+            "title" : "[ExampleApp] BlurService.swift - BlurService.classify(_:)"
+          },
+          {
+            "consoleURL" : "https://console.firebase.google.com/project/golden/crashlytics/app/ios:com.example.app/issues/I5",
+            "errorType" : "FATAL",
+            "eventsCount" : 3,
+            "exceptionType" : "FATAL",
+            "firstSeenVersion" : "6.16.0",
+            "id" : "FB-I5",
+            "impactedUsersCount" : 2,
+            "lastSeenVersion" : "6.16.0",
+            "providerId" : "I5",
+            "signal" : "SIGABRT",
+            "source" : "firebase",
+            "state" : "OPEN",
+            "subtitle" : "Fatal error: Unexpectedly found nil",
+            "title" : "[ExampleApp] BlurService.swift - BlurService.classify(_:)"
+          }
+        ],
+        "module" : "ExampleApp",
+        "symbol" : "blurservice.classify(_:)",
+        "totalEvents" : 45,
+        "totalUsers" : 14,
+        "xcode" : [
+
+        ]
+      },
+      {
+        "crossSource" : false,
+        "firebase" : [
+          {
+            "consoleURL" : "https://console.firebase.google.com/project/golden/crashlytics/app/ios:com.example.app/issues/I2",
+            "errorType" : "NON_FATAL",
+            "eventsCount" : 17,
+            "exceptionType" : "NON_FATAL",
+            "firstSeenVersion" : "6.15.0",
+            "id" : "FB-I2",
+            "impactedUsersCount" : 9,
+            "lastSeenVersion" : "6.16.0",
+            "providerId" : "I2",
+            "source" : "firebase",
+            "state" : "OPEN",
+            "subtitle" : "Domain: com.example.NetworkError",
+            "title" : "[Core] FIRCLSNonFatalError.m - -[FIRCLSNonFatalError initWithError:userInfo:rolloutsInfoJSON:]"
+          }
+        ],
+        "symbol" : "firebase:FB-I2",
+        "totalEvents" : 17,
+        "totalUsers" : 9,
+        "xcode" : [
+
+        ]
+      },
+      {
+        "crossSource" : false,
+        "firebase" : [
+          {
+            "consoleURL" : "https://console.firebase.google.com/project/golden/crashlytics/app/ios:com.example.app/issues/I3",
+            "errorType" : "EXC_BAD_ACCESS",
+            "eventsCount" : 9,
+            "exceptionType" : "EXC_BAD_ACCESS",
+            "firstSeenVersion" : "6.15.0",
+            "id" : "FB-I3",
+            "impactedUsersCount" : 4,
+            "lastSeenVersion" : "6.15.0",
+            "providerId" : "I3",
+            "signal" : "SIGSEGV",
+            "source" : "firebase",
+            "state" : "OPEN",
+            "subtitle" : "EXC_BAD_ACCESS",
+            "title" : "[ExampleApp] MapRenderer.swift - MapRenderer.draw(_:)"
+          }
+        ],
+        "module" : "ExampleApp",
+        "symbol" : "maprenderer.draw(_:)",
+        "totalEvents" : 9,
+        "totalUsers" : 4,
+        "xcode" : [
+
+        ]
+      },
+      {
+        "crossSource" : false,
+        "firebase" : [
+          {
+            "consoleURL" : "https://console.firebase.google.com/project/golden/crashlytics/app/ios:com.example.app/issues/I4",
+            "errorType" : "FATAL",
+            "eventsCount" : 6,
+            "exceptionType" : "FATAL",
+            "firstSeenVersion" : "6.16.0",
+            "id" : "FB-I4",
+            "impactedUsersCount" : 3,
+            "lastSeenVersion" : "6.16.0",
+            "providerId" : "I4",
+            "signal" : "SIGSEGV",
+            "source" : "firebase",
+            "state" : "OPEN",
+            "subtitle" : "KERN_INVALID_ADDRESS",
+            "title" : "[KeyboardCore] objectdestroyTm"
+          }
+        ],
+        "module" : "KeyboardCore",
+        "symbol" : "objectdestroytm",
+        "totalEvents" : 6,
+        "totalUsers" : 3,
+        "xcode" : [
+
+        ]
+      }
+    ],
+    "window" : {
+      "since" : "2026-06-08T12:00:00Z",
+      "until" : "2026-06-15T12:00:00Z"
+    }
+  },
+  "schemaVersion" : 1,
+  "warnings" : [
+
+  ]
+}
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:cccc3333dddd4444/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100
+POST https://www.googleapis.com/oauth2/v3/token

@@ -1,0 +1,6 @@
+=== stdout ===
+=== stderr ===
+error: id must be XC-<uuid>, FB-<id>, or a Firebase console link; got 'nonsense'.
+=== exit ===
+5
+=== requests ===

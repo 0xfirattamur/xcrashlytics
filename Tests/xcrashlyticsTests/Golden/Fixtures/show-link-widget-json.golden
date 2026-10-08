@@ -1,0 +1,99 @@
+=== stdout ===
+{
+  "data" : {
+    "activity" : {
+      "deviceSpread" : [
+        {
+          "count" : 1,
+          "name" : "iPhone14,5"
+        }
+      ],
+      "distinctUsers" : 1,
+      "firstEventAt" : "2026-06-13T07:15:00Z",
+      "lastEventAt" : "2026-06-13T07:15:00Z",
+      "osSpread" : [
+        {
+          "count" : 1,
+          "name" : "iOS 17.4"
+        }
+      ],
+      "sampledEvents" : 1,
+      "versionSpread" : [
+        {
+          "count" : 1,
+          "name" : "6.16.0"
+        }
+      ]
+    },
+    "binaryImages" : [
+
+    ],
+    "blameLibraries" : [
+
+    ],
+    "bundleVersion" : "6.15.0",
+    "crashedThreadIndex" : 0,
+    "customKeys" : {
+
+    },
+    "dominantLibraries" : [
+      {
+        "events" : 1,
+        "library" : "ExampleApp",
+        "owner" : "DEVELOPER",
+        "share" : 1
+      }
+    ],
+    "errorType" : "EXC_BAD_ACCESS",
+    "exception" : {
+      "description" : "[ExampleApp] MapRenderer.swift - MapRenderer.draw(_:)",
+      "exceptionType" : "EXC_BAD_ACCESS",
+      "signal" : "SIGSEGV",
+      "subtype" : "EXC_BAD_ACCESS"
+    },
+    "firstSeenVersion" : "6.15.0",
+    "frames" : [
+      {
+        "address" : 5000,
+        "binaryName" : "ExampleApp",
+        "file" : "MapRenderer.swift",
+        "index" : 0,
+        "isSymbolicated" : true,
+        "line" : 301,
+        "symbol" : "MapRenderer.draw(_:)"
+      },
+      {
+        "address" : 600,
+        "binaryName" : "QuartzCore",
+        "index" : 1,
+        "isSymbolicated" : true,
+        "symbol" : "CA::Layer::display()"
+      }
+    ],
+    "id" : "FB-I3",
+    "lastSeenVersion" : "6.15.0",
+    "logs" : [
+
+    ],
+    "providerId" : "I3",
+    "source" : "firebase",
+    "state" : "OPEN",
+    "versionRange" : {
+      "max" : "6.15.0 (900)",
+      "min" : "6.15.0 (900)"
+    }
+  },
+  "schemaVersion" : 1,
+  "warnings" : [
+
+  ]
+}
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:cccc3333dddd4444/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I3&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:cccc3333dddd4444/issues/I3
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:cccc3333dddd4444/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I3&page_size=100
+POST https://www.googleapis.com/oauth2/v3/token
+POST https://www.googleapis.com/oauth2/v3/token

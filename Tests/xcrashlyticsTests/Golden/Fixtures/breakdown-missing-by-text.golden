@@ -1,0 +1,9 @@
+=== stdout ===
+=== stderr ===
+Error: Missing expected argument '--by <by>'
+Help:  --by <by>  What to split by: version, os, or device.
+Usage: xcrashlytics breakdown [<issue>] --by <by> [--since <since>] [--limit <limit>] [--format <format>]
+  See 'xcrashlytics breakdown --help' for more information.
+=== exit ===
+64
+=== requests ===

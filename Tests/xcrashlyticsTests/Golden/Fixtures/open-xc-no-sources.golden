@@ -1,0 +1,6 @@
+=== stdout ===
+Opened raw report at /crashes/sample-symbolicated.crash (found no file named 'ExampleViewController.swift' under <CWD> — run from the app's repo root).
+=== stderr ===
+=== exit ===
+0
+=== requests ===

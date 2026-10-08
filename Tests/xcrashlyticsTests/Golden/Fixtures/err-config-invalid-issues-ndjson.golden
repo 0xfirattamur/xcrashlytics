@@ -1,0 +1,6 @@
+=== stdout ===
+{"error":{"code":"CONFIG_INVALID","hint":"Fix the JSON in .xcrashlytics.json, or delete it and run: xcrashlytics init --scan","message":"the .xcrashlytics.json file is invalid."},"schemaVersion":1}
+=== stderr ===
+=== exit ===
+4
+=== requests ===

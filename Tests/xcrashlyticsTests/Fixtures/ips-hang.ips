@@ -1,0 +1,6 @@
+{"app_name":"ExampleApp","timestamp":"2026-05-01 12:34:55.00 +0000","bug_type":"298","os_version":"iPhone OS 17.0 (21A329)","incident_id":"0B0B0B0B-1111-2222-3333-444444444444"}
+{
+  "crashReporterKey" : "abc",
+  "memoryStatus" : { "pageSize" : 16384 },
+  "processes" : [ { "name" : "ExampleApp", "pid" : 123, "rpages" : 100 } ]
+}

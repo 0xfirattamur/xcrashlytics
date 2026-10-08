@@ -1,0 +1,9 @@
+=== stdout ===
+=== stderr ===
+Error: Missing expected argument '<id>'
+Help:  <id>  Crash id (XC-<uuid>, FB-<id>, FB-<id>/events/<event>) or a Firebase console issue link.
+Usage: xcrashlytics show <id> [--format <format>] [--app-frames-only] [--no-system-frames] [--crashing-thread-only] [--breadcrumbs] [--dsym <dsym> ...] [--crash-directory <crash-directory> ...]
+  See 'xcrashlytics show --help' for more information.
+=== exit ===
+64
+=== requests ===

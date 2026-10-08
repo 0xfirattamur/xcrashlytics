@@ -1,0 +1,9 @@
+=== stdout ===
+[FAIL] no GoogleService-Info.plist or google-services.json found under <CWD>.
+          Run from the repo root, or: xcrashlytics init --app-id <APP_ID> --profile <name>
+Some checks failed. Fix the above, then re-run `xcrashlytics init`.
+=== stderr ===
+=== exit ===
+1
+=== requests ===
+POST https://www.googleapis.com/oauth2/v3/token

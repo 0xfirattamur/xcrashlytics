@@ -1,0 +1,45 @@
+=== stdout ===
+OVERVIEW: Show a single crash by id (XC-<uuid>, FB-<id>) or Firebase console
+link.
+
+Examples:
+  xcrashlytics show FB-3aedb610eee1a41872d991ca62ce8566
+  xcrashlytics show FB-3aedb610eee1a41872d991ca62ce8566/events/E1 --format json
+  xcrashlytics show XC-AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE
+  xcrashlytics show
+'https://console.firebase.google.com/project/p/crashlytics/app/ios:com.example.app/issues/3aed…'
+
+Console
+links are matched to the profile whose bundle id equals the
+link's app; quote the link so the shell leaves `?` and `&` alone.
+
+USAGE: xcrashlytics show <id> [--format <format>] [--app-frames-only] [--no-system-frames] [--crashing-thread-only] [--breadcrumbs] [--dsym <dsym> ...] [--crash-directory <crash-directory> ...]
+
+ARGUMENTS:
+  <id>                    Crash id (XC-<uuid>, FB-<id>, FB-<id>/events/<event>)
+                          or a Firebase console issue link.
+
+OPTIONS:
+  --format <format>       Output format: text (default) or json. (values: text,
+                          json, ndjson; default: text)
+  --app-frames-only       Firebase only: only emit frames that look app-owned.
+  --no-system-frames      Firebase only: drop redacted, deduplicated, and known
+                          system/SDK frames.
+  --crashing-thread-only  Firebase only: only emit frames of Firebase's crashed
+                          thread (warns NO_CRASHED_THREAD when there is none).
+  --breadcrumbs           Firebase only: include the event's breadcrumbs in
+                          JSON (Analytics events before the crash); large, user
+                          ids redacted.
+  --dsym <dsym>           Firebase only: a .dSYM bundle, or a directory
+                          searched recursively for them, to symbolicate frames
+                          of its library (xcrun atos). Repeatable.
+  --crash-directory <crash-directory>
+                          XC- ids: Xcode crash directory to scan instead of the
+                          profile's Organizer directories. Repeatable.
+  --version               Show the version.
+  -h, --help              Show help information.
+
+=== stderr ===
+=== exit ===
+0
+=== requests ===

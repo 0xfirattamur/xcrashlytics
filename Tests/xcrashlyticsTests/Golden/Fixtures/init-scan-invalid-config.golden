@@ -1,0 +1,7 @@
+=== stdout ===
+=== stderr ===
+error: the .xcrashlytics.json file is invalid.
+hint: Fix the JSON in .xcrashlytics.json, or delete it and run: xcrashlytics init --scan
+=== exit ===
+4
+=== requests ===

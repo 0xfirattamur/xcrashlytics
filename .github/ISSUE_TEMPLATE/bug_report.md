@@ -24,8 +24,8 @@ xcrashlytics <command> ...
 
 ## What happened?
 
-Paste full output. Include `xcrashlytics doctor` output if auth/setup related.
+Paste the full output. For a failing command, re-run it with `--format json` and paste the JSON error object it prints on stdout (it has a `code`, a `message` and often a `hint`).
 
-## Logs
-
-If applicable, attach the relevant section of `~/.xcrashlytics/errors.log`.
+```bash
+xcrashlytics <command> ... --format json
+```

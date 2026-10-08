@@ -1,0 +1,9 @@
+=== stdout ===
+[FAIL] firebase refresh token is invalid. Run: firebase login --reauth
+[WARN] no bundle id — Xcode crash commands need one. Re-run with --bundle-id <BUNDLE_ID>.
+Some checks failed. Fix the above, then re-run `xcrashlytics init`.
+=== stderr ===
+=== exit ===
+1
+=== requests ===
+POST https://www.googleapis.com/oauth2/v3/token

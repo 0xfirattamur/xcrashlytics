@@ -1,0 +1,6 @@
+=== stdout ===
+=== stderr ===
+error: no profile for bundle id 'com.other'. Add one: xcrashlytics init --app-id <APP_ID> --bundle-id com.other --profile <name>
+=== exit ===
+5
+=== requests ===

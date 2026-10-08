@@ -1,0 +1,6 @@
+=== stdout ===
+=== stderr ===
+error: profile name must not be empty.
+=== exit ===
+5
+=== requests ===

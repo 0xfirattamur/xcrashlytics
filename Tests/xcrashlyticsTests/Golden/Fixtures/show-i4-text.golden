@@ -1,0 +1,25 @@
+=== stdout ===
+ID:        FB-I4
+Source:    firebase
+Version:   6.16.0
+Exception: FATAL (SIGSEGV)
+Subtype:   KERN_INVALID_ADDRESS
+Versions:  first seen 6.16.0 · last seen 6.16.0
+Range:     6.16.0 (937) … 6.16.0 (937) (lowest/highest version with events, 90d)
+Sampled:   newest 1 events, 2026-06-13 → 2026-06-13, 1 users
+OS:        iOS 17.5.1 ×1
+Devices:   iPhone15,2 ×1
+Libraries: ExampleApp ×1 (100%)
+
+Thread 0 (crashed):
+  0  ExampleApp                        0x0000000000001000  objectdestroyTm (KeyboardCore.swift:12)
+  1  UIKitCore                         0x0000000000000384  UIApplicationMain
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I4&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/issues/I4
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I4&page_size=100
+POST https://www.googleapis.com/oauth2/v3/token
+POST https://www.googleapis.com/oauth2/v3/token

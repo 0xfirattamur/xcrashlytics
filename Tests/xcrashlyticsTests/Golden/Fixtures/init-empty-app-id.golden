@@ -1,0 +1,6 @@
+=== stdout ===
+=== stderr ===
+error: --app-id must not be empty.
+=== exit ===
+5
+=== requests ===

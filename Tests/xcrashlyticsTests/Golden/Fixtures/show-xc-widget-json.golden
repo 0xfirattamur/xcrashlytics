@@ -1,0 +1,70 @@
+=== stdout ===
+{
+  "data" : {
+    "binaryImages" : [
+      {
+        "arch" : "arm64",
+        "loadAddress" : 4294967296,
+        "name" : "ExampleApp",
+        "path" : "/private/var/containers/Bundle/Application/AAA/ExampleApp.app/ExampleApp",
+        "uuid" : "11111111-1111-1111-1111-111111111111"
+      },
+      {
+        "arch" : "arm64",
+        "loadAddress" : 6543114240,
+        "name" : "UIKit",
+        "path" : "/System/Library/Frameworks/UIKit.framework/UIKit",
+        "uuid" : "22222222-2222-2222-2222-222222222222"
+      }
+    ],
+    "bundleId" : "com.example.app.widget",
+    "bundleVersion" : "1 (1.0)",
+    "crashedThreadIndex" : 0,
+    "deviceModel" : "iPhone14,2",
+    "exception" : {
+      "exceptionType" : "EXC_BAD_ACCESS",
+      "signal" : "SIGSEGV",
+      "subtype" : "KERN_INVALID_ADDRESS at 0x0000000000000000"
+    },
+    "frames" : [
+      {
+        "address" : 4294971392,
+        "binaryName" : "ExampleApp",
+        "imageUUID" : "11111111-1111-1111-1111-111111111111",
+        "index" : 0,
+        "isSymbolicated" : true,
+        "symbol" : "-[ExampleViewController crashNow]"
+      },
+      {
+        "address" : 4294975488,
+        "binaryName" : "ExampleApp",
+        "imageUUID" : "11111111-1111-1111-1111-111111111111",
+        "index" : 1,
+        "isSymbolicated" : false,
+        "symbol" : "0x100000000"
+      },
+      {
+        "address" : 6543126528,
+        "binaryName" : "UIKit",
+        "imageUUID" : "22222222-2222-2222-2222-222222222222",
+        "index" : 2,
+        "isSymbolicated" : true,
+        "symbol" : "UIApplicationMain"
+      }
+    ],
+    "id" : "XC-77777777-BBBB-CCCC-DDDD-EEEEEEEEEEEE",
+    "osVersion" : "iPhone OS 17.0 (21A329)",
+    "providerId" : "77777777-BBBB-CCCC-DDDD-EEEEEEEEEEEE",
+    "rawPath" : "<HOME>/Library/Developer/Xcode/Products/com.example.app/Crashes/Points/A.xccrashpoint/Logs/widget.crash",
+    "source" : "xcode",
+    "timestamp" : "2026-05-01T12:34:55Z"
+  },
+  "schemaVersion" : 1,
+  "warnings" : [
+
+  ]
+}
+=== stderr ===
+=== exit ===
+0
+=== requests ===

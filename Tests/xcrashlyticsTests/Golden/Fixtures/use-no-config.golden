@@ -1,0 +1,6 @@
+=== stdout ===
+=== stderr ===
+error: profile 'app' not found. Add it with `xcrashlytics init --profile app --app-id <GOOGLE_APP_ID>`.
+=== exit ===
+5
+=== requests ===

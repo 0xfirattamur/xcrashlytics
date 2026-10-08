@@ -1,0 +1,98 @@
+=== stdout ===
+{
+  "data" : {
+    "concurrency" : 1,
+    "eventsPerIssue" : 1,
+    "issueLimit" : 30,
+    "issuesScanned" : 5,
+    "items" : [
+      {
+        "binaryName" : "ExampleApp",
+        "eventCount" : 1,
+        "exampleEventId" : "FB-I5/events/E6",
+        "exampleIssueId" : "FB-I5",
+        "file" : "BlurService.swift",
+        "line" : 12,
+        "symbol" : "BlurService.classify(_:)",
+        "topIssueIds" : [
+          "FB-I5"
+        ],
+        "users" : 1
+      },
+      {
+        "binaryName" : "ExampleApp",
+        "eventCount" : 1,
+        "exampleEventId" : "FB-I1/events/E1",
+        "exampleIssueId" : "FB-I1",
+        "file" : "BlurService.swift",
+        "line" : 77,
+        "symbol" : "BlurService.classify(_:)",
+        "topIssueIds" : [
+          "FB-I1"
+        ],
+        "users" : 1
+      },
+      {
+        "binaryName" : "ExampleApp",
+        "eventCount" : 1,
+        "exampleEventId" : "FB-I4/events/E5",
+        "exampleIssueId" : "FB-I4",
+        "file" : "KeyboardCore.swift",
+        "line" : 12,
+        "symbol" : "objectdestroyTm",
+        "topIssueIds" : [
+          "FB-I4"
+        ],
+        "users" : 1
+      },
+      {
+        "binaryName" : "ExampleApp",
+        "eventCount" : 1,
+        "exampleEventId" : "FB-I3/events/E4",
+        "exampleIssueId" : "FB-I3",
+        "file" : "MapRenderer.swift",
+        "line" : 301,
+        "symbol" : "MapRenderer.draw(_:)",
+        "topIssueIds" : [
+          "FB-I3"
+        ],
+        "users" : 1
+      },
+      {
+        "binaryName" : "ExampleApp",
+        "eventCount" : 1,
+        "exampleEventId" : "FB-I2/events/E3",
+        "exampleIssueId" : "FB-I2",
+        "file" : "NetworkClient.swift",
+        "line" : 186,
+        "symbol" : "NetworkClient.recordFailure(error:)",
+        "topIssueIds" : [
+          "FB-I2"
+        ],
+        "users" : 1
+      }
+    ],
+    "sampledEvents" : 5,
+    "since" : "7d",
+    "top" : 20,
+    "window" : {
+      "since" : "2026-06-08T12:00:00Z",
+      "until" : "2026-06-15T12:00:00Z"
+    }
+  },
+  "schemaVersion" : 1,
+  "warnings" : [
+
+  ]
+}
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I1&page_size=1
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I2&page_size=1
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I3&page_size=1
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I4&page_size=1
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I5&page_size=1
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=30
+POST https://www.googleapis.com/oauth2/v3/token

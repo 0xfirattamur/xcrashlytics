@@ -1,0 +1,6 @@
+=== stdout ===
+=== stderr ===
+error: id must start with FB- or XC-; got 'ZZ-1'.
+=== exit ===
+5
+=== requests ===

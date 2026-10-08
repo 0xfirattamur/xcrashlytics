@@ -1,0 +1,227 @@
+=== stdout ===
+{
+  "data" : {
+    "breakdown" : {
+      "versions" : [
+        {
+          "buildVersion" : "937",
+          "dimension" : "version",
+          "displayVersion" : "6.16.0",
+          "eventsCount" : 30,
+          "eventsShare" : 71.42857142857143,
+          "impactedUsersCount" : 9,
+          "impactedUsersPercentage" : 1,
+          "name" : "6.16.0 (937)",
+          "versionUsersCount" : 900
+        },
+        {
+          "buildVersion" : "900",
+          "dimension" : "version",
+          "displayVersion" : "6.15.0",
+          "eventsCount" : 12,
+          "eventsShare" : 28.571428571428573,
+          "impactedUsersCount" : 6,
+          "impactedUsersPercentage" : 1,
+          "name" : "6.15.0 (900)",
+          "versionUsersCount" : 600
+        }
+      ],
+      "window" : {
+        "since" : "2026-06-08T12:00:00Z",
+        "until" : "2026-06-15T12:00:00Z"
+      }
+    },
+    "consoleURL" : "https://console.firebase.google.com/project/golden/crashlytics/app/ios:com.example.app/issues/I1",
+    "crash" : {
+      "crashMessage" : "BlurService.swift:77: Fatal error: Array index out of range (user [redacted])",
+      "file" : "BlurService.swift",
+      "module" : "ExampleApp",
+      "signal" : "SIGABRT",
+      "subtype" : "Fatal error: Array index out of range",
+      "symbol" : "BlurService.classify(_:)",
+      "topSourceFrame" : {
+        "address" : 4096,
+        "binaryName" : "ExampleApp",
+        "file" : "BlurService.swift",
+        "index" : 3,
+        "isSymbolicated" : true,
+        "line" : 77,
+        "symbol" : "BlurService.classify(_:)"
+      },
+      "type" : "FATAL"
+    },
+    "dailyEvents" : [
+      {
+        "day" : "2026-06-10",
+        "eventsCount" : 3
+      },
+      {
+        "day" : "2026-06-11",
+        "eventsCount" : 6
+      },
+      {
+        "day" : "2026-06-12",
+        "eventsCount" : 9
+      },
+      {
+        "day" : "2026-06-13",
+        "eventsCount" : 12
+      },
+      {
+        "day" : "2026-06-14",
+        "eventsCount" : 8
+      },
+      {
+        "day" : "2026-06-15",
+        "eventsCount" : 4
+      }
+    ],
+    "exportedAt" : "2026-06-15T12:00:00Z",
+    "firstSeenVersion" : "6.14.2",
+    "frames" : [
+      {
+        "address" : 6400,
+        "binaryName" : "libobjc.A.dylib",
+        "index" : 0,
+        "isSymbolicated" : true,
+        "symbol" : "objc_exception_throw"
+      },
+      {
+        "address" : 620768,
+        "binaryName" : "CoreFoundation",
+        "index" : 1,
+        "isSymbolicated" : true,
+        "symbol" : "<redacted>"
+      },
+      {
+        "address" : 2092404,
+        "binaryName" : "KeyboardCore",
+        "index" : 2,
+        "isSymbolicated" : true,
+        "symbol" : "objectdestroyTm"
+      },
+      {
+        "address" : 4096,
+        "binaryName" : "ExampleApp",
+        "file" : "BlurService.swift",
+        "index" : 3,
+        "isSymbolicated" : true,
+        "line" : 77,
+        "symbol" : "BlurService.classify(_:)"
+      },
+      {
+        "address" : 8192,
+        "binaryName" : "ExampleApp",
+        "file" : "ExampleViewController.swift",
+        "index" : 4,
+        "isSymbolicated" : true,
+        "line" : 42,
+        "symbol" : "ExampleViewController.viewDidLoad()"
+      },
+      {
+        "address" : 900,
+        "binaryName" : "UIKitCore",
+        "index" : 5,
+        "isSymbolicated" : true,
+        "symbol" : "UIApplicationMain"
+      }
+    ],
+    "id" : "FB-I1",
+    "impact" : {
+      "appUsersCount" : 900,
+      "eventsCount" : 42,
+      "impactedUsersCount" : 12,
+      "impactedUsersPercentage" : 1.3333333333333335,
+      "since" : "2026-06-08T12:00:00Z",
+      "until" : "2026-06-15T12:00:00Z"
+    },
+    "lastSeenVersion" : "6.16.0",
+    "occurrence" : {
+      "appBuild" : "937",
+      "appVersion" : "6.16.0",
+      "bundleId" : "com.example.app",
+      "deviceModel" : "iPhone15,2",
+      "id" : "FB-I1/events/E1",
+      "osVersion" : "17.5.1",
+      "processState" : "FOREGROUND",
+      "time" : "2026-06-14T09:30:00Z"
+    },
+    "sample" : {
+      "deviceSpread" : [
+        {
+          "count" : 1,
+          "name" : "iPhone14,5"
+        },
+        {
+          "count" : 1,
+          "name" : "iPhone15,2"
+        }
+      ],
+      "distinctUsers" : 2,
+      "firstEventAt" : "2026-06-12T08:00:00Z",
+      "lastEventAt" : "2026-06-14T09:30:00Z",
+      "osSpread" : [
+        {
+          "count" : 1,
+          "name" : "iOS 17.4"
+        },
+        {
+          "count" : 1,
+          "name" : "iOS 17.5.1"
+        }
+      ],
+      "sampledEvents" : 2,
+      "versionSpread" : [
+        {
+          "count" : 1,
+          "name" : "6.15.0"
+        },
+        {
+          "count" : 1,
+          "name" : "6.16.0"
+        }
+      ]
+    },
+    "source" : "firebase",
+    "title" : "[ExampleApp] BlurService.swift - BlurService.classify(_:)",
+    "toolVersion" : "0.2.0",
+    "versionRange" : {
+      "max" : "6.16.0 (937)",
+      "min" : "6.15.0 (900)"
+    }
+  },
+  "schemaVersion" : 1,
+  "warnings" : [
+    {
+      "code" : "BREAKDOWN_UNAVAILABLE",
+      "message" : "the os report failed (Firebase API error 500: topOperatingSystems failed); its 'Where it happens' spread comes from the newest sampled events."
+    },
+    {
+      "code" : "BREAKDOWN_UNAVAILABLE",
+      "message" : "the device report failed (Firebase API error 500: topAppleDevices failed); its 'Where it happens' spread comes from the newest sampled events."
+    }
+  ]
+}
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I1&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/issues/I1
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topAppleDevices?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I1&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topAppleDevices?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I1&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topAppleDevices?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I1&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topAppleDevices?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I1&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topAppleDevices?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I1&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topAppleDevices?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I1&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topOperatingSystems?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I1&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topOperatingSystems?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I1&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topOperatingSystems?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I1&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topOperatingSystems?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I1&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topOperatingSystems?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I1&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topOperatingSystems?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I1&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I1&granularity=TIME_GRANULARITY_DAY&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I1&page_size=100
+POST https://www.googleapis.com/oauth2/v3/token
+POST https://www.googleapis.com/oauth2/v3/token

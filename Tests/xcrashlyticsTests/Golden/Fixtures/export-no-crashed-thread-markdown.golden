@@ -1,0 +1,61 @@
+=== stdout ===
+# [ExampleApp] MapRenderer.swift - MapRenderer.draw(_:)
+
+**What:** `EXC_BAD_ACCESS` (SIGSEGV) in `MapRenderer.draw(_:)` — `MapRenderer.swift:301`  
+**Impact (last 7 days, 2026-06-08 → 2026-06-15):** 9 events · 4 users (0.44% of 900)  
+**Versions:** first seen 6.15.0 · last seen 6.15.0 (versions of the first and the latest event, not a range)  
+**Version range:** 6.15.0 (900) … 6.15.0 (900) (lowest and highest app version with events in the window)  
+
+## Details
+
+| Field | Value |
+| --- | --- |
+| ID | `FB-I3` |
+| Firebase console | [Open issue](https://console.firebase.google.com/project/golden/crashlytics/app/ios:com.example.app/issues/I3) |
+| Source | firebase |
+| Type | `EXC_BAD_ACCESS` (SIGSEGV) |
+| Subtype | EXC_BAD_ACCESS |
+| Module | ExampleApp |
+| Top source frame | `MapRenderer.swift:301` MapRenderer.draw(_:) |
+
+## Where it happens
+
+Exact counts from the Crashlytics reports over the export window (2026-06-08 → 2026-06-15), top 5 by events.
+
+- App versions: 6.15.0 (900) 9 events (100.0%) · 4 users (0.67% of 600)
+- OS: iOS 17.5.1 20 events (50.0%) · 7 users; iOS 17.4 14 events (35.0%) · 5 users; iOS 16.7.8 6 events (15.0%) · 3 users
+- Devices: iPhone 14 Pro (iPhone15,2) 24 events (60.0%) · 8 users; iPhone 13 (iPhone14,5) 12 events (30.0%) · 6 users; iPad Air (iPad13,1) 4 events (10.0%) · 2 users
+
+## Latest occurrence
+
+| Field | Value |
+| --- | --- |
+| Event | `FB-I3/events/E4` |
+| Time | 2026-06-13 07:15 UTC |
+| App version | 6.16.0 (937) |
+| OS | 17.4 |
+| Device | iPhone14,5 |
+| Bundle | com.example.app |
+
+## Stack trace
+
+```text
+  0  ExampleApp                        0x0000000000001388  MapRenderer.draw(_:) (MapRenderer.swift:301)
+  1  QuartzCore                        0x0000000000000258  CA::Layer::display()
+```
+
+---
+_Exported with xcrashlytics 0.2.0 on 2026-06-15 12:00 UTC._
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I3&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/issues/I3
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topAppleDevices?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I3&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topOperatingSystems?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I3&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I3&granularity=TIME_GRANULARITY_DAY&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I3&page_size=100
+POST https://www.googleapis.com/oauth2/v3/token
+POST https://www.googleapis.com/oauth2/v3/token

@@ -1,0 +1,6 @@
+=== stdout ===
+=== stderr ===
+error: provide an issue id argument or --issues FB-a,FB-b.
+=== exit ===
+5
+=== requests ===

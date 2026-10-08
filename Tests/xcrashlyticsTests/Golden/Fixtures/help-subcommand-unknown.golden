@@ -1,0 +1,33 @@
+=== stdout ===
+OVERVIEW: Firebase Crashlytics from the terminal, with clean JSON for
+developers and AI agents.
+
+USAGE: xcrashlytics <subcommand>
+
+OPTIONS:
+  --version               Show the version.
+  -h, --help              Show help information.
+
+SUBCOMMANDS:
+  init                    Write .xcrashlytics.json in the current directory and
+                          verify the Firebase setup.
+  use                     Switch the active Firebase app profile.
+  issues                  List Firebase Crashlytics issues.
+  events                  List Firebase Crashlytics events for one or more
+                          issues.
+  show                    Show a single crash by id (XC-<uuid>, FB-<id>) or
+                          Firebase console link.
+  export                  Export one crash as a shareable report: what it is,
+                          how much it hurts, where it happens.
+  open                    Open a crash's source location in Xcode via xed.
+  blame                   Aggregate top blamed Firebase frames.
+  groups                  Show related Firebase issues and optional Xcode
+                          crashes.
+  breakdown               Exact events and users per app version, OS version,
+                          or device model — for one issue or the whole app.
+
+  See 'xcrashlytics help <subcommand>' for detailed help.
+=== stderr ===
+=== exit ===
+0
+=== requests ===

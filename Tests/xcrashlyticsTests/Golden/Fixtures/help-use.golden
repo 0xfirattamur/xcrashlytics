@@ -1,0 +1,17 @@
+=== stdout ===
+OVERVIEW: Switch the active Firebase app profile.
+
+USAGE: xcrashlytics use <profile>
+
+ARGUMENTS:
+  <profile>               Profile name, for example debug, staging, prerelease,
+                          or release.
+
+OPTIONS:
+  --version               Show the version.
+  -h, --help              Show help information.
+
+=== stderr ===
+=== exit ===
+0
+=== requests ===

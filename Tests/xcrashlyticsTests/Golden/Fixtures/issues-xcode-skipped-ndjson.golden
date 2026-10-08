@@ -1,0 +1,9 @@
+=== stdout ===
+{"appVersion":"1.0 (42)","deviceModel":"iPhone14,2","exceptionType":"EXC_BAD_ACCESS","id":"XC-0A0A0A0A-1111-2222-3333-444444444444","kind":"xcodeCrash","schemaVersion":1,"source":"xcode","topAppSymbol":"__pthread_kill"}
+{"appVersion":"1 (1.0)","deviceModel":"iPhone14,2","exceptionType":"EXC_BAD_ACCESS","id":"XC-AAAAAAAA-BBBB-CCCC-DDDD-EEEEEEEEEEEE","kind":"xcodeCrash","schemaVersion":1,"source":"xcode","topAppSymbol":"-[ExampleViewController crashNow]"}
+{"kind":"hint","schemaVersion":1,"symbolicationHint":"1 app dSYM UUID(s) may be needed for 2 Xcode crash(es)."}
+=== stderr ===
+warning: FIREBASE_SKIPPED: no Firebase appId is configured; showing local Xcode crashes only.
+=== exit ===
+0
+=== requests ===

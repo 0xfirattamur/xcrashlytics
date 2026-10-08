@@ -1,0 +1,8 @@
+=== stdout ===
+=== stderr ===
+error: Stored refresh token is invalid (Token has been expired or revoked.).
+hint: Run: firebase login --reauth
+=== exit ===
+2
+=== requests ===
+POST https://www.googleapis.com/oauth2/v3/token

@@ -1,0 +1,177 @@
+=== stdout ===
+{
+  "data" : {
+    "activity" : {
+      "deviceSpread" : [
+        {
+          "count" : 1,
+          "name" : "iPhone14,5"
+        },
+        {
+          "count" : 1,
+          "name" : "iPhone15,2"
+        }
+      ],
+      "distinctUsers" : 2,
+      "firstEventAt" : "2026-06-12T08:00:00Z",
+      "lastEventAt" : "2026-06-14T09:30:00Z",
+      "osSpread" : [
+        {
+          "count" : 1,
+          "name" : "iOS 17.4"
+        },
+        {
+          "count" : 1,
+          "name" : "iOS 17.5.1"
+        }
+      ],
+      "sampledEvents" : 2,
+      "versionSpread" : [
+        {
+          "count" : 1,
+          "name" : "6.15.0"
+        },
+        {
+          "count" : 1,
+          "name" : "6.16.0"
+        }
+      ]
+    },
+    "binaryImages" : [
+
+    ],
+    "blameLibraries" : [
+      {
+        "events" : 1,
+        "library" : "ExampleApp",
+        "owner" : "DEVELOPER",
+        "share" : 0.5
+      }
+    ],
+    "bundleVersion" : "6.16.0",
+    "crashInfo" : [
+      "BlurService.swift:77: Fatal error: Array index out of range (user [redacted])",
+      "second entry"
+    ],
+    "crashMessage" : "BlurService.swift:77: Fatal error: Array index out of range (user [redacted])",
+    "crashedThread" : {
+      "crashAddress" : "0",
+      "queue" : "com.apple.main-thread",
+      "signal" : "SIGABRT",
+      "signalCode" : "0x0",
+      "title" : "Crashed: com.apple.main-thread"
+    },
+    "crashedThreadIndex" : 0,
+    "customKeys" : {
+      "feature_flag" : "dark_mode",
+      "nserror-domain" : "com.example.BlurError"
+    },
+    "dominantLibraries" : [
+      {
+        "events" : 2,
+        "library" : "ExampleApp",
+        "owner" : "DEVELOPER",
+        "share" : 1
+      },
+      {
+        "events" : 1,
+        "library" : "KeyboardCore",
+        "owner" : "THIRD_PARTY",
+        "share" : 0.5
+      }
+    ],
+    "errorType" : "FATAL",
+    "exception" : {
+      "description" : "[ExampleApp] BlurService.swift - BlurService.classify(_:)",
+      "exceptionType" : "FATAL",
+      "message" : "-[NSNull length]: unrecognized selector sent to instance 0x1 (user [redacted])",
+      "signal" : "SIGABRT",
+      "subtype" : "Fatal error: Array index out of range",
+      "type" : "NSInvalidArgumentException"
+    },
+    "firstSeenVersion" : "6.14.2",
+    "frames" : [
+      {
+        "address" : 6400,
+        "binaryName" : "libobjc.A.dylib",
+        "index" : 0,
+        "isSymbolicated" : true,
+        "symbol" : "objc_exception_throw"
+      },
+      {
+        "address" : 620768,
+        "binaryName" : "CoreFoundation",
+        "index" : 1,
+        "isSymbolicated" : true,
+        "symbol" : "<redacted>"
+      },
+      {
+        "address" : 2092404,
+        "binaryName" : "KeyboardCore",
+        "index" : 2,
+        "isSymbolicated" : true,
+        "symbol" : "objectdestroyTm"
+      },
+      {
+        "address" : 4096,
+        "binaryName" : "ExampleApp",
+        "file" : "BlurService.swift",
+        "index" : 3,
+        "isSymbolicated" : true,
+        "line" : 77,
+        "symbol" : "BlurService.classify(_:)"
+      },
+      {
+        "address" : 8192,
+        "binaryName" : "ExampleApp",
+        "file" : "ExampleViewController.swift",
+        "index" : 4,
+        "isSymbolicated" : true,
+        "line" : 42,
+        "symbol" : "ExampleViewController.viewDidLoad()"
+      },
+      {
+        "address" : 900,
+        "binaryName" : "UIKitCore",
+        "index" : 5,
+        "isSymbolicated" : true,
+        "symbol" : "UIApplicationMain"
+      }
+    ],
+    "id" : "FB-I1",
+    "lastSeenVersion" : "6.16.0",
+    "logs" : [
+      {
+        "message" : "opened camera for [redacted]",
+        "time" : "2026-06-14T09:29:58Z"
+      },
+      {
+        "message" : "classify start",
+        "time" : "2026-06-14T09:29:59Z"
+      }
+    ],
+    "providerId" : "I1",
+    "source" : "firebase",
+    "state" : "OPEN",
+    "versionRange" : {
+      "max" : "6.16.0 (937)",
+      "min" : "6.15.0 (900)"
+    }
+  },
+  "schemaVersion" : 1,
+  "warnings" : [
+    {
+      "code" : "EVENT_NOT_RESOLVED",
+      "message" : "the link's event is not among the newest 100 events; showing the issue."
+    }
+  ]
+}
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I1&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/issues/I1
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I1&page_size=100
+POST https://www.googleapis.com/oauth2/v3/token
+POST https://www.googleapis.com/oauth2/v3/token

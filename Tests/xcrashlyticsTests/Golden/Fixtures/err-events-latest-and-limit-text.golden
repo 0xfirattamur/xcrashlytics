@@ -1,0 +1,6 @@
+=== stdout ===
+=== stderr ===
+error: --latest and --limit cannot be combined; --latest returns one event.
+=== exit ===
+5
+=== requests ===

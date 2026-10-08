@@ -1,0 +1,30 @@
+=== stdout ===
+OVERVIEW: Aggregate top blamed Firebase frames.
+
+Defaults are tuned for quick agent loops: 30 issues, 1 event per issue, and 6
+concurrent event requests.
+Use --issue-limit and --events-per-issue for deeper investigations.
+
+USAGE: xcrashlytics blame [--format <format>] [--top <top>] [--since <since>] [--issue-limit <issue-limit>] [--events-per-issue <events-per-issue>] [--concurrency <concurrency>]
+
+OPTIONS:
+  --format <format>       Output format: text (default), json, or ndjson.
+                          (values: text, json, ndjson; default: text)
+  --top <top>             Return the top N blamed frames. (default: 20)
+  --since <since>         Report window and event cutoff: 7d (default), 24h,
+                          30m, 2w, or all (90d). At most 90d. (default: 7d)
+  --issue-limit <issue-limit>
+                          Number of Firebase issues to scan. (default: 30)
+  --events-per-issue <events-per-issue>
+                          Number of sample events to inspect per issue. Counts
+                          in the output are of sampled events. (default: 1)
+  --concurrency <concurrency>
+                          Maximum number of Firebase event requests to run in
+                          parallel. (default: 6)
+  --version               Show the version.
+  -h, --help              Show help information.
+
+=== stderr ===
+=== exit ===
+0
+=== requests ===

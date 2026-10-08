@@ -1,0 +1,6 @@
+=== stdout ===
+=== stderr ===
+error: invalid --since 'soon' — use a positive number with a unit of m, h, d or w (for example 30m, 24h, 7d, 2w), or all.
+=== exit ===
+5
+=== requests ===

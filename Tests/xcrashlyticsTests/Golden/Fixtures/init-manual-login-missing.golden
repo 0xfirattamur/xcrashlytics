@@ -1,0 +1,8 @@
+=== stdout ===
+[FAIL] firebase login not completed. Run: firebase login
+[WARN] no bundle id — Xcode crash commands need one. Re-run with --bundle-id <BUNDLE_ID>.
+Some checks failed. Fix the above, then re-run `xcrashlytics init`.
+=== stderr ===
+=== exit ===
+1
+=== requests ===

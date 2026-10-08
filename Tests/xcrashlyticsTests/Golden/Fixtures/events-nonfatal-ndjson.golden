@@ -1,0 +1,8 @@
+=== stdout ===
+{"appBuild":"937","appVersion":"6.16.0","customKeys":{"retry":"2"},"deviceModel":"iPhone15,2","eventTime":"2026-06-14T10:00:00Z","firebaseEventId":"E3","frames":[{"binaryName":"Core","file":"FIRCLSNonFatalError.m","index":0,"isBlamed":false,"line":33,"symbol":"-[FIRCLSNonFatalError initWithError:userInfo:rolloutsInfoJSON:]"},{"binaryName":"Core","file":"FIRCrashlytics.m","index":1,"isBlamed":false,"line":435,"symbol":"-[FIRCrashlytics recordError:userInfo:]"},{"binaryName":"ExampleApp","file":"NetworkClient.swift","index":2,"isBlamed":false,"line":186,"symbol":"NetworkClient.recordFailure(error:)"},{"binaryName":"UIKitCore","index":3,"isBlamed":false,"symbol":"UIApplicationMain"}],"id":"FB-I2/events/E3","issueId":"FB-I2","logs":[{"message":"request failed for [redacted]","time":"2026-06-14T09:59:00Z"}],"osVersion":"17.5.1","schemaVersion":1,"userIdHash":"14e0fbbd1214db43c3b8f438b55db0437bf9b23f0ec82b53d73a40245a4daee7"}
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I2&page_size=10
+POST https://www.googleapis.com/oauth2/v3/token

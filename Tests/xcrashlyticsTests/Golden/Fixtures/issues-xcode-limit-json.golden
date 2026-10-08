@@ -1,0 +1,56 @@
+=== stdout ===
+{
+  "data" : {
+    "fetchedIssuesCount" : 1,
+    "issues" : [
+      {
+        "appVersion" : "6.16.0",
+        "errorType" : "FATAL",
+        "eventsCount" : 42,
+        "exceptionType" : "FATAL",
+        "file" : "BlurService.swift",
+        "firebaseIssueId" : "I1",
+        "firstSeenVersion" : "6.14.2",
+        "id" : "FB-I1",
+        "impactedUsersCount" : 12,
+        "lastSeenAt" : "2026-06-14T09:30:00Z",
+        "lastSeenVersion" : "6.16.0",
+        "module" : "ExampleApp",
+        "signal" : "SIGABRT",
+        "source" : "firebase",
+        "subtitle" : "Fatal error: Array index out of range",
+        "title" : "[ExampleApp] BlurService.swift - BlurService.classify(_:)",
+        "topAppSymbol" : "BlurService.classify(_:)"
+      }
+    ],
+    "limit" : 1,
+    "matchedIssuesCount" : 1,
+    "matchedXcodeCrashesCount" : 3,
+    "searchLimit" : 1,
+    "window" : {
+      "since" : "2026-06-08T12:00:00Z",
+      "until" : "2026-06-15T12:00:00Z"
+    },
+    "xcodeCrashes" : [
+      {
+        "appVersion" : "1 (1.0)",
+        "deviceModel" : "iPhone14,2",
+        "exceptionType" : "EXC_BAD_ACCESS",
+        "id" : "XC-77777777-BBBB-CCCC-DDDD-EEEEEEEEEEEE",
+        "source" : "xcode",
+        "topAppSymbol" : "-[ExampleViewController crashNow]"
+      }
+    ]
+  },
+  "schemaVersion" : 1,
+  "warnings" : [
+
+  ]
+}
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I1&page_size=1
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=1
+POST https://www.googleapis.com/oauth2/v3/token

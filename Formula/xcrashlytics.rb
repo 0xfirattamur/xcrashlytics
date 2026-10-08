@@ -15,6 +15,6 @@ class Xcrashlytics < Formula
   end
 
   test do
-    assert_match "xcrashlytics", shell_output("#{bin}/xcrashlytics --help")
+    assert_equal version.to_s, shell_output("#{bin}/xcrashlytics --version").strip
   end
 end

@@ -1,0 +1,15 @@
+=== stdout ===
+{
+  "error" : {
+    "code" : "NOT_FOUND",
+    "hint" : "Check the id, or list ids with: xcrashlytics issues --format json",
+    "message" : "Crashlytics app 1:1234567890:ios:aaaa1111bbbb2222 was not found in project 1234567890; check the app id in the config."
+  },
+  "schemaVersion" : 1
+}
+=== stderr ===
+=== exit ===
+5
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I404&page_size=100
+POST https://www.googleapis.com/oauth2/v3/token

@@ -1,0 +1,64 @@
+=== stdout ===
+# [Core] FIRCLSNonFatalError.m - -[FIRCLSNonFatalError initWithError:userInfo:rolloutsInfoJSON:]
+
+**What:** `NON_FATAL` in `NetworkClient.recordFailure(error:)` — `NetworkClient.swift:186`  
+**Impact (last 7 days, 2026-06-08 → 2026-06-15):** 17 events · 9 users (1.00% of 900)  
+**Trend (events per day, UTC):** 2026-06-09: 1 · 2026-06-11: 4 · 2026-06-12: 2 · 2026-06-13: 5 · 2026-06-14: 3 · 2026-06-15: 2  
+**Versions:** first seen 6.15.0 · last seen 6.16.0 (versions of the first and the latest event, not a range)  
+**Version range:** 6.15.0 (900) … 6.16.0 (937) (lowest and highest app version with events in the window)  
+
+## Details
+
+| Field | Value |
+| --- | --- |
+| ID | `FB-I2` |
+| Firebase console | [Open issue](https://console.firebase.google.com/project/golden/crashlytics/app/ios:com.example.app/issues/I2) |
+| Source | firebase |
+| Type | `NON_FATAL` |
+| Subtype | Domain: com.example.NetworkError |
+| Module | Core |
+| Top source frame | `NetworkClient.swift:186` NetworkClient.recordFailure(error:) |
+
+## Where it happens
+
+Exact counts from the Crashlytics reports over the export window (2026-06-08 → 2026-06-15), top 5 by events.
+
+- App versions: 6.16.0 (937) 12 events (70.6%) · 7 users (0.78% of 900); 6.15.0 (900) 5 events (29.4%) · 3 users (0.50% of 600)
+- OS: iOS 17.5.1 20 events (50.0%) · 7 users; iOS 17.4 14 events (35.0%) · 5 users; iOS 16.7.8 6 events (15.0%) · 3 users
+- Devices: iPhone 14 Pro (iPhone15,2) 24 events (60.0%) · 8 users; iPhone 13 (iPhone14,5) 12 events (30.0%) · 6 users; iPad Air (iPad13,1) 4 events (10.0%) · 2 users
+
+## Latest occurrence
+
+| Field | Value |
+| --- | --- |
+| Event | `FB-I2/events/E3` |
+| Time | 2026-06-14 10:00 UTC |
+| App version | 6.16.0 (937) |
+| OS | 17.5.1 |
+| Device | iPhone15,2 |
+| Bundle | com.example.app |
+
+## Stack trace
+
+```text
+  0  Core                              0x0000000000000064  -[FIRCLSNonFatalError initWithError:userInfo:rolloutsInfoJSON:] (FIRCLSNonFatalError.m:33)
+  1  Core                              0x00000000000000c8  -[FIRCrashlytics recordError:userInfo:] (FIRCrashlytics.m:435)
+  2  ExampleApp                        0x000000000000012c  NetworkClient.recordFailure(error:) (NetworkClient.swift:186)
+  3  UIKitCore                         0x0000000000000384  UIApplicationMain
+```
+
+---
+_Exported with xcrashlytics 0.2.0 on 2026-06-15 12:00 UTC._
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I2&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/issues/I2
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topAppleDevices?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I2&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topOperatingSystems?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I2&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I2&granularity=TIME_GRANULARITY_DAY&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&filter.issue.id=I2&page_size=100
+POST https://www.googleapis.com/oauth2/v3/token
+POST https://www.googleapis.com/oauth2/v3/token

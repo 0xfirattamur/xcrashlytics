@@ -1,0 +1,6 @@
+=== stdout ===
+=== stderr ===
+error: pass --app-id and --profile, or --scan to discover them.
+=== exit ===
+5
+=== requests ===

@@ -1,0 +1,10 @@
+=== stdout ===
+No Firebase issues found.
+Hint: 0 matches in top 5 by impact. Rerun with --search-limit 500.
+=== stderr ===
+warning: SEARCH_TRUNCATED: searched the top 5 issues by impact; matches ranked lower were not checked.
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topIssues?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-06-08T12:00:00Z&page_size=5
+POST https://www.googleapis.com/oauth2/v3/token

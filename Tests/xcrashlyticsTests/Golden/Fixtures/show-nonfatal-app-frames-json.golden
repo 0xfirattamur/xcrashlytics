@@ -1,0 +1,94 @@
+=== stdout ===
+{
+  "data" : {
+    "activity" : {
+      "deviceSpread" : [
+        {
+          "count" : 1,
+          "name" : "iPhone15,2"
+        }
+      ],
+      "distinctUsers" : 1,
+      "firstEventAt" : "2026-06-14T10:00:00Z",
+      "lastEventAt" : "2026-06-14T10:00:00Z",
+      "osSpread" : [
+        {
+          "count" : 1,
+          "name" : "iOS 17.5.1"
+        }
+      ],
+      "sampledEvents" : 1,
+      "versionSpread" : [
+        {
+          "count" : 1,
+          "name" : "6.16.0"
+        }
+      ]
+    },
+    "binaryImages" : [
+
+    ],
+    "blameLibraries" : [
+
+    ],
+    "bundleVersion" : "6.16.0",
+    "crashedThreadIndex" : 0,
+    "customKeys" : {
+      "retry" : "2"
+    },
+    "dominantLibraries" : [
+      {
+        "events" : 1,
+        "library" : "ExampleApp",
+        "owner" : "DEVELOPER",
+        "share" : 1
+      }
+    ],
+    "errorType" : "NON_FATAL",
+    "exception" : {
+      "description" : "[Core] FIRCLSNonFatalError.m - -[FIRCLSNonFatalError initWithError:userInfo:rolloutsInfoJSON:]",
+      "exceptionType" : "NON_FATAL",
+      "subtype" : "Domain: com.example.NetworkError"
+    },
+    "firstSeenVersion" : "6.15.0",
+    "frames" : [
+      {
+        "address" : 300,
+        "binaryName" : "ExampleApp",
+        "file" : "NetworkClient.swift",
+        "index" : 2,
+        "isSymbolicated" : true,
+        "line" : 186,
+        "symbol" : "NetworkClient.recordFailure(error:)"
+      }
+    ],
+    "id" : "FB-I2",
+    "lastSeenVersion" : "6.16.0",
+    "logs" : [
+      {
+        "message" : "request failed for [redacted]",
+        "time" : "2026-06-14T09:59:00Z"
+      }
+    ],
+    "providerId" : "I2",
+    "source" : "firebase",
+    "state" : "OPEN",
+    "versionRange" : {
+      "max" : "6.16.0 (937)",
+      "min" : "6.15.0 (900)"
+    }
+  },
+  "schemaVersion" : 1,
+  "warnings" : [
+
+  ]
+}
+=== stderr ===
+=== exit ===
+0
+=== requests ===
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/events?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I2&page_size=100
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/issues/I2
+GET https://firebasecrashlytics.googleapis.com/v1alpha/projects/1234567890/apps/1:1234567890:ios:aaaa1111bbbb2222/reports/topVersions?filter.interval.endTime=2026-06-15T12:00:00Z&filter.interval.startTime=2026-03-17T12:00:00Z&filter.issue.id=I2&page_size=100
+POST https://www.googleapis.com/oauth2/v3/token
+POST https://www.googleapis.com/oauth2/v3/token

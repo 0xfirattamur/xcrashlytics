@@ -1,0 +1,9 @@
+=== stdout ===
+=== stderr ===
+Error: The value 'text' is invalid for '--format <format>'. Please provide one of 'markdown' and 'json'.
+Help:  --format <format>  Report format: markdown (default) or json.
+Usage: xcrashlytics export <id> [--format <format>] [--since <since>] [--output <output>] [--app-frames-only] [--no-system-frames] [--crashing-thread-only] [--crash-directory <crash-directory> ...]
+  See 'xcrashlytics export --help' for more information.
+=== exit ===
+64
+=== requests ===
